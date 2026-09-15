@@ -1,0 +1,860 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<meta name="description" content="十三个可交互的线性代数与三维姿态实验，包含矩阵求导、奇异值分解、坐标变换、旋转矩阵、欧拉角与四元数，以及完整定义、推导和例题。">
+<title>Linear Algebra Explainer · 线性代数几何实验台</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect x='3' y='3' width='11' height='11' rx='2' fill='%235b73d5'/%3E%3Crect x='18' y='3' width='11' height='11' rx='2' fill='%23e8a06c'/%3E%3Crect x='3' y='18' width='11' height='11' rx='2' fill='%239c7ebf'/%3E%3Crect x='18' y='18' width='11' height='11' rx='2' fill='%2346a99f'/%3E%3C/svg%3E">
+<style>
+:root{--ink:#262934;--muted:#69717f;--line:#e2e5ec;--soft:#f7f8fb;--blue:#526ecb;--orange:#cf7b42;--teal:#25897f;--purple:#895bb1;--pink:#bf5382;--bluebg:#eef2ff;--tealbg:#edf8f5;--orangebg:#fff5eb;--purplebg:#f6effa;--shadow:0 2px 7px #242d4110}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#fafbfd;color:var(--ink);font:16px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:default;opacity:.5}button,a,input,select,summary{touch-action:manipulation}button:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:3px solid #8193df;outline-offset:3px}a{color:var(--blue);text-underline-offset:3px}button{color:inherit}.top{background:#fff;border-bottom:1px solid var(--line)}.header{max-width:1500px;margin:auto;min-height:88px;padding:16px 32px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:14px}.brandmark{display:grid;grid-template-columns:repeat(2,10px);gap:4px;transform:rotate(-6deg)}.brandmark i{height:10px;border-radius:2px;background:var(--blue)}.brandmark i:nth-child(2){background:#dfa16b}.brandmark i:nth-child(3){background:var(--purple)}.brandmark i:nth-child(4){background:var(--teal)}.brandtitle{font:600 27px/1.1 Georgia,"Times New Roman",serif;letter-spacing:-.7px}.brandtitle span{font-weight:400;color:#696273}.brandsub{font-size:13px;color:var(--muted);margin-top:5px;letter-spacing:2px}.headeractions{display:flex;align-items:center;gap:10px}.btn{border:1px solid var(--line);background:#fff;border-radius:7px;padding:8px 14px;font-size:14px;line-height:1.5;display:inline-flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}.btn:hover{background:#f3f5fa;border-color:#bdc5d5}.btn.primary{background:var(--blue);color:#fff;border-color:var(--blue)}.btn.primary:hover{background:#425ebb}.btn.subtle{background:var(--bluebg);border-color:#d9e1fd;color:var(--blue)}.btn.small{padding:5px 10px}.navwrap{background:#fff;border-bottom:1px solid var(--line)}.topics{max-width:1500px;margin:auto;padding:0 32px;display:flex;gap:12px;overflow:auto;scrollbar-width:thin}.topic{border:0;border-bottom:3px solid transparent;background:none;padding:15px 11px 13px;display:flex;align-items:center;gap:9px;color:var(--muted);font-size:14px;white-space:nowrap;flex:1;justify-content:center}.topic .num{font-size:12px;color:#8d94a4;font-variant-numeric:tabular-nums}.topic:hover{color:var(--blue);background:#f8f9fd}.topic.active{color:var(--blue);border-bottom-color:var(--blue);background:linear-gradient(transparent,#f2f5fe)}.topic.active .num{color:var(--blue)}main{max-width:1500px;margin:auto;padding:27px 32px 48px}.intro{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;margin:0 0 22px}.eyebrow{font-size:12px;letter-spacing:1.7px;color:var(--blue);font-weight:600;margin-bottom:7px}.intro h1{font-size:27px;line-height:1.3;margin:0 0 7px;font-weight:650;letter-spacing:-.5px}.intro p{margin:0;color:var(--muted);font-size:15px}.topicposition{font:italic 21px Georgia,serif;color:#a1a8b6;white-space:nowrap;margin-bottom:4px}.lab{background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);overflow:hidden}.labhead{display:flex;gap:15px;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);padding:12px 18px}.labhead strong{font-size:14px;font-weight:600}.labhead .caption{font-size:13px;color:var(--muted)}.legend{display:flex;gap:16px;flex-wrap:wrap;font-size:12px;color:var(--muted)}.legend span{display:flex;gap:6px;align-items:center}.legend i{width:17px;height:3px;background:var(--blue);display:inline-block}.workspace{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:430px}.controls{padding:20px 18px;border-right:1px solid var(--line);background:#fcfcfe}.controltitle{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;font-size:14px;font-weight:600}.dimension{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;background:#eef0f5;color:#747c8b;border-radius:4px;padding:2px 6px}.matrixeditor{display:flex;align-items:center;justify-content:center;gap:9px;margin:13px 0 17px}.matrixname{font:italic 25px Georgia,serif;margin-right:2px}.matrixgrid{position:relative;display:grid;grid-template-columns:repeat(2,59px);gap:6px;padding:7px 10px}.matrixgrid:before,.matrixgrid:after,.matrix-static:before,.matrix-static:after{content:"";position:absolute;top:0;bottom:0;width:5px;border:1.5px solid #8790a4}.matrixgrid:before,.matrix-static:before{left:0;border-right:0}.matrixgrid:after,.matrix-static:after{right:0;border-left:0}.matrixgrid input{width:59px;height:41px;padding:5px 4px;text-align:center;border:1px solid #dbe2f7;background:var(--bluebg);border-radius:5px;color:var(--blue);font-size:16px;font-variant-numeric:tabular-nums;-moz-appearance:textfield}.matrixgrid input:nth-child(even){color:var(--orange);background:var(--orangebg);border-color:#f3dfce}.matrixgrid input::-webkit-inner-spin-button{opacity:.45}.helptext{font-size:13px;line-height:1.65;color:var(--muted);margin:10px 0}.controls .divider{height:1px;background:var(--line);margin:18px 0}.rangegroup{margin:15px 0}.rangegroup label{font-size:14px;display:flex;justify-content:space-between;gap:8px;align-items:baseline}.rangegroup output{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;color:var(--blue);font-size:13px}.rangegroup input[type=range]{display:block;width:100%;height:19px;margin:7px 0 0;accent-color:var(--blue);cursor:pointer}.presetlabel{font-size:12px;color:var(--muted);margin:16px 0 7px}.presets{display:flex;gap:6px;flex-wrap:wrap}.preset{font-size:12px;padding:5px 8px;border:1px solid #dfe3ed;border-radius:5px;background:white;line-height:1.4}.preset:hover{background:var(--bluebg);border-color:#b8c5ed}.preset.selected{color:var(--blue);border-color:#9cafe4;background:var(--bluebg)}.selectrow{margin:12px 0;display:flex;gap:8px;align-items:center;justify-content:space-between;font-size:14px}.selectrow select{max-width:125px;border:1px solid var(--line);border-radius:5px;background:#fff;padding:4px;font-size:13px}.toggle{display:flex;align-items:center;gap:7px;font-size:13px;margin:11px 0;color:var(--muted)}.toggle input{accent-color:var(--blue);width:15px;height:15px}.viewarea{min-width:0;display:flex;flex-direction:column}.visuals{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:0;position:relative;flex:1;min-height:337px;touch-action:none;overflow:hidden}.visuals.single{grid-template-columns:1fr}.visuals.four{grid-template-columns:repeat(4,minmax(0,1fr))}.plot{position:relative;min-width:0;display:flex;flex-direction:column;border-right:1px dashed var(--line);overflow:hidden}.plot:last-child{border-right:0}.plothead{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:13px;padding:17px 20px 0;min-height:40px;z-index:1}.plothead strong{font-weight:550}.plothead .tag{color:var(--muted);font-size:11px;letter-spacing:.4px}.plot svg{width:100%;height:auto;display:block;flex:1;min-height:245px;max-height:400px;touch-action:none;user-select:none}.visuals.single svg{max-height:440px}.visuals.four .plothead{padding:18px 10px 0;font-size:12px}.visuals.four svg{min-height:250px}.plotfoot{font-size:12px;color:var(--muted);text-align:center;padding:0 10px 13px;min-height:29px}.plotstage{display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:5px;background:var(--bluebg);color:var(--blue);font-size:11px;margin-right:6px}.stageactive{background:#f8faff}.plot svg text{font:12px -apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC",sans-serif}.plot svg .pointlabel{font-size:14px;font-weight:600;paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}.plot svg .axislabel{font:italic 14px Georgia,serif;fill:#89909e}.plot svg [data-handle]{cursor:grab;outline:none}.plot svg [data-handle]:hover,.plot svg [data-handle]:focus{filter:drop-shadow(0 0 4px #9aaad7)}.plot svg .arrowline{vector-effect:non-scaling-stroke}.hintpill{position:absolute;bottom:42px;left:50%;transform:translateX(-50%);padding:5px 10px;border:1px solid var(--line);border-radius:20px;background:#ffffffee;font-size:11px;color:var(--muted);white-space:nowrap;pointer-events:none}.equationstrip{border-top:1px solid var(--line);background:#fdfdff;min-height:93px;padding:15px 22px;display:flex;align-items:center;justify-content:center;gap:17px;flex-wrap:wrap;overflow:auto}.matrix-static{position:relative;padding:4px 9px;display:grid;gap:4px 12px;font:16px/1.3 Georgia,"Times New Roman",serif;text-align:center;font-variant-numeric:tabular-nums;min-width:43px}.mathsymbol{font:italic 21px Georgia,serif}.eqgroup{display:flex;align-items:center;gap:9px}.eqdetail{font-size:12px;color:var(--muted);text-align:center;margin-top:5px}.eqtoken{display:flex;flex-direction:column;align-items:center;gap:3px}.eqop{font:23px Georgia,serif;color:#9aa1ae}.math{font-family:"Cambria Math","STIX Two Math",Georgia,"Times New Roman",serif;font-size:1.1em}.math sub,.math sup{font-size:.68em}.mathline{font-family:"Cambria Math",Georgia,serif;font-size:19px;line-height:1.8;text-align:center;white-space:normal}.formula-box{padding:15px;background:#f5f7fd;border:1px solid #e3e8f6;border-radius:7px;margin:16px 0;color:#3d4772;overflow-x:auto}math{font-family:"Cambria Math","STIX Two Math",serif;font-size:19px}math[display=block]{margin:8px auto}.player{display:grid;grid-template-columns:auto minmax(80px,1fr) auto auto;gap:15px;align-items:center;border-top:1px solid var(--line);padding:13px 19px;background:#fff}.playbutton{min-width:88px}.timeline{display:flex;align-items:center;gap:10px;min-width:0}.timeline input{width:100%;accent-color:var(--blue);cursor:pointer;min-width:20px}.timeline output{font:12px ui-monospace,SFMono-Regular,monospace;color:var(--muted);min-width:34px}.speed{border:0;background:transparent;color:var(--muted);font-size:12px;width:51px}.replay{font-size:13px;padding:5px 0;color:var(--muted);background:none;border:0}.observation{display:grid;grid-template-columns:30px 1fr;gap:10px;padding:16px 20px;background:#f3f7ff;border-top:1px solid #e0e7f9;min-height:78px}.obsmark{font-family:Georgia,serif;color:var(--blue);font-style:italic;font-size:24px;line-height:1.4}.observation strong{font-size:14px;display:block;margin-bottom:3px;font-weight:600}.observation p{font-size:14px;color:#65718b;margin:0;line-height:1.65}.underlab{display:flex;gap:12px;margin-top:13px;align-items:center;justify-content:space-between}.walksteps{display:flex;gap:9px;flex-wrap:wrap}.walkstep{border:1px solid var(--line);background:#fff;padding:7px 11px;font-size:13px;border-radius:6px;color:var(--muted)}.walkstep.active{background:var(--purplebg);border-color:#d9c9e8;color:var(--purple)}.walkstep b{font-size:11px;margin-right:6px;opacity:.8}.keyboardhint{font-size:12px;color:#8d95a3;white-space:nowrap}.lesson{padding-top:32px}.sectionheading{display:flex;gap:12px;align-items:center;font-size:19px;line-height:1.4;margin:0 0 17px;letter-spacing:-.2px}.sectionheading small{font-size:12px;font-weight:400;color:var(--muted);letter-spacing:.3px}.lessoncolumns{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px}.lessoncard{padding:0 22px 4px 0;border-right:1px solid var(--line)}.lessoncard:last-child{border:0;padding-right:0}.lessoncard h3{font-size:16px;margin:0 0 9px;font-weight:600;display:flex;align-items:center;gap:8px}.cardnumber{color:var(--blue);font:italic 18px Georgia,serif}.lessoncard p{font-size:16px;color:#606979;line-height:1.85;margin:9px 0}.lessoncard strong{font-weight:600;color:#3f4756}.lessoncard .math{color:var(--purple)}.details{background:#fff;border:1px solid var(--line);border-radius:8px;margin:23px 0;overflow:hidden}.details summary{cursor:pointer;padding:13px 18px;font-size:14px;color:#58637a;list-style:none;display:flex;align-items:center;justify-content:space-between}.details summary:after{content:"＋";color:#8b96aa}.details[open] summary:after{content:"−"}.details[open] summary{border-bottom:1px solid var(--line)}.detailbody{padding:7px 22px 20px;font-size:16px;line-height:1.9;color:#596374;max-width:1050px}.detailbody h4{font-size:15px;color:var(--ink);margin:19px 0 7px}.detailbody p{margin:10px 0}.detailbody ol{padding-left:23px}.detailbody li{padding:4px 0}.detailbody table{border-collapse:collapse;width:100%;margin:13px 0}.detailbody th,.detailbody td{padding:8px;border:1px solid var(--line);text-align:left}.challenge{border:1px solid #e3dcf0;background:#fdfbff;border-radius:9px;padding:20px 22px;display:grid;grid-template-columns:1fr 1.2fr;gap:32px}.challenge .eyebrow{color:var(--purple);font-size:11px;margin:0 0 7px}.challenge h3{font-size:16px;margin:0 0 6px;line-height:1.7}.challenge p{font-size:13px;color:var(--muted);margin:0}.answers{display:flex;gap:8px;flex-wrap:wrap;align-content:flex-start}.answer{border:1px solid #dfd9ea;background:#fff;border-radius:6px;padding:8px 12px;font-size:13px;flex:1;min-width:90px;white-space:normal}.answer:hover{border-color:#a88dbd}.answer.correct{background:var(--tealbg);border-color:#61a69a;color:#24776d}.answer.incorrect{background:#fff3f4;border-color:#d8a1ac;color:#b04f61}.feedback{font-size:13px;line-height:1.7;flex-basis:100%;color:#655478;min-height:24px;margin-top:3px}.nextrow{display:flex;justify-content:space-between;gap:14px;margin-top:27px}.nextrow .btn{max-width:49%;white-space:normal}.footer{border-top:1px solid var(--line);margin-top:36px;padding-top:18px;display:flex;justify-content:space-between;gap:16px;color:#8a91a0;font-size:12px}.footer a{color:#77819a}.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);opacity:0;background:#303849;color:white;padding:10px 18px;border-radius:8px;font-size:14px;z-index:20;pointer-events:none;transition:.2s}.toast.visible{opacity:1;transform:translateX(-50%) translateY(0)}.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap}.hidden{display:none!important}.notice{font-size:12px;padding:9px 10px;border:1px solid #f0ddbf;background:#fff9ed;border-radius:5px;line-height:1.7;color:#946e35;margin:13px 0}.camerahelp{font-size:12px;color:var(--muted);margin:12px 0}.inlinevalue{font:16px Georgia,serif;color:var(--purple)}.viewmode{display:flex;border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:14px 0}.viewmode button{flex:1;border:0;border-right:1px solid var(--line);background:#fff;font-size:12px;padding:7px 3px}.viewmode button:last-child{border:0}.viewmode button.active{background:var(--bluebg);color:var(--blue)}.numberpair{display:flex;gap:8px;align-items:center;font-size:13px}.numberpair input{width:60px;border:1px solid var(--line);border-radius:5px;padding:4px 5px;color:var(--purple)}.badges{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}.badge{padding:5px 10px;border-radius:5px;background:var(--soft);font-size:12px;color:#657085}.badge strong{color:var(--blue);font-weight:600}.tourstatus{font-size:12px;color:var(--purple);margin-left:10px}.ploterror{margin:30px;padding:20px;color:#a86d37;background:#fff7ea;border-radius:8px;font-size:14px}
+@media(min-width:1500px){.plot svg{max-height:435px}.workspace{grid-template-columns:245px minmax(0,1fr)}}
+@media(max-width:1100px){.header,main{padding-left:20px;padding-right:20px}.topics{padding-left:18px;padding-right:18px;gap:2px}.topic{padding-left:8px;padding-right:8px}.workspace{grid-template-columns:212px minmax(0,1fr)}.controls{padding:17px 14px}.visuals.four{grid-template-columns:repeat(2,minmax(0,1fr))}.visuals.four .plot:nth-child(2){border-right:0}.visuals.four .plot:nth-child(-n+2){border-bottom:1px dashed var(--line)}.visuals.four svg{min-height:185px;max-height:215px}.legend{gap:10px}.keyboardhint{display:none}.lessoncolumns{gap:17px}.lessoncard{padding-right:17px}.challenge{gap:20px}}
+@media(max-width:760px){.header{flex-wrap:wrap;padding:15px 16px;align-items:flex-start;gap:10px}.brandtitle{font-size:21px}.brandsub{font-size:11px;letter-spacing:.8px}.brandmark{grid-template-columns:repeat(2,8px);gap:3px}.brandmark i{height:8px}.headeractions{gap:5px}.headeractions .btn{font-size:12px;padding:6px 8px}.headeractions .downloadlabel{display:none}.topic{flex:none;padding:12px 10px;font-size:13px}.topics{padding:0 8px;gap:0}main{padding:22px 14px 30px}.intro{gap:12px;align-items:flex-start;margin-bottom:18px}.intro h1{font-size:23px}.intro p{font-size:14px}.eyebrow{font-size:11px}.topicposition{font-size:17px}.labhead{padding:11px 13px;align-items:flex-start;flex-wrap:wrap;gap:7px}.labhead .caption{font-size:12px}.workspace{display:flex;flex-direction:column}.controls{border-right:0;border-bottom:1px solid var(--line);display:grid;grid-template-columns:1fr 1fr;column-gap:22px;padding:15px 16px}.controls .controltitle,.controls .presets,.controls .helptext,.controls .notice,.controls .viewmode,.controls .camerahelp,.controls .numberpair,.controls .selectrow{grid-column:1/-1}.controls .matrixeditor{grid-row:2/5;grid-column:1;margin:5px 0}.controls .matrixeditor~.helptext{grid-column:2;font-size:12px;margin:0}.controls .divider{display:none}.controls .presetlabel{grid-column:1/-1;margin:9px 0 5px}.controls .rangegroup{margin:5px 0}.matrixgrid{grid-template-columns:repeat(2,54px)}.matrixgrid input{width:54px;height:36px}.visuals{min-height:260px}.plothead{padding:12px 11px 0;font-size:12px}.plothead .tag{font-size:10px}.plot svg{min-height:190px;max-height:265px}.plotfoot{font-size:11px;padding:0 7px 10px}.visuals.single svg{max-height:380px;min-height:280px}.equationstrip{padding:12px 8px;gap:10px;min-height:81px}.matrix-static{font-size:14px;gap:3px 8px}.mathsymbol{font-size:18px}.eqdetail{font-size:11px}.eqop{font-size:19px}.player{padding:12px;gap:8px;grid-template-columns:auto minmax(45px,1fr) auto}.player .replay{display:none}.player .btn{padding:6px 9px;font-size:13px;min-width:75px}.speed{width:45px}.observation{padding:13px;gap:6px;grid-template-columns:23px 1fr}.observation p{font-size:14px}.walksteps{gap:6px}.walkstep{font-size:12px;padding:6px 8px}.lesson{padding-top:26px}.sectionheading{font-size:18px}.lessoncolumns{grid-template-columns:1fr;gap:15px}.lessoncard{border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px}.lessoncard:last-child{padding-bottom:0}.lessoncard p{font-size:14px}.details{margin:20px 0}.details summary{font-size:13px;padding:12px 14px}.detailbody{padding:5px 15px 16px}.challenge{grid-template-columns:1fr;gap:14px;padding:17px}.footer{flex-direction:column;gap:7px;margin-top:28px}.nextrow .btn{font-size:12px}.toast{font-size:13px;max-width:90%;width:max-content}.hintpill{font-size:10px;bottom:33px}.visuals.four .plothead{font-size:11px}.visuals.four svg{min-height:185px}.controls .selectrow{margin:5px 0}.mathline{font-size:17px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important}}
+@media print{.headeractions,.controls,.player,.walksteps,.challenge,.nextrow,.topics,.toast{display:none!important}body{background:#fff}.workspace{display:block}.lab,.details{break-inside:avoid}main{padding:10px}.lessoncolumns{display:block}.lessoncard{border:0}.footer{margin-top:15px}}
+@media(max-width:760px){.controls[data-topic="composition"] .matrixeditor{grid-row:auto;grid-column:auto}.controls[data-topic="composition"] .helptext{grid-column:1/-1}.detailbody{overflow-x:auto}}
+.topics{display:block;overflow:visible;padding-top:4px;padding-bottom:4px}.topicgroup{display:flex;align-items:center;gap:2px;overflow-x:auto;scrollbar-width:thin}.topicgroup+.topicgroup{border-top:1px solid #edf0f5}.topicgroup-label{min-width:91px;padding:10px 7px;font-size:12px;color:#969cab;letter-spacing:1px}.topic{flex:0 0 auto;padding:11px 13px 9px}.topic.newtopic:after{content:"NEW";font-size:9px;color:var(--purple);background:var(--purplebg);padding:1px 3px;border-radius:3px;margin-left:-3px}.convention{font-size:14px;line-height:1.8;color:#586680;border:1px solid #dfe6f5;background:#f5f8ff;padding:12px 16px;border-radius:6px;margin:17px 0}.derivation{counter-reset:derive;margin:16px 0}.derive-step{display:grid;grid-template-columns:32px 1fr;gap:8px;padding:12px 0;border-bottom:1px solid #eef0f5}.derive-step:before{counter-increment:derive;content:counter(derive);font:italic 19px Georgia,serif;color:var(--blue);padding-top:2px}.derive-step:last-child{border:0}.derive-step p{margin:0}.detailbody{max-width:none;padding:8px 26px 25px}.detailbody h4{font-size:18px;margin-top:25px}.detailbody p{max-width:1040px}.detailbody .formula-box{max-width:1040px}.detailbody table{font-size:14px}.detailbody th{background:#f5f7fb;font-weight:600}.theorem{border-left:3px solid var(--purple);background:#fbf8fd;padding:10px 16px;margin:15px 0;max-width:1040px}.worked{border-left:3px solid var(--teal);background:#f4faf8;padding:10px 16px;margin:17px 0;max-width:1040px}.sources{font-size:12px!important;color:#8a92a1;border-top:1px solid var(--line);padding-top:12px;margin-top:24px!important}.numbers3{display:flex;gap:5px;align-items:center;flex-wrap:wrap;grid-column:1/-1;margin:7px 0 10px}.numbers3 label{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:3px}.numbers3 input{width:46px;padding:4px 3px;border:1px solid var(--line);border-radius:4px;background:#fff;font-size:13px}.compactform{font:13px/1.8 "Cambria Math",Georgia,serif;overflow:auto;padding:9px;background:#f1f5fc;border-radius:5px;margin:10px 0}.pose-info{padding:14px 20px;background:#fff;font-size:14px;border-top:1px dashed var(--line)}.pose-info .matrix-static{font-size:14px}.qformula{font:17px/1.8 "Cambria Math",Georgia,serif}.mathline .matrix-static{display:inline-grid;vertical-align:middle;margin:0 7px;font-size:17px}.mathline .symmatrix{display:inline-grid;position:relative;vertical-align:middle;gap:5px 13px;text-align:center;padding:5px 11px;margin:0 8px;line-height:1.5}.symmatrix:before,.symmatrix:after{content:"";position:absolute;top:0;bottom:0;width:5px;border:1.5px solid #8090a6}.symmatrix:before{left:0;border-right:0}.symmatrix:after{right:0;border-left:0}.parameter-note{font-size:12px;color:#8390a4;grid-column:1/-1}.svg-status{font-size:13px;line-height:1.7;padding:10px 16px;border-top:1px solid #edf0f6;color:#68788f}.topicposition{min-width:60px}.matrixgrid input.active-cell{outline:2px solid var(--purple);outline-offset:1px}.details>summary{font-size:16px;color:#465474;font-weight:550;background:#fbfcff}.plot svg{min-height:275px}.mathline{overflow-wrap:anywhere}.qsign{color:var(--purple)}
+@media(max-width:1100px){.topicgroup-label{min-width:78px;font-size:11px}.topic{padding-left:10px;padding-right:10px}.topic.newtopic:after{display:none}}
+@media(max-width:760px){.topics{padding:0 5px}.topicgroup-label{min-width:69px;letter-spacing:0}.topic{padding:11px 9px;font-size:13px}.detailbody{padding:6px 16px 20px}.detailbody h4{font-size:17px}.convention{font-size:13px;padding:10px 12px}.controls[data-topic="calculus"] .helptext{grid-column:1/-1}.controls[data-topic="calculus"] .matrixeditor{grid-row:auto}.controls[data-topic="frames"] .rangegroup,.controls[data-topic="rotation"] .rangegroup,.controls[data-topic="euler"] .rangegroup,.controls[data-topic="quaternion"] .rangegroup{grid-column:1/-1}.plot svg{min-height:230px}.pose-info{font-size:12px;padding:10px}.numbers3 input{width:52px}.derive-step{grid-template-columns:25px 1fr}.details>summary{font-size:14px}}
+.controls[data-topic="calculus"] .rangegroup{margin:9px 0}.controls[data-topic="calculus"] .matrixeditor{margin:8px 0 10px}.detailbody h4{scroll-margin-top:20px}.detailbody table{border-collapse:collapse;width:100%;max-width:1040px;margin:18px 0}.detailbody th,.detailbody td{border:1px solid #e2e6f0;padding:9px 12px;text-align:left}.detailbody p{line-height:1.95}.detailbody .mathline{line-height:1.8}
+</style>
+</head>
+<body>
+<a href="#main" class="sr-only">跳转到实验内容</a>
+<header class="top"><div class="header">
+ <div class="brand"><div class="brandmark" aria-hidden="true"><i></i><i></i><i></i><i></i></div><div><div class="brandtitle">Linear Algebra <span>Explainer</span></div><div class="brandsub">线性代数 · 看见空间如何变化</div></div></div>
+ <div class="headeractions"><button class="btn subtle" id="tourButton">▷ 自动导览</button><button class="btn" id="downloadButton" aria-label="下载完整离线 HTML">↓ <span class="downloadlabel">下载 HTML</span></button></div>
+</div></header>
+<div class="navwrap"><nav class="topics" id="topics" aria-label="学习主题"></nav></div>
+<main id="main">
+<section class="intro"><div><div class="eyebrow" id="eyebrow">01 / LINEAR TRANSFORMATION</div><h1 id="topicTitle">矩阵，究竟对空间做了什么？</h1><p id="topicSubtitle">拖动两个基向量，看整个平面随之变化。矩阵的每一列，都有一个几何去向。</p></div><div class="topicposition" id="topicPosition">01 — 13</div></section>
+<section class="lab" aria-label="交互几何实验">
+ <div class="labhead"><div><strong id="experimentLabel">几何实验</strong><span class="tourstatus hidden" id="tourStatus"></span></div><div class="legend" id="legend"></div></div>
+ <div class="workspace"><aside class="controls" id="controls" aria-label="实验参数"></aside><div class="viewarea"><div class="visuals" id="visuals"></div><div class="equationstrip" id="equation" aria-label="实时公式"></div></div></div>
+ <div class="player"><button class="btn primary playbutton" id="playButton">▷ 播放变换</button><div class="timeline"><label for="progress" class="sr-only">动画进度</label><input id="progress" type="range" min="0" max="1" step="0.001" value="1"><output id="progressValue">100%</output></div><label class="sr-only" for="speed">播放速度</label><select class="speed" id="speed"><option value="0.5">0.5×</option><option value="1" selected>1×</option><option value="1.5">1.5×</option></select><button class="replay" id="resetButton">↺ 重置本实验</button></div>
+ <div class="observation"><div class="obsmark" aria-hidden="true">↳</div><div><strong id="observationTitle"></strong><p id="observationText"></p></div></div>
+</section>
+<div class="underlab"><div class="walksteps" id="walksteps" aria-label="分步观察"></div><span class="keyboardhint">空格 播放 / 暂停 · ← → 逐步观察</span></div>
+<section class="lesson" aria-labelledby="lessonHeading"><h2 class="sectionheading" id="lessonHeading">从图形走向理解 <small>GEOMETRY → INTUITION → MATH</small></h2><div class="lessoncolumns" id="lessonColumns"></div>
+<details class="details"><summary id="detailSummary">展开推导与容易混淆的地方</summary><div class="detailbody" id="detailBody"></div></details>
+<div class="challenge"><div><div class="eyebrow">TRY IT YOURSELF</div><h3 id="challengeTitle"></h3><p id="challengeHint"></p></div><div class="answers" id="answers"></div></div>
+</section>
+<div class="nextrow"><button class="btn" id="previousTopic">← 上一个主题</button><button class="btn subtle" id="nextTopic">下一个主题 →</button></div>
+<footer class="footer"><div>13 个几何实验 · 可离线运行 · 参数、图形与公式实时联动</div><div>视觉与交互编排参考 <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener noreferrer">Transformer Explainer</a> · 独立的线性代数学习作品</div></footer>
+</main><div id="toast" class="toast" role="status" aria-live="polite"></div>
+<noscript><p style="padding:30px">请启用 JavaScript，以使用拖动、滑块和动画实验。</p></noscript>
+<script>
+'use strict';
+const $=id=>document.getElementById(id);
+const C={blue:'#526ecb',orange:'#cf7b42',teal:'#25897f',purple:'#895bb1',pink:'#bf5382',gray:'#adb5c4',ink:'#394254'};
+const fmt=(x,n=2)=>Math.abs(x)<1e-8?'0':Number(x.toFixed(n)).toString().replace('-','−');
+const clamp=(x,a,b)=>Math.min(b,Math.max(a,x));
+const dot=(a,b)=>a.reduce((s,x,i)=>s+x*b[i],0);
+const norm=a=>Math.sqrt(dot(a,a));
+const add=(a,b)=>a.map((v,i)=>v+b[i]);
+const sub=(a,b)=>a.map((v,i)=>v-b[i]);
+const scale=(a,s)=>a.map(v=>v*s);
+const lerp=(a,b,t)=>a+(b-a)*t;
+const mix=(a,b,t)=>a.map((v,i)=>lerp(v,b[i],t));
+const I=[1,0,0,1];
+const mv=(A,v)=>[A[0]*v[0]+A[1]*v[1],A[2]*v[0]+A[3]*v[1]];
+const mm=(A,B)=>[A[0]*B[0]+A[1]*B[2],A[0]*B[1]+A[1]*B[3],A[2]*B[0]+A[3]*B[2],A[2]*B[1]+A[3]*B[3]];
+const tr=A=>[A[0],A[2],A[1],A[3]];
+const det=A=>A[0]*A[3]-A[1]*A[2];
+const inverse=A=>Math.abs(det(A))<1e-8?null:scale([A[3],-A[1],-A[2],A[0]],1/det(A));
+const rotation=t=>[Math.cos(t),-Math.sin(t),Math.sin(t),Math.cos(t)];
+const rank=A=>Math.max(...A.map(Math.abs))<1e-8?0:Math.abs(det(A))>1e-7?2:1;
+const unit=(v,fallback=[1,0])=>norm(v)>1e-10?scale(v,1/norm(v)):fallback;
+const perp=v=>[-v[1],v[0]];
+const cross=(a,b)=>[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];
+function eigen(A){
+ const trace=A[0]+A[3], disc=(A[0]-A[3])**2+4*A[1]*A[2];
+ if(disc < -1e-9)return{real:false,realPart:trace/2,imag:Math.sqrt(-disc)/2,values:[],vectors:[]};
+ const d=Math.sqrt(Math.max(0,disc)), values=[(trace+d)/2,(trace-d)/2];
+ const scalar=Math.abs(A[1])+Math.abs(A[2])+Math.abs(A[0]-A[3])<1e-8;
+ const repeated=d<1e-8;
+ const vectors=scalar?[[1,0],[0,1]]:values.map(l=>{
+  const row1=[A[0]-l,A[1]],row2=[A[2],A[3]-l];
+  return unit(perp(norm(row1)>=norm(row2)?row1:row2));
+ });
+ return{real:true,values,vectors,scalar,repeated,defective:repeated&&!scalar};
+}
+function svd2(A){
+ const a=A[0]**2+A[2]**2,b=A[0]*A[1]+A[2]*A[3],d=A[1]**2+A[3]**2;
+ const theta=.5*Math.atan2(2*b,a-d),V=rotation(theta),v1=[V[0],V[2]],v2=[V[1],V[3]];
+ const Av1=mv(A,v1),Av2=mv(A,v2),s1=norm(Av1),s2=norm(Av2);
+ const u1=unit(Av1),u2=s2>1e-9?scale(Av2,1/s2):perp(u1);
+ const U=[u1[0],u2[0],u1[1],u2[1]],S=[s1,0,0,s2],VT=tr(V);
+ return{U,S,V,VT,s:[s1,s2],u:[u1,u2],v:[v1,v2]};
+}
+function orthogonalPartial(A,t){
+ const theta=Math.atan2(A[2],A[0]),r=rotation(theta*t);
+ return mm(r,[1,0,0,lerp(1,det(A)<0?-1:1,t)]);
+}
+const matrixHTML=(A,cols=2,colors=true)=>'<span class="matrix-static" style="grid-template-columns:repeat('+cols+',1fr)">'+A.map((x,i)=>'<span style="color:'+(colors?(i%cols===0?C.blue:C.orange):'inherit')+'">'+fmt(x)+'</span>').join('')+'</span>';
+const token=(label,A,cols=2,color)=>'<div class="eqtoken"><div class="eqgroup"><span class="mathsymbol" style="color:'+(color||'inherit')+'">'+label+'</span>'+matrixHTML(A,cols)+'</div><div class="eqdetail">'+(cols===1?A.length+' × 1':A.length/cols+' × '+cols)+'</div></div>';
+const op=s=>'<span class="eqop">'+s+'</span>';
+const formula=s=>'<div class="formula-box"><div class="mathline">'+s+'</div></div>';
+const lessons=[
+ {id:'transform',name:'矩阵变换',english:'LINEAR TRANSFORMATION',title:'矩阵，究竟对空间做了什么？',subtitle:'拖动变换后的两个基向量，看整个网格随之变化。矩阵的每一列，都有一个几何去向。',
+ defaults:{A:[1.5,.5,0,1],v:[1.5,1]},presets:[['剪切',[1,1,0,1]],['旋转 60°',rotation(Math.PI/3)],['拉伸',[2,0,0,.7]],['镜面反射',[-1,0,0,1]]],
+ steps:['从单位基出发','看整个空间变形','把向量送进去'],
+ cards:[
+ ['一列，就是一个基向量的去向','标准基 <span class="math">e₁=(1,0)</span> 只取矩阵第一列，<span class="math">e₂=(0,1)</span> 只取第二列。拖动右图蓝色、橙色端点，就是直接编辑矩阵。'],
+ ['为什么整张网格都会动？','任意向量都能写成 <span class="math">x=x₁e₁+x₂e₂</span>。线性性要求 <span class="math">Ax=x₁Ae₁+x₂Ae₂</span>。两个基的去向一旦确定，其他点就没有任意移动的自由。'],
+ ['数字乘法其实是“拼箭头”','右图的紫色向量由两列按 <span class="math">x₁、x₂</span> 加权后相加得到。改变左图向量，会同时改变输出。<strong>系数不变，组成它的基方向改变了。</strong>']
+ ],
+ detail:'<h4>把矩阵乘法拆开</h4>'+formula('A x = x₁ a₁ + x₂ a₂')+'<p>令 A 的两列为 a₁、a₂。乘法第一行给出输出横坐标，第二行给出输出纵坐标；按列看则是两个向量的线性组合。两种计算得到同一个结果。</p><h4>哪些几何性质保持？</h4><p>线性变换保持原点、线性组合和共线关系。直线可能映成直线，也可能被压成一个点；长度、夹角、面积通常不保持。只有正交矩阵才保持欧氏长度和夹角。</p><h4>动画中间的矩阵</h4>'+formula('A(t) = (1 − t) I + t A,　0 ≤ t ≤ 1')+'<p>这里把单位矩阵连续插值到目标矩阵，方便看见形变。中间状态不一定可逆，也不一定保持长度：例如目标是旋转矩阵，线性插值路径仍可能缩小图形。它是演示路径，不是“旋转必须经过的物理过程”。</p><h4>动手验证线性</h4><p>把输入向量改成原来的两倍，观察输出也恰好变成两倍。再选“镜面反射”，比较保持的长度与改变的方向。原点始终不动，所以带平移项 Ax+b（b≠0）是仿射变换，不是线性变换。</p>',
+ challenge:['矩阵的第一列表示什么？','先拖动右图蓝色端点，再观察矩阵。',['e₁ 变换后的向量','第一行的长度','所有向量的平均位置'],0,'Ae₁ 只取第一列。第二列则是 Ae₂；两列一起决定整个线性变换。']},
+ {id:'basis',name:'基与坐标',english:'BASIS & COORDINATES',title:'换了坐标，向量为什么没有变？',subtitle:'拖动两根坐标轴或紫色向量，比较同一个几何对象在两套基下的描述。',
+ defaults:{A:[1,.5,.4,1.3],v:[1.8,1.3]},presets:[['标准基',[1,0,0,1]],['斜坐标',[1,.5,.4,1.3]],['正交基',rotation(Math.PI/4)],['两列共线',[1,2,.5,1]]],
+ steps:['看固定的向量','沿第一根基走','补上第二个分量'],
+ cards:[
+ ['向量是对象，坐标是描述','紫色箭头表示一个固定的向量 <span class="math">x</span>。改变蓝色和橙色基时，箭头不需要移动，但用这两根基拼出它的系数会改变。'],
+ ['坐标就是两个拼接系数','令基矩阵 <span class="math">P=[b₁ b₂]</span>。新坐标 <span class="math">c</span> 满足 <span class="math">x=Pc</span>，所以 <span class="math">c=P⁻¹x</span>。虚线平行四边形显示两个分量如何相加。'],
+ ['“不垂直”不妨碍成为基','一组基只需要<strong>线性无关且能张成整个空间</strong>。当两根箭头共线，它们只能覆盖一条直线，二维坐标描述便失去唯一性。']
+ ],
+ detail:'<h4>为什么坐标唯一？</h4><p>假设同一个向量有两套坐标 c、d，则 Pc=Pd，得到 P(c−d)=0。基向量线性无关意味着零空间只有零向量，所以 c=d。</p>'+formula('x = P c　⇔　c = P⁻¹ x')+'<h4>换坐标与改变向量</h4><p>本实验改变 P 时固定 x，是“被动换坐标”。上一个实验固定输入坐标并改变输出 Ax，是“主动变换向量”。两者都含矩阵乘法，但问题不同。</p><h4>同一个线性变换在新基下</h4>'+formula('x = P c　→　Ax = A P c　→　c′ = P⁻¹ A P c')+'<p>于是新矩阵为 P⁻¹AP，这就是相似变换。右侧 P 先把新坐标换回标准坐标，A 执行变换，左侧 P⁻¹ 再换回新坐标。</p><h4>接近共线时为什么系数暴涨？</h4><p>若两根基几乎同向，为拼出横向偏离很远的点，就需要两个很大的、互相抵消的系数。基仍可能可逆，但坐标对误差非常敏感，这与条件数有关。数值结果只显示到小数点后两位，不能把显示上的近似共线当作精确相关。</p>',
+ challenge:['两根基几乎共线时，新坐标可能怎样？','选择“斜坐标”，再把两根基慢慢拖近。',['一定接近零','可能很大且相互抵消','一定没有任何变化'],1,'几乎共线的两个方向需要较大的相反系数，才能拼出横向分量。这就是病态坐标的几何来源。']},
+ {id:'determinant',name:'行列式与秩',english:'DETERMINANT & RANK',title:'面积变成零，意味着丢掉了什么？',subtitle:'把二维空间压成一条线，再压成一个点。看见行列式、秩与零空间之间的联系。',
+ defaults:{A:[1.5,.6,.2,1.2],v:[1,1]},presets:[['保留二维',[1.5,.6,.2,1.2]],['压成直线',[1,2,.5,1]],['压成一点',[0,0,0,0]],['翻转方向',[-1,.5,0,1]]],
+ steps:['从单位面积开始','跟踪平行四边形','寻找被压掉的方向'],
+ cards:[
+ ['行列式是有向面积倍率','原单位正方形面积为 1。两列张成的平行四边形面积为 <span class="math">|det A|</span>。正负号记录定向，负号不表示“负的面积”。'],
+ ['秩是输出还剩几个独立方向','两列不共线，秩为 2；共线但不全为零，秩为 1；全部为零，秩为 0。<strong>秩只数独立方向，不数箭头有几根。</strong>'],
+ ['零空间是被压成零的输入','选择“压成直线”，左图会标出零空间方向。沿这个方向移动，输出不变。二维输入满足 <span class="math">rank A + dim ker A = 2</span>。']
+ ],
+ detail:'<h4>二阶行列式的几何公式</h4>'+formula('A = [a₁ a₂],　det A = a₁ₓ a₂ᵧ − a₂ₓ a₁ᵧ')+'<p>它是两列向量张成的有向平行四边形面积。两列共线时高度为零，因此行列式为零。右图边界上的方向提示用于区分顺、逆定向。</p><h4>为什么压丢方向就不能求逆？</h4><p>若 n≠0 且 An=0，那么 A(x+n)=Ax。两个不同输入给出同一个输出，看到输出便无法判断原来是哪一个。可逆要求每个输入都能被区分，因此零空间必须只有零向量。</p>'+formula('det A ≠ 0　⇔　rank A = 2　⇔　ker A = {0}　⇔　A 可逆')+'<h4>方程 Ax=b 的解怎样出现？</h4><p>秩为 1 时，如果 b 不在像直线上，就无解；若 b 在像直线上，一个特解加上任意零空间向量都仍然是解，于是有无穷多解。选择预设后拖动左图紫色箭头，观察许多输入怎样汇聚到同一条输出直线。</p><p>为处理浮点误差，界面把绝对值小于 10⁻⁷ 的行列式视为退化；显示的是这个阈值下的数值秩。非常接近退化时，数值判断不等同于精确代数结论。</p><h4>不要用行列式的大小代替条件数</h4><p>0.001I 的行列式很小，但所有方向缩放一致，条件数为 1。相反 diag(1000,0.001) 的行列式为 1，却对误差十分敏感。精确可逆与数值稳定是两个问题。</p>',
+ challenge:['二维矩阵的秩为 1，零空间维数是多少？','点击“压成直线”，检查左侧虚线。',['0','1','2'],1,'输入空间维数 2 = 秩 1 + 零空间维数 1。有一整条输入方向被压成了零。']},
+ {id:'eigen',name:'特征向量',english:'EIGENVECTORS & EIGENVALUES',title:'有没有只缩放、不偏离原直线的方向？',subtitle:'转动紫色输入向量，观察它和输出何时共线。特征向量不是任意向量。',
+ defaults:{A:[1.7,.6,.6,1],v:[1.5,.7],angle:25},presets:[['两个特征方向',[1.7,.6,.6,1]],['负特征值',[1,0,0,-1]],['只有一个方向',[1,1,0,1]],['没有实特征方向',[0,-1,1,0]],['所有方向都可以',[1.5,0,0,1.5]]],
+ steps:['选一个普通方向','寻找共线的位置','比较不同类型矩阵'],
+ cards:[
+ ['核心条件是共线','如果 <span class="math">Av=λv</span> 且 <span class="math">v≠0</span>，v 就是特征向量。λ&gt;0 同向，λ&lt;0 反向，λ=0 则被压成零。图中的虚线标出真实特征直线。'],
+ ['特征值是带符号的缩放','沿特征方向，原来的箭头只会变长、变短、翻转或消失。选“负特征值”，看纵向箭头虽然反向，但仍留在原来的直线上。'],
+ ['不一定有足够的特征方向','二维剪切可能只有一条特征直线；旋转 90° 在实平面上没有特征方向。<strong>只有凑够两个独立特征向量，二维矩阵才可在实数域对角化。</strong>']
+ ],
+ detail:'<h4>为什么要解行列式方程？</h4>'+formula('Av = λv　⇔　(A − λI)v = 0')+'<p>要找到非零 v，A−λI 就必须不可逆，所以 det(A−λI)=0。先求 λ，再解这个齐次方程的零空间。</p><h4>重特征值不等于不能对角化</h4><p>1.5I 只有一个不同的特征值，但每个非零方向都是特征方向，可以任选两根独立向量作基。剪切矩阵 [[1,1],[0,1]] 的特征值 1 也是二重，但只有水平方向，缺少第二根基。</p><h4>对称矩阵为什么特别？</h4><p>实对称矩阵总能找到标准正交特征基，而且特征值都为实数。不同特征值的特征向量正交；同一个特征空间内，也可以选择正交基。</p>'+formula('A = QΛQᵀ　→　Ax = Σᵢ λᵢ(qᵢᵀx)qᵢ')+'<h4>图中的“偏离程度”</h4><p>实验用 |vₓ(Av)ᵧ−vᵧ(Av)ₓ|/(‖v‖‖Av‖) 衡量偏离，等于两箭头夹角正弦的绝对值。它接近零时，两者接近共线；若 Av=0，单独按零特征值处理。接近共线的交互提示不是精确数学证明。</p><h4>矩阵反复作用</h4><p>若初始状态在特征方向上，Aᵏv=λᵏv。离散线性系统所有特征值模长小于 1 才渐近稳定。边界上还要检查 Jordan 块，不能只看最大特征值。</p>',
+ challenge:['把箭头反向放大两倍，还是特征向量吗？','选择“负特征值”观察反向的情形。',['是，λ = −2','不是，必须同向','只有长度为 1 才是'],0,'特征向量只要求留在同一条直线上。负特征值允许反向；零向量本身不能作为特征向量。']},
+ {id:'composition',name:'复合与顺序',english:'COMPOSITION & NONCOMMUTATIVITY',title:'为什么 AB 和 BA 通常不是一回事？',subtitle:'同一张网格，依次经过旋转与拉伸。两边只交换顺序，终点就可能不同。',
+ defaults:{A:[1.8,0,0,.6],B:rotation(Math.PI/4),v:[1.5,.8]},presets:[['拉伸 × 旋转',[1.8,0,0,.6],rotation(Math.PI/4)],['剪切 × 旋转',[1,1,0,1],rotation(Math.PI/3)],['两次轴向缩放',[2,0,0,.5],[.5,0,0,1.5]]],
+ steps:['同一个输入','先做右边的矩阵','再做左边的矩阵'],
+ cards:[
+ ['右边的矩阵先作用','<span class="math">ABx=A(Bx)</span>：B 离 x 最近，所以先执行 B，再执行 A。左图显示 B→A，右图显示 A→B。'],
+ ['拉伸方向取决于坐标轴','先把向量旋转，再沿固定水平轴拉伸；和先沿水平轴拉伸，再把结果旋转，改变的是不同的几何方向。终点不必相同。'],
+ ['有些特殊情形可以交换','两次沿相同坐标轴的缩放会交换，因为各方向只需把缩放倍数相乘。<strong>矩阵乘法有结合律，但通常没有交换律。</strong>']
+ ],
+ detail:'<h4>列向量约定决定阅读顺序</h4>'+formula('x → Bx → A(Bx) = (AB)x')+'<p>本实验使用列向量，因此从右向左读算子。它不是文字书写上的习惯，而是矩阵乘法维度与函数复合共同决定的。</p><h4>如何检查两个变换是否真的相同？</h4><p>只看一个测试向量不够：两种变换可能恰好在这个向量上重合。应检查它们对一组基的作用都相同，或直接验证 AB−BA=0。下方同时给出当前向量的输出距离与矩阵差的 Frobenius 范数。</p><h4>交换子的含义</h4>'+formula('[A,B] = AB − BA')+'<p>交换子为零，才表示这两个矩阵交换。图中输出距离为零只说明当前输入上看不出区别，不一定意味着整个变换可交换。</p><h4>求逆为什么倒序？</h4>'+formula('(AB)⁻¹ = B⁻¹A⁻¹')+'<p>要撤销“先 B 后 A”，必须先撤销 A，再撤销 B。就像先穿袜子再穿鞋，恢复时顺序相反。动画中每一段都用线性插值展示该步，不保证中途仍为旋转。</p>',
+ challenge:['ABx 的执行顺序是哪一个？','播放动画，注意中间阶段的标签。',['先 A，后 B','先 B，后 A','A 和 B 同时作用'],1,'ABx=A(Bx)。先得到 Bx，再把这个结果交给 A。']},
+ {id:'projection',name:'投影与拟合',english:'PROJECTION & LEAST SQUARES',title:'没有精确解时，为什么要垂直地落下？',subtitle:'把三维观测投影到一个二维平面。拖动图形旋转视角，Z 轴始终朝上。',
+ defaults:{slope:.45,b:[1.2,1,2.3],yaw:-.65,pitch:.55},presets:[['倾斜平面',.45,[1.2,1,2.3]],['水平平面',0,[1.3,1,2]],['观测在平面上',.5,[1.4,.8,.7]]],
+ steps:['观测离开列空间','沿垂线寻找最近点','读出最小二乘解'],
+ cards:[
+ ['列空间是所有可预测的输出','本实验的 A 有两列，<span class="math">a₁=(1,0,s)</span>、<span class="math">a₂=(0,1,0)</span>，所以 Ax 只能位于平面 z=sx 上。观测 b 在平面外时，Ax=b 无解。'],
+ ['误差最小时，残差垂直于平面','投影点 p 是平面上离 b 最近的点。残差 <span class="math">r=b−p</span> 与两列都正交，因此 <span class="math">Aᵀr=0</span>。图中的直角符号表示这个条件。'],
+ ['正规方程不是凭空来的','代入 <span class="math">p=A x̂</span>，便得到 <span class="math">AᵀA x̂=Aᵀb</span>。左边是坐标空间的方程，右图展示的是输出空间里的最近点。']
+ ],
+ detail:'<h4>本实验的精确解</h4>'+formula('a₁ = (1,0,s)ᵀ,　a₂ = (0,1,0)ᵀ')+formula('x̂₁ = (bₓ + s b_z)/(1+s²),　x̂₂ = bᵧ')+'<p>两列互相正交，所以可以分别计算投影系数。p=(x̂₁,x̂₂,sx̂₁)，r=b−p。图中的误差长度由真实三维距离计算，不是屏幕上的二维距离。</p><h4>为什么垂足最短？</h4><p>取平面上任何其他点 q，则 b−q=(b−p)+(p−q)。前者垂直于平面，后者位于平面，勾股定理给出：</p>'+formula('‖b−q‖² = ‖b−p‖² + ‖p−q‖² ≥ ‖b−p‖²')+'<h4>和直线拟合有什么关系？</h4><p>给 N 个样本拟合 y≈α+βt 时，A 的两列是全 1 向量与时间向量，b 是观测 y。它不是把纸面上的散点投到一条线，而是把 N 维观测向量投到 A 张成的二维列空间。这里用三维输出，是为了让这个几何关系能直接看见。</p><h4>唯一性与计算</h4><p>本实验两列始终线性无关，最小二乘系数唯一。一般 A 秩不足时，投影 p 仍唯一，但系数可以不唯一；伪逆选出最小范数的那一个。实际求解最小二乘通常优先 QR 或 SVD，避免形成 AᵀA 后条件数平方。</p>',
+ challenge:['最小二乘的残差 r 与什么正交？','转动视角，看残差线与平面的关系。',['与整个列空间','只与观测 b','与输入坐标 x̂'],0,'Aᵀr=0 表示残差与 A 的每一列正交，因此与整个列空间正交。']},
+ {id:'quadratic',name:'二次型',english:'QUADRATIC FORMS & DEFINITENESS',title:'正定为什么是一只碗，不定为什么是鞍面？',subtitle:'改变对称矩阵，看 z=xᵀAx 的曲面与等高线。转动视角，寻找上升或下降的方向。',
+ defaults:{A:[1,.35,.35,.8],v:[1,.7],yaw:-.65,pitch:.55},presets:[['正定：碗',[1,.35,.35,.8]],['不定：鞍面',[1,0,0,-1]],['半正定：槽',[1,0,0,0]],['负定：倒碗',[-1,0,0,-.7]]],
+ steps:['从原点看曲面','沿不同方向移动','用特征值判断形状'],
+ cards:[
+ ['二次型给每个方向一个高度','在平面上选 <span class="math">x=(x₁,x₂)</span>，高度为 <span class="math">q(x)=xᵀAx</span>。两个交叉位置共同产生 <span class="math">2a₁₂x₁x₂</span>。这里始终保持 A 对称。'],
+ ['正定要求每个非零方向都为正','不是只看两个坐标轴，也不是只看某一条轨迹。正定像碗，原点是严格最低点；半正定可以有平坦方向；不定同时有上升和下降方向。'],
+ ['特征向量就是曲面的主轴','沿特征方向 qᵢ，有 <span class="math">q(tqᵢ)=λᵢt²</span>。因此特征值的正负决定弯曲的方向，绝对值决定弯曲程度。对称矩阵的主轴可以选成正交。']
+ ],
+ detail:'<h4>展开二次型</h4>'+formula('q(x₁,x₂) = a x₁² + 2b x₁x₂ + d x₂²')+'<p>交叉项系数是 2b，不能把整个交叉项系数直接填进矩阵一个位置。滑动任意一个非对角元素时，另一个位置同步变化，以保持对称。</p><h4>为什么谱分解能判定形状？</h4>'+formula('A = QΛQᵀ,　x = Qy　⇒　xᵀAx = λ₁y₁² + λ₂y₂²')+'<p>Q 只旋转或反射坐标，消去交叉项。若 λ₁、λ₂ 均为正，每个非零方向高度都正；符号相反时，必有一个上升方向和一个下降方向。</p><h4>二阶正定判据</h4>'+formula('A 对称正定　⇔　a > 0 且 ad − b² > 0')+'<p>半正定要求 a≥0、d≥0、ad−b²≥0。不能仅把正定的顺序主子式条件改成“≥”：例如 diag(0,−1) 的顺序主子式都是零，但它并不半正定。</p><h4>等高线怎样读？</h4><p>正定矩阵的正高度等高线是椭圆；特征值较大的方向，同样距离带来更高代价，因此对应椭圆的短轴。不定时出现双曲线。右图零等高线、正高度与负高度使用不同颜色。</p><h4>关于三维视图</h4><p>为让各种曲面保持可见，纵向显示采用统一于当前矩阵的缩放；坐标刻度和数值仍表示真实 q 值。比较高低请看实时公式，不能仅凭不同预设下屏幕上的斜率比较特征值。</p>',
+ challenge:['一个方向上升、另一个方向下降，矩阵是什么类型？','选择“鞍面”，转动视角并拖动右图取样点。',['正定','半正定','不定'],2,'存在正、负两种二次型取值，等价于实对称矩阵同时有正特征值和负特征值。']},
+ {id:'svd',name:'奇异值分解',english:'SINGULAR VALUE DECOMPOSITION',title:'任意矩阵，都能拆成哪三个几何动作？',subtitle:'跟踪同一个圆和同一根向量：先换输入坐标，再沿轴缩放，最后放到输出方向。',
+ defaults:{A:[1.5,.8,.2,.9],v:[1.2,.8]},presets:[['一般矩阵',[1.5,.8,.2,.9]],['强弱方向',[2,.8,0,.2]],['秩为 1',[1,2,.5,1]],['含反射',[-1,.5,0,1]]],
+ steps:['先作用 Vᵀ','再作用 Σ','最后作用 U'],
+ cards:[
+ ['Vᵀ：换到输入主方向','右奇异向量 v₁、v₂ 告诉我们输入空间中的特殊正交方向。先应用 Vᵀ，把这两个方向对齐到坐标轴，单位圆仍是圆。'],
+ ['Σ：沿两个轴分别缩放','σ₁、σ₂ 是非负奇异值。单位圆变成椭圆，半轴长度就是奇异值；若 σ₂=0，椭圆压成线，秩降为 1。'],
+ ['U：把结果放到输出方向','左奇异向量 u₁、u₂ 指定输出主轴。最终结果与直接计算 Ax 完全一致。<strong>SVD 不要求矩阵可对角化，长方形矩阵也可以分解。</strong>']
+ ],
+ detail:'<h4>最重要的两个等式</h4>'+formula('A = UΣVᵀ　　Avᵢ = σᵢuᵢ')+'<p>注意 vᵢ 在输入空间，uᵢ 在输出空间。它们不必是同一方向，所以奇异值不是特征值：特征值要求输入、输出留在同一条直线上。</p><h4>怎样计算？</h4>'+formula('AᵀA = VΣ²Vᵀ,　σᵢ = √λᵢ(AᵀA)')+'<p>AᵀA 对称半正定，能选一组标准正交特征向量作 V。对 σᵢ&gt;0，用 uᵢ=Avᵢ/σᵢ 得到输出方向。本实验直接计算当前矩阵的真实 SVD，不使用固定的示意椭圆。</p><h4>秩与伪逆</h4>'+formula('A⁺ = VΣ⁺Uᵀ')+'<p>非零奇异值取倒数，零保留为零。它在能恢复的方向上撤销缩放，不能恢复的方向不凭空补回信息。A⁺b 是最小二乘解中范数最小的一个。</p><h4>条件数与降维</h4>'+formula('κ₂(A) = σ₁/σ₂　（A 可逆）')+'<p>若 σ₂ 很小，椭圆被压得很扁，逆向恢复会放大微小误差。只保留 σ₁u₁v₁ᵀ，就得到最佳秩一近似；被删掉方向的作用强度是 σ₂。</p><h4>动画中的旋转与反射</h4><p>Vᵀ 和 U 在分解终点是正交矩阵。纯旋转阶段用角度插值，保持圆的长度。若 U 包含反射，连续演示必然经过一次压平：不存在始终保持正交、却把定向由正改成负的连续路径。每个阶段终点仍与精确 SVD 完全一致。</p><h4>重复奇异值</h4><p>两个奇异值相同时，主方向不是唯一的；拖动参数经过这个位置，方向可能切换，但 UΣVᵀ 的乘积仍连续且等于 A。不要把某一组奇异向量误认为唯一答案。</p>',
+ challenge:['σ₂ 变成 0，单位圆会变成什么？','选择“秩为 1”，播放完整分解。',['一条线段','更大的圆','一定是一个点'],0,'一个方向完全压成零，另一个方向仍保留，圆变成线段。只有两个奇异值都为零时才变成一个点。']}
+];
+let topicIndex=0,S={},playing=false,tour=false,frame=0,lastTime=0,lastRender=0,drag=null,selectedPreset=-1,stepIndex=-1,tourTimer=0;
+const fresh=i=>({...JSON.parse(JSON.stringify(lessons[i].defaults)),t:lessons[i].id==='calculus'?0:1,grid:true,circle:true,zoom:1,rankOne:false});
+function slider(key,label,value,min,max,step=.05){
+ return '<div class="rangegroup"><label for="p_'+key+'">'+label+'<output id="o_'+key+'">'+fmt(value)+'</output></label><input id="p_'+key+'" data-param="'+key+'" type="range" value="'+value+'" min="'+min+'" max="'+max+'" step="'+step+'"></div>';
+}
+function matrixEditor(label,A,key='A'){
+ return '<div class="matrixeditor"><span class="matrixname">'+label+'</span><div class="matrixgrid">'+A.map((v,i)=>'<input type="number" inputmode="decimal" step="0.05" min="-3" max="3" value="'+Number(v.toFixed(3))+'" aria-label="'+label+' 第'+(Math.floor(i/2)+1)+'行第'+(i%2+1)+'列" data-matrix="'+key+'" data-index="'+i+'">').join('')+'</div></div>';
+}
+function renderControls(){
+ if(advancedIds.includes(lessons[topicIndex].id)){renderAdvancedControls();return;}
+ const l=lessons[topicIndex],id=l.id;let h='<div class="controltitle"><span>'+(id==='basis'?'编辑基矩阵':id==='projection'?'平面与观测':'实验参数')+'</span><span class="dimension">'+(id==='projection'?'3 × 2':'2 × 2')+'</span></div>';
+ if(S.A){h+=matrixEditor(id==='basis'?'P':'A',S.A);}
+ if(id==='projection'){
+  h+='<div class="helptext">列空间：z = s x。<br>拖动画布改变视角，滑块改变观测。</div>';
+  h+=slider('slope','平面倾斜 s',S.slope,-1.5,1.5)+slider('bx','观测 bₓ',S.b[0],-2.5,2.5)+slider('by','观测 bᵧ',S.b[1],-2.5,2.5)+slider('bz','观测 b_z',S.b[2],-2.5,3);
+ }else if(id==='composition'){
+  h+='<div class="helptext">A：第二步（左图）<br>B：第一步（左图）</div>'+matrixEditor('B',S.B,'B');
+ }else if(id==='eigen'){
+  h+='<div class="helptext">拖动紫色端点改变方向。虚线标记真实的特征直线。</div>'+slider('angle','起始角度 θ',S.angle,-180,180,1);
+ }else if(id==='quadratic'){
+  h+='<div class="helptext">对称矩阵：两个非对角元素自动同步。右图拖点，左图旋转视角；播放时从取样起点沿圆周检查不同方向。</div>';
+  h+=slider('vx','起点 x₁',S.v[0],-2.3,2.3)+slider('vy','起点 x₂',S.v[1],-2.3,2.3);
+ }else{
+  h+='<div class="helptext">'+(id==='basis'?'拖动左图的基和向量；<br>右图展示新坐标。':'拖动左图紫色端点；<br>右图基端点可编辑矩阵。')+'</div>';
+  h+=slider('vx','输入 x₁',S.v[0],-2.5,2.5)+slider('vy','输入 x₂',S.v[1],-2.5,2.5);
+ }
+ h+='<div class="presetlabel">试一组有代表性的情形</div><div class="presets">'+l.presets.map((p,i)=>'<button class="preset'+(i===selectedPreset?' selected':'')+'" data-preset="'+i+'">'+p[0]+'</button>').join('')+'</div>';
+ if(id==='svd')h+='<label class="toggle"><input type="checkbox" data-toggle="rankOne" '+(S.rankOne?'checked':'')+'>只保留最大奇异值（秩一近似）</label>';
+ if(id==='projection'||id==='quadratic')h+='<button class="btn small" data-camera-reset style="margin-top:12px">恢复三维视角</button>';
+ else if(id!=='basis') h+='<label class="toggle"><input type="checkbox" data-toggle="circle" '+(S.circle?'checked':'')+'>显示单位圆</label>';
+ h+='<div class="selectrow"><label for="zoom">观察范围</label><select id="zoom" data-zoom><option value=".75" '+(S.zoom===.75?'selected':'')+'>更大范围</option><option value="1" '+(S.zoom===1?'selected':'')+'>标准</option><option value="1.3" '+(S.zoom===1.3?'selected':'')+'>放大</option></select></div>';
+ $('controls').dataset.topic=id;$('controls').innerHTML=h;
+}
+function syncControls(){
+ document.querySelectorAll('[data-matrix]').forEach(el=>{if(document.activeElement!==el)el.value=Number(S[el.dataset.matrix][Number(el.dataset.index)].toFixed(3));});
+ const vals={...S,vx:S.v?.[0],vy:S.v?.[1],angle:S.angle,slope:S.slope,bx:S.b?.[0],by:S.b?.[1],bz:S.b?.[2]};
+ for(const [k,v]of Object.entries(vals)){if(typeof v!=='number')continue;const input=$('p_'+k),out=$('o_'+k);if(input&&document.activeElement!==input)input.value=v;if(out)out.textContent=fmt(v);}
+ document.querySelectorAll('[data-vector]').forEach(el=>{if(document.activeElement!==el)el.value=S[el.dataset.vector][Number(el.dataset.component)];});
+ document.querySelectorAll('[data-preset]').forEach(b=>b.classList.toggle('selected',Number(b.dataset.preset)===selectedPreset));
+}
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+function svgStart(key,title,w=480,h=370){return '<svg viewBox="0 0 '+w+' '+h+'" data-plot="'+key+'" role="img" aria-label="'+esc(title)+'"><title>'+esc(title)+'</title><defs><clipPath id="clip_'+key+'"><rect x="10" y="6" width="'+(w-20)+'" height="'+(h-12)+'" rx="3"/></clipPath></defs><g clip-path="url(#clip_'+key+')">';}
+const svgEnd=()=>'</g></svg>';
+function line(a,b,color,width=1,dash='',opacity=1){return '<line x1="'+a[0]+'" y1="'+a[1]+'" x2="'+b[0]+'" y2="'+b[1]+'" stroke="'+color+'" stroke-width="'+width+'" '+(dash?'stroke-dasharray="'+dash+'" ':'')+'opacity="'+opacity+'"/>';}
+function poly(points,fill,stroke='none',width=1,opacity=1){return '<polygon points="'+points.map(p=>p.join(',')).join(' ')+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+width+'" opacity="'+opacity+'"/>';}
+function textAt(p,text,color=C.ink,size=12,anchor='start',cls=''){return '<text x="'+p[0]+'" y="'+p[1]+'" fill="'+color+'" text-anchor="'+anchor+'" style="font-size:'+size+'px"'+(cls?' class="'+cls+'"':'')+'>'+esc(text)+'</text>';}
+function circle(p,r,fill,stroke='none',width=1){return '<circle cx="'+p[0]+'" cy="'+p[1]+'" r="'+r+'" fill="'+fill+'" stroke="'+stroke+'" stroke-width="'+width+'"/>';}
+function arrow(a,b,color,label='',handle='',offset=[12,-10],dashed=false){
+ const d=sub(b,a),len=norm(d);let h=line(a,b,color,2.4,dashed?'6 4':'',dashed?.5:1);
+ if(len>5){const u=scale(d,1/len),v=perp(u);h+=poly([b,add(sub(b,scale(u,10)),scale(v,4)),sub(sub(b,scale(u,10)),scale(v,4))],color);}
+ else h+=circle(b,3,color);
+ if(handle)h+='<g data-handle="'+handle+'" role="button" tabindex="0" aria-label="'+esc(label+'，可拖动或用方向键调整')+'">'+circle(b,20,'transparent')+circle(b,6,'#fff',color,2.2)+'</g>';
+ if(label)h+=textAt(add(b,offset),label,color,14,'start','pointlabel');
+ return h;
+}
+function coordinate2(w=480,h=370,units=48){const u=units*S.zoom;return{w,h,u,p:v=>[w/2+v[0]*u,h/2-v[1]*u]};}
+function plane2(key,title,M=I,options={}){
+ const w=options.mini?280:480,hgt=options.mini?300:370;const {p,u}=coordinate2(w,hgt,options.mini?40:48);let h=svgStart(key,title,w,hgt);
+ for(let k=-8;k<=8;k++){h+=line(p([k,-8]),p([k,8]),k===0?'#b8c2d0':'#e9edf3',k===0?1.2:.8);h+=line(p([-8,k]),p([8,k]),k===0?'#b8c2d0':'#e9edf3',k===0?1.2:.8);}
+ if(options.transformedGrid){for(let k=-6;k<=6;k++){h+=line(p(mv(M,[k,-7])),p(mv(M,[k,7])),'#7eaaa9',.9,'',.38);h+=line(p(mv(M,[-7,k])),p(mv(M,[7,k])),'#7eaaa9',.9,'',.38);}}
+ for(let k=-4;k<=4;k++)if(k){h+=textAt(add(p([k,0]),[0,16]),k,'#a4adbc',10,'middle');h+=textAt(add(p([0,k]),[-9,4]),k,'#a4adbc',10,'end');}
+ h+=textAt([w-15,hgt/2-7],'x','#949dac',13)+textAt([w/2+10,17],'y','#949dac',13);
+ if(options.unitSquare!==false){h+=poly([[0,0],[1,0],[1,1],[0,1]].map(v=>p(mv(M,v))),'#e7e0f4',C.purple,1.2,.6);}
+ if(S.circle&&options.circle!==false){
+  const pts=Array.from({length:101},(_,i)=>p(mv(M,[Math.cos(i*2*Math.PI/100),Math.sin(i*2*Math.PI/100)])));
+  h+='<polyline points="'+pts.map(v=>v.join(',')).join(' ')+'" fill="none" stroke="'+C.teal+'" stroke-width="1.8" opacity=".75"/>';
+ }
+ if(options.axes!==false){h+=arrow(p([0,0]),p(mv(M,[1,0])),C.blue,options.basisNames?.[0]||'a₁',options.draggableBasis?'a1':'',[11,-11]);h+=arrow(p([0,0]),p(mv(M,[0,1])),C.orange,options.basisNames?.[1]||'a₂',options.draggableBasis?'a2':'',[-25,-12]);}
+ if(options.nullDirection){const n=options.nullDirection;h+=line(p(scale(n,-7)),p(scale(n,7)),C.pink,2,'7 5',.65);h+=textAt(p(add(scale(n,2.3),[.2,.25])),'ker A',C.pink,13);}
+ if(options.lines){for(const [v,color,label]of options.lines){h+=line(p(scale(v,-7)),p(scale(v,7)),color,1.5,'6 5',.65);if(label)h+=textAt(p(add(scale(v,2.65),[.12,.15])),label,color,12);}}
+ if(options.segments){for(const seg of options.segments)h+=line(p(seg[0]),p(seg[1]),seg[2]||C.gray,1.6,'5 4');}
+ if(options.extra)h+=options.extra(p);
+ if(options.vector){h+=arrow(p([0,0]),p(options.vector),options.vectorColor||C.purple,options.vectorLabel||'x',options.draggableVector?'v':'',options.vectorOffset||[12,20]);}
+ h+=circle(p([0,0]),3,'#8090a7');
+ return h+svgEnd();
+}
+function plot(title,svg,foot='',tag='',active=false){return '<div class="plot'+(active?' stageactive':'')+'"><div class="plothead"><strong>'+title+'</strong><span class="tag">'+tag+'</span></div>'+svg+'<div class="plotfoot">'+foot+'</div></div>';}
+function badge(label,value){return '<span class="badge">'+label+' <strong>'+value+'</strong></span>';}
+function setObs(title,body){$('observationTitle').textContent=title;$('observationText').textContent=body;}
+function setLegend(items){$('legend').innerHTML=items.map(([name,color])=>'<span><i style="background:'+color+'"></i>'+name+'</span>').join('');}
+function projectionData(){
+ const s=S.slope,b=S.b,x=[(b[0]+s*b[2])/(1+s*s),b[1]],p=[x[0],x[1],s*x[0]],r=sub(b,p);
+ return{x,p,r,A:[1,0,0,1,s,0],normal:unit([-s,0,1])};
+}
+function projector(w=640,h=390,zscale=1,fit=1){
+ const u=65*S.zoom*fit,yaw=S.yaw??-.65,pitch=S.pitch??.55,c=Math.cos(yaw),s=Math.sin(yaw);
+ return{p:v=>[w/2+u*(c*v[0]-s*v[1]),h*.59-u*(Math.sin(pitch)*(s*v[0]+c*v[1])+Math.cos(pitch)*v[2]*zscale)],depth:v=>(s*v[0]+c*v[1])*Math.cos(pitch)-v[2]*zscale*Math.sin(pitch),u};
+}
+function base3(p,zscale=1,extent=2.5){
+ let h='';
+ for(let k=-2;k<=2;k++){h+=line(p([k,-extent,0]),p([k,extent,0]),'#e0e5ec',.8);h+=line(p([-extent,k,0]),p([extent,k,0]),'#e0e5ec',.8);}
+ h+=arrow(p([-extent,0,0]),p([extent,0,0]),'#a1aaba','x','',[7,6]);h+=arrow(p([0,-extent,0]),p([0,extent,0]),'#a1aaba','y','',[7,6]);h+=arrow(p([0,0,0]),p([0,0,2.6/zscale]),'#8894a8','z','',[8,-3]);
+ h+=textAt(add(p([0,0,1/zscale]),[8,4]),fmt(1/zscale,1),'#9aa4b4',11);
+ for(const k of [-2,-1,1,2]){h+=textAt(add(p([k,0,0]),[0,16]),k,'#8e9bae',10,'middle');h+=textAt(add(p([0,k,0]),[10,5]),k,'#8e9bae',10);}
+ return h;
+}
+function projectionSVG(){
+ const d=projectionData(),s=S.slope,{p}=projector(640,390,1,1/Math.max(1,Math.abs(s)*.9));
+ let h=svgStart('projection3','三维最小二乘投影，可拖动旋转；z 轴向上',640,390);
+ h+=base3(p);
+ const verts=[[-2.4,-2.2,-2.4*s],[2.4,-2.2,2.4*s],[2.4,2.2,2.4*s],[-2.4,2.2,-2.4*s]];
+ h+=poly(verts.map(p),'#dceeea','#8ebfb5',1.1,.75);
+ for(let k=-2;k<=2;k++){h+=line(p([k,-2.2,k*s]),p([k,2.2,k*s]),'#78aaa2',.8,'',.55);h+=line(p([-2.4,k,-2.4*s]),p([2.4,k,2.4*s]),'#78aaa2',.8,'',.55);}
+ h+=arrow(p([0,0,0]),p([1,0,s]),C.blue,'a₁','',[12,2]);
+ h+=arrow(p([0,0,0]),p([0,1,0]),C.orange,'a₂','',[-24,-8]);
+ h+=arrow(p([0,0,0]),p(S.b),C.purple,'b','',[12,-10]);
+ h+=arrow(p([0,0,0]),p(d.p),C.teal,'p = A x̂','',[12,20]);
+ h+=line(p(S.b),p(d.p),C.pink,2,'6 5');
+ const moving=mix(S.b,d.p,S.t);h+=circle(p(moving),7,'#fff',C.pink,2);
+ if(norm(d.r)>.03){
+  const nr=unit(d.r),planeDir=unit([1,0,s]),z=.22;
+  h+='<polyline points="'+[add(d.p,scale(nr,z)),add(add(d.p,scale(nr,z)),scale(planeDir,z)),add(d.p,scale(planeDir,z))].map(v=>p(v).join(',')).join(' ')+'" fill="none" stroke="'+C.pink+'" stroke-width="1.3"/>';
+  h+=textAt(add(p(mix(S.b,d.p,.52)),[12,2]),'r = b − p',C.pink,13,'start','pointlabel');
+ }
+ h+=textAt(p([-1.7,1.9,-1.7*s]),'Col(A)',C.teal,14,'start','pointlabel');
+ h+=circle(p([0,0,0]),3,'#6e8198');
+ return h+svgEnd();
+}
+function quadraticSVG(v){
+ const E=eigen(S.A),zs=.25/Math.max(1,...E.values.map(Math.abs)),{p,depth}=projector(480,370,zs);
+ const q=(x,y)=>S.A[0]*x*x+2*S.A[1]*x*y+S.A[3]*y*y;
+ let h=svgStart('quadratic3','二次型三维曲面；拖动旋转，z 轴向上');
+ h+=base3(p,zs,2.5);
+ const tiles=[];
+ for(let i=0;i<20;i++)for(let j=0;j<20;j++){
+  const x=-2+i*.2,y=-2+j*.2,vs=[[x,y,q(x,y)],[x+.2,y,q(x+.2,y)],[x+.2,y+.2,q(x+.2,y+.2)],[x,y+.2,q(x,y+.2)]],z=q(x+.1,y+.1),strength=clamp(Math.abs(z)*zs/2,0,1);
+  const color=z>=0?'hsl('+(220+25*strength)+', '+(38+12*strength)+'%, '+(91-28*strength)+'%)':'hsl(20, '+(50+15*strength)+'%, '+(91-22*strength)+'%)';
+  tiles.push({d:depth([x+.1,y+.1,z]),h:poly(vs.map(p),color,'#7383a166',.5,.89)});
+ }
+ tiles.sort((a,b)=>b.d-a.d);h+=tiles.map(t=>t.h).join('');
+ const z=q(v[0],v[1]);
+ h+=line(p([v[0],v[1],0]),p([v[0],v[1],z]),C.pink,1.5,'5 4');
+ h+=circle(p([v[0],v[1],z]),6,'#fff',C.pink,2);
+ h+=textAt(add(p([v[0],v[1],z]),[11,-10]),'q(x) = '+fmt(z),C.pink,13,'start','pointlabel');
+ h+=arrow(p([0,0,0]),p([0,0,2.6/zs]),'#8894a8','z','',[8,-3]);
+ return h+svgEnd();
+}
+function contours(p,A){
+ const q=v=>dot(v,mv(A,v)),levels=[-3,-1,0,1,3],step=.22;let h='';
+ for(const level of levels){
+  let path='';
+  for(let i=0;i<36;i++)for(let j=0;j<32;j++){
+   const x=-4+i*step,y=-3.5+j*step,pts=[[x,y],[x+step,y],[x+step,y+step],[x,y+step]],vals=pts.map(q),hits=[];
+   for(let k=0;k<4;k++){const l=(k+1)%4,v1=vals[k],v2=vals[l];if((v1<=level&&v2>level)||(v2<=level&&v1>level)){hits.push(mix(pts[k],pts[l],(level-v1)/(v2-v1)));}}
+   for(let k=0;k+1<hits.length;k+=2){const a=p(hits[k]),b=p(hits[k+1]);path+='M'+a[0]+','+a[1]+'L'+b[0]+','+b[1];}
+  }
+  h+='<path d="'+path+'" fill="none" stroke="'+(level===0?'#8e99aa':level>0?C.blue:C.orange)+'" stroke-width="'+(level===0?1.6:1.2)+'" opacity=".67"'+(level===0?' stroke-dasharray="4 3"':'')+'/>';
+ }
+ return h;
+}
+function getEigenVector(){const t=playing||S.t<1?S.angle*Math.PI/180+S.t*2*Math.PI:S.angle*Math.PI/180;return[Math.cos(t)*1.6,Math.sin(t)*1.6];}
+function renderScene(){
+ if(advancedIds.includes(lessons[topicIndex].id)){renderAdvancedScene();return;}
+ const l=lessons[topicIndex],id=l.id,visual=$('visuals');visual.className='visuals'+(id==='projection'?' single':id==='svd'?' four':'');let h='',eq='';
+ if(id==='transform'||id==='determinant'){
+  const M=mix(I,S.A,S.t),y=mv(M,S.v),r=rank(S.A);let n=null;
+  if(id==='determinant'&&r===1)n=unit(perp(norm([S.A[0],S.A[1]])>=norm([S.A[2],S.A[3]])?[S.A[0],S.A[1]]:[S.A[2],S.A[3]]));
+  h=plot('输入空间',plane2('input','输入平面与可拖动的向量',I,{basisNames:['e₁','e₂'],vector:S.v,draggableVector:true,nullDirection:n,extra:r===0&&id==='determinant'?p=>textAt(p([-3,2.8]),'ker A = 整个输入平面',C.pink,13):null}),'拖动紫色端点改变 x','ℝ²');
+  h+=plot('变换后的空间',plane2('output','矩阵作用后的网格与向量',M,{transformedGrid:true,draggableBasis:true,vector:y,vectorLabel:'A(t)x',extra:id==='determinant'?p=>{
+   const verts=[[0,0],[1,0],[1,1],[0,1]].map(v=>p(mv(M,v)));let s='';for(let i=0;i<4;i++)s+=arrow(verts[i],mix(verts[i],verts[(i+1)%4],.65),C.purple);return s;
+  }:null}),'蓝 / 橙端点就是矩阵的两列','ℝ²');
+  eq=token('A(t)',M)+op('×')+token('x',S.v,1,C.purple)+op('=')+token('y',y,1,C.teal);
+  if(id==='determinant'){
+   eq+='<div class="badges">'+badge('目标 det A',fmt(det(S.A)))+badge('目标数值秩',r)+badge('dim ker',2-r)+'</div>';
+   setObs(r===2?'两个输入方向都保留了':r===1?'一个输入方向消失，整个平面落到一条直线上':'所有方向都被压成一个点','目标矩阵的有向面积倍率为 '+fmt(det(S.A))+'，实际面积倍率为 '+fmt(Math.abs(det(S.A)))+'。当前动画矩阵 det A(t) = '+fmt(det(M))+'。'+(r===1?'左图粉色虚线是目标矩阵的零空间；它与输出像直线属于不同的空间。':r===0?'任意输入都会变成零；秩为 0，零空间维数为 2。':'把两列拖到共线的位置，或选择“压成直线”，观察秩发生变化。'));
+  }else setObs('每个点都遵守同一条规则：x₁ × 第一列 + x₂ × 第二列','当前输出为 ('+fmt(y[0])+', '+fmt(y[1])+')。播放时展示 A(t)=(1−t)I+tA；终点才是你设置的目标矩阵 A。原点始终不动，直线仍映成直线或点。');
+  setLegend([['第一列 / e₁',C.blue],['第二列 / e₂',C.orange],['输入与输出',C.purple]]);
+ }else if(id==='basis'){
+  const inv=inverse(S.A),c=inv?mv(inv,S.v):null,b1=[S.A[0],S.A[2]],b2=[S.A[1],S.A[3]];
+  const part=c?scale(b1,c[0]):[0,0],progress=S.t<=.5?scale(part,S.t*2):mix(part,S.v,(S.t-.5)*2);
+  h=plot('同一个几何向量',plane2('basisworld','标准空间内的基与固定向量',S.A,{transformedGrid:true,draggableBasis:true,vector:S.v,draggableVector:true,basisNames:['b₁','b₂'],circle:false,segments:c?[[part,S.v,C.orange],[scale(b2,c[1]),S.v,C.blue]]:[],extra:p=>c?arrow(p([0,0]),p(progress),C.teal,'拼接','',[10,-13],false):''}),'拖基：改描述；拖紫色点：改对象','标准坐标');
+  h+=plot('用这组基描述',c?plane2('basiscoords','新坐标 c 所在的坐标图',I,{vector:c,vectorLabel:'c',basisNames:['(1,0)','(0,1)'],circle:false,unitSquare:false,extra:p=>textAt([20,32],'这里的轴代表 b₁、b₂ 的系数',C.gray,12)}):'<div class="ploterror">两列已共线，不能构成二维的基。坐标可能无解，也可能不唯一；P⁻¹ 不存在。</div>',c?'c₁ = '+fmt(c[0])+'，c₂ = '+fmt(c[1]):'将其中一根基拖离共线位置','新坐标');
+  eq=c?token('x',S.v,1)+op('=')+token('P',S.A)+op('×')+token('c',c,1):'<div class="mathline">det P = 0，不能求唯一的新坐标</div>';
+  setObs(c?'几何位置不变，但坐标换成了 ('+fmt(c[0])+', '+fmt(c[1])+')':'这两根箭头不能组成二维坐标系',c?'新坐标不是“新的向量”，而是沿 b₁、b₂ 的组合系数。左图虚线展示平行四边形分解；点击播放，先沿 b₁ 走，再沿 b₂ 补上。'+(norm(c)>6?'当前基接近共线，坐标系数较大；缩小观察范围可以看到更多。':''):'det P = 0。两列张成的空间不足二维，无法用它们唯一表示整个平面里的向量。');
+  setLegend([['基 b₁',C.blue],['基 b₂',C.orange],['固定向量 x',C.purple],['分量拼接',C.teal]]);
+ }else if(id==='eigen'){
+  const E=eigen(S.A),v=getEigenVector(),y=mv(S.A,v),lines=E.real&&!E.scalar?E.vectors.slice(0,E.defective?1:2).map((u,i)=>[u,i?C.orange:C.teal,'λ = '+fmt(E.values[i])]):[];
+  h=plot('寻找不偏离的方向',plane2('eigeninput','输入向量与特征方向',I,{vector:v,draggableVector:true,unitSquare:false,axes:false,lines,extra:p=>arrow(p([0,0]),p(y),C.blue,'Av','',[12,-14],true)}),'拖动紫色端点改变方向','输入与输出叠加');
+  h+=plot('变换后的单位圆',plane2('eigenoutput','单位圆在矩阵变换下的形状',S.A,{transformedGrid:false,vector:y,vectorLabel:'Av',vectorColor:C.blue,unitSquare:false,axes:false,lines,extra:p=>arrow(p([0,0]),p(v),C.purple,'v','',[12,22],true)}),E.scalar?'每个非零方向都是特征方向':E.real?(E.defective?'只有一条独立特征直线':'虚线为两条真实特征直线'):'旋转 90°：实平面中没有特征直线','A v');
+  const err=norm(y)<1e-8?0:Math.abs(v[0]*y[1]-v[1]*y[0])/(norm(v)*norm(y)),lam=dot(v,y)/dot(v,v);
+  eq=token('A',S.A)+op('×')+token('v',v,1)+op('=')+token('Av',y,1)+ '<div class="badges">'+badge('共线偏离',fmt(err,3))+'</div>';
+  setObs(E.scalar?'每个非零方向都是特征方向':!E.real?'没有实特征方向：实向量都被转离原来的直线':err<.018?'你找到了接近特征直线的方向':'这个方向发生了偏转，还不是特征方向',!E.real?'当前特征值为 '+fmt(E.realPart)+' ± '+fmt(E.imag)+'i。没有实特征向量，并不代表不存在复特征值。':E.scalar?'A 是标量矩阵，所有非零向量都按 '+fmt(E.values[0])+' 倍缩放。':(E.defective?'这个重特征值只有一个独立特征方向，不能在二维实空间对角化。':'特征值为 '+E.values.map(x=>fmt(x)).join('、')+'。')+(err<.018?'当前沿方向的带符号缩放约为 '+fmt(lam)+'。':'“共线偏离”越接近 0，越接近同向或反向共线；不要求同向。'));
+  setLegend([['输入 v',C.purple],['输出 Av',C.blue],['特征直线',C.teal]]);
+ }else if(id==='composition'){
+  const phase=S.t*2,M1=phase<=1?mix(I,S.B,phase):mm(mix(I,S.A,phase-1),S.B),M2=phase<=1?mix(I,S.A,phase):mm(mix(I,S.B,phase-1),S.A);
+  const AB=mm(S.A,S.B),BA=mm(S.B,S.A),v1=mv(M1,S.v),v2=mv(M2,S.v),difference=norm(sub(mv(AB,S.v),mv(BA,S.v))),commutator=norm(sub(AB,BA));
+  h=plot('先 B，再 A',plane2('composeAB','先 B 后 A 的复合变换',M1,{transformedGrid:true,vector:v1,vectorLabel:phase<1?'B(t)x':'A(t)Bx',axes:false}),'ABx：右侧 B 先作用',phase<=1?'阶段 1 / 2':'阶段 2 / 2');
+  h+=plot('先 A，再 B',plane2('composeBA','先 A 后 B 的复合变换',M2,{transformedGrid:true,vector:v2,vectorLabel:phase<1?'A(t)x':'B(t)Ax',axes:false}),'BAx：右侧 A 先作用',phase<=1?'阶段 1 / 2':'阶段 2 / 2');
+  eq=token('AB',AB)+op('≟')+token('BA',BA)+'<div class="badges">'+badge('终点距离',fmt(difference))+badge('‖AB − BA‖F',fmt(commutator))+'</div>';
+  setObs(commutator<1e-7?'这一组变换恰好可以交换':'交换先后顺序，整体变换就改变了','当前阶段 '+(phase<=1?'1：左边先执行 B，右边先执行 A。':'2：左边再执行 A，右边再执行 B。')+' 两个最终输出的距离为 '+fmt(difference)+'。'+(difference<1e-6&&commutator>1e-6?'这个向量恰好看不出差别，但矩阵仍不交换。':'矩阵差为零才表示对所有输入都没有区别。'));
+  setLegend([['变换后的网格',C.teal],['同一输入的输出',C.purple]]);
+ }else if(id==='projection'){
+  const d=projectionData();h=plot('观测向量投影到列空间',projectionSVG(),'拖动空白处旋转视角 · 粉色虚线为三维垂直残差','ℝ³ 输出空间');
+  eq=token('x̂',d.x,1)+op('→')+token('p',d.p,1)+op('+')+token('r',d.r,1)+op('=')+token('b',S.b,1);
+  setObs(norm(d.r)<1e-7?'观测已经在列空间中，存在精确解':'观测落在平面外，只能寻找最近的预测','真实残差长度 ‖r‖ = '+fmt(norm(d.r))+'；a₁ᵀr = '+fmt(d.r[0]+S.slope*d.r[2],5)+'，a₂ᵀr = '+fmt(d.r[1],5)+'。白色动点沿垂直方向从观测 b 移到投影 p。');
+  setLegend([['列空间平面',C.teal],['观测 b',C.purple],['垂直残差',C.pink]]);
+ }else if(id==='quadratic'){
+  const E=eigen(S.A),v=mv(rotation(S.t*2*Math.PI),S.v),q=dot(v,mv(S.A,v)),min=Math.min(...E.values),max=Math.max(...E.values);
+  const type=min>1e-7?'正定 · 碗':max< -1e-7?'负定 · 倒碗':min< -1e-7&&max>1e-7?'不定 · 鞍面':min>=-1e-7&&max>1e-7?'半正定 · 有平坦方向':max<=1e-7&&min< -1e-7?'半负定 · 有平坦方向':'零二次型';
+  h=plot('高度 z = xᵀAx',quadraticSVG(v),'拖动旋转 · 竖向已缩放以完整呈现曲面','三维曲面');
+  h+=plot('从上方看等高线',plane2('contours','二次型等高线与可拖动取样点',I,{unitSquare:false,axes:false,circle:false,vector:v,draggableVector:true,vectorLabel:'x',lines:E.vectors.map((u,i)=>[u,i?C.orange:C.teal,'λ'+(i+1)+'='+fmt(E.values[i])]),extra:p=>contours(p,S.A)}),'蓝：正高度 · 橙：负高度 · 虚线：主轴','x₁ x₂ 平面');
+  eq='<div class="mathline">q(x) = '+fmt(S.A[0])+'x₁² '+(S.A[1]>=0?'+ ':'− ')+fmt(Math.abs(2*S.A[1]))+'x₁x₂ '+(S.A[3]>=0?'+ ':'− ')+fmt(Math.abs(S.A[3]))+'x₂² = <strong style="color:'+C.pink+'">'+fmt(q)+'</strong></div><div class="badges">'+badge('λ₁',fmt(E.values[0]))+badge('λ₂',fmt(E.values[1]))+'</div>';
+  setObs(type,'当前取样点 ('+fmt(v[0])+', '+fmt(v[1])+') 的真实高度为 '+fmt(q)+'。'+(min<0&&max>0?'两个特征值异号，因此一定能找到高度为正和高度为负的方向。':min>0?'全部特征值为正，所以所有非零方向都在原点之上。':'沿零特征值方向是平的；正定要求每个非零方向都严格为正。'));
+  setLegend([['正高度',C.blue],['负高度',C.orange],['当前取样',C.pink]]);
+ }else if(id==='svd'){
+  const d=svd2(S.A),sigma=S.rankOne?[d.s[0],0]:d.s,sm=[sigma[0],0,0,sigma[1]],stage=S.t*3;
+  const M0=I,M1=orthogonalPartial(d.VT,clamp(stage,0,1)),M2=mm(mix(I,sm,clamp(stage-1,0,1)),M1),M3=mm(orthogonalPartial(d.U,clamp(stage-2,0,1)),M2);
+  const matrices=[M0,M1,M2,M3],titles=['输入 x','Vᵀ：换坐标','Σ：轴向缩放','U：输出方向'];
+  for(let i=0;i<4;i++){h+=plot('<span class="plotstage">'+i+'</span>'+titles[i],plane2('svd'+i,titles[i]+'的单位圆与向量',matrices[i],{mini:true,unitSquare:false,axes:false,vector:mv(matrices[i],S.v),draggableVector:i===0,vectorLabel:['x','x′','x″','y'][i],transformedGrid:false}),['同一个单位圆','终点仍保持长度','半轴长 σ₁、σ₂',S.rankOne?'目标：最佳秩一近似':'终点与 Ax 完全相同'][i],'',i===Math.min(3,Math.floor(stage)+1));}
+  const target=mm(d.U,mm(sm,d.VT)),ratio=d.s[0]<1e-9?'零矩阵':d.s[1]<1e-9?'∞':fmt(d.s[0]/d.s[1]);
+  eq=token(S.rankOne?'A₁':'A',target)+op('=')+token('U',d.U)+op('×')+token('Σ',sm)+op('×')+token('Vᵀ',d.VT)+'<div class="badges">'+badge('σ₁',fmt(d.s[0]))+badge('σ₂',fmt(d.s[1]))+badge('κ₂(A)',ratio)+badge('‖A − 目标‖F',fmt(norm(sub(S.A,target)),4))+(S.rankOne?badge('保留平方能量',norm(S.A)>1e-9?fmt(d.s[0]**2/(d.s[0]**2+d.s[1]**2)*100,1)+'%':'原矩阵为零'):'')+'</div>';
+  setObs(S.rankOne?'已删去较小奇异值对应的方向':stage<=1?'第一步：把输入主方向对齐坐标轴':stage<=2?'第二步：沿两个轴分别缩放':'第三步：把椭圆放到正确的输出方向','σ₁ = '+fmt(d.s[0])+'，σ₂ = '+fmt(d.s[1])+'。'+(S.rankOne?'秩一近似的谱范数误差为 σ₂ = '+fmt(d.s[1])+'。':d.s[1]<1e-9?'第二个方向完全消失，输出只剩一条线或一个点。':'单位圆的最大、最小放大倍数就是两个奇异值。')+(det(d.U)<0?' U 含反射，演示过渡会经过压平；终点 U 仍为正交矩阵。':''));
+  setLegend([['单位圆 → 椭圆',C.teal],['同一根向量',C.purple]]);
+ }
+ visual.innerHTML=h;$('equation').innerHTML=eq;
+ $('progress').value=S.t;$('progressValue').textContent=Math.round(S.t*100)+'%';
+ document.querySelectorAll('.walkstep').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===stepIndex));
+}
+function toast(message){const el=$('toast');el.textContent=message;el.classList.add('visible');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('visible'),2600);}
+function pause(){playing=false;cancelAnimationFrame(frame);$('playButton').textContent='▷ 播放变换';}
+function stopTour(){tour=false;clearTimeout(tourTimer);$('tourButton').textContent='▷ 自动导览';$('tourStatus').classList.add('hidden');}
+function interrupt(){pause();stopTour();}
+function renderContent(){
+ const l=lessons[topicIndex];
+ $('eyebrow').textContent=String(topicIndex+1).padStart(2,'0')+' / '+l.english;
+ $('topicTitle').textContent=l.title;$('topicSubtitle').textContent=l.subtitle;$('topicPosition').textContent=String(topicIndex+1).padStart(2,'0')+' — '+lessons.length;
+ $('topics').innerHTML=renderTopicGroups();
+ $('walksteps').innerHTML=l.steps.map((s,i)=>'<button class="walkstep" data-step="'+i+'"><b>0'+(i+1)+'</b>'+s+'</button>').join('');
+ $('lessonColumns').innerHTML=l.cards.map(([title,body],i)=>'<article class="lessoncard"><h3><span class="cardnumber">'+(i+1)+'.</span>'+title+'</h3><p>'+body+'</p></article>').join('');
+ $('detailBody').innerHTML=(l.convention?'<div class="convention"><strong>本节约定</strong>　'+l.convention+'</div>':'')+l.detail+(lessonExtensions[l.id]||'');
+ $('detailSummary').textContent='完整讲解 · 定义、推导、例题与工程联系';
+ document.querySelector('.details').open=true;
+ $('challengeTitle').textContent=l.challenge[0];$('challengeHint').textContent=l.challenge[1];
+ $('answers').innerHTML=l.challenge[2].map((a,i)=>'<button class="answer" data-answer="'+i+'">'+a+'</button>').join('')+'<div class="feedback" id="feedback" role="status" aria-live="polite"></div>';
+ $('previousTopic').disabled=topicIndex===0;$('previousTopic').textContent=topicIndex?'← '+lessons[topicIndex-1].name:'已到第一个主题';
+ $('nextTopic').textContent=topicIndex===lessons.length-1?'回到矩阵变换 ↺':lessons[topicIndex+1].name+' →';
+ $('experimentLabel').textContent=l.name+' · 几何实验';
+ if(tour){$('tourStatus').classList.remove('hidden');$('tourStatus').textContent='导览 '+(topicIndex+1)+' / '+lessons.length;}
+ renderControls();
+}
+function selectTopic(i,fromTour=false){
+ if(!Number.isInteger(i)||i<0||i>=lessons.length)throw new Error('未知的学习主题');
+ pause();if(!fromTour)stopTour();topicIndex=i;S=fresh(i);selectedPreset=-1;stepIndex=-1;renderContent();renderScene();
+}
+function play(){
+ if(playing){pause();return;}
+ if(S.t>=.999)S.t=0;
+ playing=true;lastTime=performance.now();lastRender=0;$('playButton').textContent='Ⅱ 暂停';
+ frame=requestAnimationFrame(tick);
+}
+function tick(now){
+ if(!playing)return;
+ const dt=Math.min(now-lastTime,90);lastTime=now;
+ const duration=lessons[topicIndex].id==='svd'?10500:lessons[topicIndex].id==='composition'?9000:8000;
+ S.t=Math.min(1,S.t+dt/duration*Number($('speed').value||1));
+ if(now-lastRender>32||S.t===1){renderScene();lastRender=now;}
+ if(S.t<1){frame=requestAnimationFrame(tick);return;}
+ playing=false;$('playButton').textContent='▷ 再播放一次';renderScene();
+ if(tour){tourTimer=setTimeout(()=>{if(!tour)return;if(topicIndex<lessons.length-1){selectTopic(topicIndex+1,true);S.t=0;play();}else{stopTour();toast('全部 '+lessons.length+' 个主题已演示完。现在可以自由探索与推导。');}},1600);}
+}
+function applyPreset(i){
+ const l=lessons[topicIndex],p=l.presets[i];if(!p)return;
+ interrupt();selectedPreset=i;stepIndex=-1;
+ if(advancedIds.includes(l.id)){Object.assign(S,JSON.parse(JSON.stringify(p[1])));}
+ else if(l.id==='projection'){S.slope=p[1];S.b=[...p[2]];}
+ else{S.A=[...p[1]];if(l.id==='composition')S.B=[...p[2]];}
+ S.t=l.id==='calculus'?0:1;renderControls();renderScene();
+}
+function stepTo(i){
+ interrupt();stepIndex=i;const id=lessons[topicIndex].id;
+ if(advancedIds.includes(id)){S.t=id==='euler'?(i+1)/3:id==='calculus'?[0,.25,1][i]:[0,.5,1][i];}
+ else if(id==='svd')S.t=(i+1)/3;
+ else if(id==='composition'||id==='basis'||id==='transform'||id==='determinant'||id==='projection')S.t=[0,.5,1][i];
+ else if(id==='eigen'){
+  S.t=1;if(i===1){const e=eigen(S.A);if(e.real){S.angle=Math.atan2(e.vectors[0][1],e.vectors[0][0])*180/Math.PI;}else toast('当前矩阵没有实特征方向；试试“两个特征方向”。');}else if(i===0)S.angle=25;
+ }else S.t=[0,.125,1][i];
+ syncControls();renderScene();
+}
+function changeMatrix(key,index,value){
+ if(!['A','B'].includes(key)||!S[key]||!Number.isFinite(value)||index<0||index>3)return;
+ interrupt();S.t=lessons[topicIndex].id==='calculus'?0:1;S[key][index]=clamp(value,-3,3);
+ if(lessons[topicIndex].id==='quadratic'&&(index===1||index===2))S.A[index===1?2:1]=S.A[index];
+ selectedPreset=-1;stepIndex=-1;syncControls();renderScene();
+}
+function setParam(key,value){
+ if(advancedIds.includes(lessons[topicIndex].id)){setAdvancedParam(key,value);return;}
+ if(!Number.isFinite(value))return;interrupt();S.t=1;stepIndex=-1;
+ if(key==='vx'||key==='vy')S.v[key==='vx'?0:1]=clamp(value,-2.5,2.5);
+ else if(key==='angle')S.angle=clamp(value,-180,180);
+ else if(key==='slope'){S.slope=clamp(value,-1.5,1.5);selectedPreset=-1;}
+ else if(['bx','by','bz'].includes(key)){S.b[['bx','by','bz'].indexOf(key)]=clamp(value,-2.5,key==='bz'?3:2.5);selectedPreset=-1;}
+ syncControls();renderScene();
+}
+function pointFromEvent(event,svg){
+ const rect=svg.getBoundingClientRect(),box=svg.viewBox.baseVal,ratio=Math.min(rect.width/box.width,rect.height/box.height);
+ const px=(event.clientX-rect.left-(rect.width-box.width*ratio)/2)/ratio,py=(event.clientY-rect.top-(rect.height-box.height*ratio)/2)/ratio;
+ const units=svg.dataset.plot.startsWith('svd')?40:48;return[(px-box.width/2)/(units*S.zoom),(box.height/2-py)/(units*S.zoom)];
+}
+function moveHandle(handle,v){
+ const id=lessons[topicIndex].id;v=v.map(x=>clamp(x,-3,3));S.t=id==='calculus'?0:1;stepIndex=-1;
+ if(handle==='v'){
+  if(id==='eigen')S.angle=Math.atan2(v[1],v[0])*180/Math.PI;
+  else S.v=v.map(x=>clamp(x,-2.5,2.5));
+ }else if(handle==='a1'||handle==='a2'){
+  const offset=handle==='a1'?0:1;S.A[offset]=v[0];S.A[offset+2]=v[1];selectedPreset=-1;
+ }
+ syncControls();renderScene();
+}
+$('topics').addEventListener('click',e=>{const b=e.target.closest('[data-topic]');if(b)selectTopic(Number(b.dataset.topic));});
+$('controls').addEventListener('input',e=>{
+ const el=e.target;if(el.dataset.vector)setVectorComponent(el.dataset.vector,Number(el.dataset.component),Number.parseFloat(el.value));
+ if(el.dataset.matrix)changeMatrix(el.dataset.matrix,Number(el.dataset.index),Number.parseFloat(el.value));
+ if(el.dataset.param)setParam(el.dataset.param,Number(el.value));
+});
+$('controls').addEventListener('change',e=>{
+ const el=e.target;if(el.dataset.vector){const v=Number.parseFloat(el.value);el.value=Number.isFinite(v)?clamp(v,-3,3):S[el.dataset.vector][Number(el.dataset.component)];}
+ if(el.hasAttribute('data-entry')){interrupt();S.entry=clamp(Number(el.value),0,3);document.querySelectorAll('[data-matrix]').forEach(x=>x.classList.toggle('active-cell',Number(x.dataset.index)===S.entry));renderScene();}
+ if(el.dataset.matrix){const v=Number.parseFloat(el.value);if(!Number.isFinite(v))el.value=S[el.dataset.matrix][Number(el.dataset.index)];else{el.value=clamp(v,-3,3);syncControls();}}
+ if(el.dataset.toggle){interrupt();S[el.dataset.toggle]=el.checked;S.t=1;renderScene();}
+ if(el.hasAttribute('data-zoom')){S.zoom=Number(el.value);renderScene();}
+});
+$('controls').addEventListener('click',e=>{
+ if(e.target.closest('[data-lock-shift]'))shiftLockedAngles();
+ const b=e.target.closest('[data-preset]');if(b)applyPreset(Number(b.dataset.preset));
+ if(e.target.closest('[data-camera-reset]')){S.yaw=-.65;S.pitch=.55;renderScene();}
+});
+$('walksteps').addEventListener('click',e=>{const b=e.target.closest('[data-step]');if(b)stepTo(Number(b.dataset.step));});
+$('answers').addEventListener('click',e=>{
+ const b=e.target.closest('[data-answer]');if(!b)return;const correct=Number(b.dataset.answer)===lessons[topicIndex].challenge[3];
+ $('answers').querySelectorAll('.answer').forEach(x=>x.classList.remove('correct','incorrect'));b.classList.add(correct?'correct':'incorrect');
+ $('feedback').textContent=(correct?'答对了。':'再想一想。')+lessons[topicIndex].challenge[4];
+});
+$('playButton').addEventListener('click',()=>{if(tour)stopTour();play();});
+$('resetButton').addEventListener('click',()=>selectTopic(topicIndex));
+$('progress').addEventListener('input',e=>{interrupt();S.t=Number(e.target.value);stepIndex=-1;renderScene();});
+$('tourButton').addEventListener('click',()=>{
+ if(tour){interrupt();return;}tour=true;$('tourButton').textContent='Ⅱ 停止导览';selectTopic(0,true);S.t=0;play();
+});
+$('previousTopic').addEventListener('click',()=>{selectTopic(Math.max(0,topicIndex-1));$('main').scrollIntoView({behavior:'smooth'});});
+$('nextTopic').addEventListener('click',()=>{selectTopic((topicIndex+1)%lessons.length);$('main').scrollIntoView({behavior:'smooth'});});
+$('visuals').addEventListener('pointerdown',e=>{
+ const svg=e.target.closest('svg[data-plot]');if(!svg)return;
+ const handle=e.target.closest('[data-handle]'),key=svg.dataset.plot;
+ if(handle){interrupt();drag={type:'handle',handle:handle.dataset.handle,plot:key};}
+ else if(key==='projection3'||key==='quadratic3'||svg.hasAttribute('data-camera')){interrupt();drag={type:'camera',x:e.clientX,y:e.clientY,yaw:S.yaw,pitch:S.pitch};}
+ else return;
+ e.preventDefault();$('visuals').setPointerCapture?.(e.pointerId);
+});
+document.addEventListener('pointermove',e=>{
+ if(!drag)return;e.preventDefault();
+ if(drag.type==='camera'){S.yaw=drag.yaw+(e.clientX-drag.x)*.007;S.pitch=clamp(drag.pitch+(e.clientY-drag.y)*.005,.18,1.25);renderScene();}
+ else{const svg=$('visuals').querySelector('svg[data-plot="'+drag.plot+'"]');if(svg)moveHandle(drag.handle,pointFromEvent(e,svg));}
+},{passive:false});
+document.addEventListener('pointerup',()=>{drag=null;});
+document.addEventListener('pointercancel',()=>{drag=null;});
+$('visuals').addEventListener('keydown',e=>{
+ const handle=e.target.closest('[data-handle]');if(!handle||!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(e.key))return;
+ e.preventDefault();e.stopPropagation();interrupt();const name=handle.dataset.handle;
+ let v=name==='v'?(lessons[topicIndex].id==='eigen'?getEigenVector():[...S.v]):name==='a1'?[S.A[0],S.A[2]]:[S.A[1],S.A[3]];
+ v=add(v,[e.key==='ArrowRight'?.1:e.key==='ArrowLeft'?-.1:0,e.key==='ArrowUp'?.1:e.key==='ArrowDown'?-.1:0]);const plotId=handle.closest('svg').dataset.plot;
+ moveHandle(name,v);$('visuals').querySelector('svg[data-plot="'+plotId+'"] [data-handle="'+name+'"]')?.focus();
+});
+document.addEventListener('keydown',e=>{
+ if(/INPUT|SELECT|TEXTAREA|BUTTON|SUMMARY/.test(e.target.tagName)||e.target.closest?.('[data-handle]'))return;
+ if(e.code==='Space'){e.preventDefault();stopTour();play();}
+ else if(e.key==='ArrowLeft'||e.key==='ArrowRight'){e.preventDefault();interrupt();S.t=clamp(S.t+(e.key==='ArrowRight'?.025:-.025),0,1);renderScene();}
+});
+document.addEventListener('visibilitychange',()=>{if(document.hidden)pause();});
+$('downloadButton').addEventListener('click',()=>{
+ const blob=new Blob(['<!doctype html>\n'+document.documentElement.outerHTML],{type:'text/html;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');
+ a.href=url;a.download='线性代数几何实验台.html';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),30000);
+ toast('已开始下载，保存后可直接用浏览器打开。');
+});
+function readGeometryState(){return{topic:lessons[topicIndex].id,matrix:S.A??null,secondMatrix:S.B??null,vector:S.v??S.point3??null,parameters:Object.fromEntries(Object.entries(S).filter(([k])=>!['A','B','v','t','yaw','pitch','grid','circle','zoom','rankOne'].includes(k))),progress:S.t,observation:$('observationText').textContent};}
+function configureGeometry(input){
+ if(!input||typeof input!=='object'||!lessons.some(l=>l.id===input.topic))throw new Error('topic 必须是十三个已定义主题之一。');
+ const index=lessons.findIndex(l=>l.id===input.topic);
+ if(input.matrix!==undefined&&(!Array.isArray(input.matrix)||input.matrix.length!==4||input.matrix.some(x=>!Number.isFinite(x)||Math.abs(x)>3)))throw new Error('matrix 必须包含四个 −3 到 3 之间的有限数。');
+ if(input.progress!==undefined&&(!Number.isFinite(input.progress)||input.progress<0||input.progress>1))throw new Error('progress 必须在 0 到 1 之间。');
+ if(input.matrix!==undefined&&!lessons[index].defaults.A)throw new Error('当前主题的矩阵由几何参数生成，不接受直接编辑。');
+ if(input.matrix!==undefined&&lessons[index].id==='quadratic'&&Math.abs(input.matrix[1]-input.matrix[2])>1e-8)throw new Error('二次型实验需要对称矩阵。');
+ selectTopic(index);if(input.matrix)S.A=[...input.matrix];if(input.progress!==undefined)S.t=input.progress;renderControls();renderScene();return readGeometryState();
+}
+function registerGeometryTools(){
+ const context=document.modelContext;if(!context?.registerTool)return;
+ const lifecycle=new AbortController();window.addEventListener('pagehide',()=>lifecycle.abort(),{once:true});
+ const ts=[
+ {name:'read_linear_algebra_geometry',title:'读取几何实验',description:'读取当前线性代数实验、矩阵、向量、动画进度和解释。',inputSchema:{type:'object',properties:{},additionalProperties:false},annotations:{readOnlyHint:true,untrustedContentHint:false},execute:()=>readGeometryState()},
+ {name:'configure_linear_algebra_geometry',title:'配置几何实验',description:'选择现有的几何主题，并可更新矩阵和动画进度；与页面控件使用同一状态。',inputSchema:{type:'object',properties:{topic:{type:'string',enum:lessons.map(l=>l.id)},matrix:{type:'array',items:{type:'number',minimum:-3,maximum:3},minItems:4,maxItems:4},progress:{type:'number',minimum:0,maximum:1}},required:['topic'],additionalProperties:false},annotations:{readOnlyHint:false,untrustedContentHint:false},execute:configureGeometry}
+ ];for(const tool of ts){try{Promise.resolve(context.registerTool(tool,{signal:lifecycle.signal})).catch(()=>{});}catch{}}
+}
+const advancedIds=['calculus','frames','rotation','euler','quaternion'];
+const deg=x=>x*Math.PI/180,I3=[1,0,0,0,1,0,0,0,1];
+const mv3=(A,v)=>[dot(A.slice(0,3),v),dot(A.slice(3,6),v),dot(A.slice(6,9),v)];
+const tr3=A=>[A[0],A[3],A[6],A[1],A[4],A[7],A[2],A[5],A[8]];
+const mm3=(A,B)=>Array.from({length:9},(_,k)=>{const r=Math.floor(k/3),c=k%3;return A[r*3]*B[c]+A[r*3+1]*B[c+3]+A[r*3+2]*B[c+6];});
+const det3=A=>A[0]*(A[4]*A[8]-A[5]*A[7])-A[1]*(A[3]*A[8]-A[5]*A[6])+A[2]*(A[3]*A[7]-A[4]*A[6]);
+const Rx=a=>[1,0,0,0,Math.cos(a),-Math.sin(a),0,Math.sin(a),Math.cos(a)];
+const Ry=a=>[Math.cos(a),0,Math.sin(a),0,1,0,-Math.sin(a),0,Math.cos(a)];
+const Rz=a=>[Math.cos(a),-Math.sin(a),0,Math.sin(a),Math.cos(a),0,0,0,1];
+const eulerR=(r,p,y)=>mm3(Rz(y),mm3(Ry(p),Rx(r)));
+function axisFromAngles(az,el){return[Math.cos(deg(el))*Math.cos(deg(az)),Math.cos(deg(el))*Math.sin(deg(az)),Math.sin(deg(el))];}
+function axisRotation(n,a){const c=Math.cos(a),s=Math.sin(a),v=1-c,[x,y,z]=n;return[c+x*x*v,x*y*v-z*s,x*z*v+y*s,y*x*v+z*s,c+y*y*v,y*z*v-x*s,z*x*v-y*s,z*y*v+x*s,c+z*z*v];}
+function quatAxis(n,a){return[Math.cos(a/2),...scale(n,Math.sin(a/2))];}
+function quatMultiply(q,p){const w=q[0],s=p[0],v=q.slice(1),u=p.slice(1);return[w*s-dot(v,u),...add(add(scale(u,w),scale(v,s)),cross(v,u))];}
+function quatToR(q){const [w,x,y,z]=unit(q,[1,0,0,0]);return[1-2*(y*y+z*z),2*(x*y-w*z),2*(x*z+w*y),2*(x*y+w*z),1-2*(x*x+z*z),2*(y*z-w*x),2*(x*z-w*y),2*(y*z+w*x),1-2*(x*x+y*y)];}
+function slerp(q0,q1,t,shortest=true,axis=[1,0,0]){
+ let q=[...q1],d=clamp(dot(q0,q),-1,1);
+ if(shortest&&d<0){q=scale(q,-1);d=-d;}
+ if(d>.999999)return unit(mix(q0,q,t),q0);
+ const tangent=sub(q,scale(q0,d)),sn=norm(tangent);
+ if(sn<1e-10&&d<0){let n=[0,...axis];n=unit(sub(n,scale(q0,dot(q0,n))),[0,1,0,0]);return add(scale(q0,Math.cos(Math.PI*t)),scale(n,Math.sin(Math.PI*t)));}
+ const a=Math.atan2(sn,d);return add(scale(q0,Math.cos(t*a)),scale(tangent,Math.sin(t*a)/sn));
+}
+function eulerRateMatrix(roll,pitch){const c=Math.cos(roll),s=Math.sin(roll),ct=Math.cos(pitch),st=Math.sin(pitch);return[1,0,-st,0,c,s*ct,0,-s,c*ct];}
+function homogeneous(R,t){return[R[0],R[1],R[2],t[0],R[3],R[4],R[5],t[1],R[6],R[7],R[8],t[2],0,0,0,1];}
+function symMatrix(rows){return'<span class="symmatrix" style="grid-template-columns:repeat('+rows[0].length+',auto)">'+rows.flat().map(s=>'<span>'+s+'</span>').join('')+'</span>';}
+const mathML=body=>'<math display="block" xmlns="http://www.w3.org/1998/Math/MathML">'+body+'</math>';
+const convention3='使用右手坐标系、列向量。角度控件以度为单位，三角函数与微分公式内部使用弧度。三维图中 z 轴向上。R<sub>WB</sub> 把 B 系分量映到 W 系分量。';
+const sources=links=>'<p class="sources">进一步核对：'+links.map(([title,url])=>'<a href="'+url+'" target="_blank" rel="noopener noreferrer">'+title+'</a>').join(' · ')+'。本节采用上方明确列出的约定。</p>';
+const srcR=['Modern Robotics · Rotation Matrices','https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-2-1-rotation-matrices-part-1-of-2/'];
+const srcF=['Modern Robotics · Homogeneous Transformations','https://modernrobotics.northwestern.edu/nu-gm-book-resource/3-3-1-homogeneous-transformation-matrices/'];
+const srcQ=['Solà · Quaternion Kinematics','https://arxiv.org/abs/1711.02508'];
+const srcD=['Petersen & Pedersen · The Matrix Cookbook','https://www.math.uwaterloo.ca/~hwolkowi/matrixcookbook.pdf'];
+lessons.push(
+ {id:'calculus',name:'矩阵求导',english:'MATRIX CALCULUS & GRADIENTS',title:'一个矩阵里的每个元素，怎样影响损失？',subtitle:'左图观察向量梯度与下降轨迹，右图单独扰动一个矩阵元素，对比真实损失曲线与一阶近似。',
+ defaults:{A:[1.4,.2,.4,.9],v:[1.7,1.3],bTarget:[1,-.5],eta:.18,entry:0,probe:.35},
+ presets:[['稳定下降',{A:[1.4,.2,.4,.9],v:[1.7,1.3],eta:.18,bTarget:[1,-.5]}],['带数字推导',{A:[1,2,0,1],v:[1,-1],bTarget:[0,1],eta:.1}],['步长过大',{A:[2,0,0,1],v:[.8,1.5],bTarget:[0,0],eta:.7}],['平坦方向',{A:[1,1,0,0],v:[1.7,.4],bTarget:[1,1],eta:.2}]],
+ steps:['在起点计算导数','沿负梯度走几步','检查收敛与步长'],
+ convention:'实变量、列梯度约定。A∈ℝ<sup>m×n</sup>、x∈ℝ<sup>n</sup>、b∈ℝ<sup>m</sup>。本实验取 m=n=2。对 A 求导时，把各元素视为独立变量；对 x 求导时固定 A、b。',
+ cards:[
+ ['导数首先是一个线性映射','微小扰动 dx 引起 df≈(∇<sub>x</sub>f)ᵀdx。梯度向量不是“函数值的方向”，而是表示<strong>每个输入分量对标量损失的一阶影响</strong>。'],
+ ['向量梯度与矩阵梯度不同','令 r=Ax−b。对 x 求导得到 ∇<sub>x</sub>f=Aᵀr，形状为 n×1；对 A 求导得到 ∇<sub>A</sub>f=rxᵀ，形状为 m×n。右图只改变 a<sub>ij</sub>，其切线斜率就是 r<sub>i</sub>x<sub>j</sub>。'],
+ ['二阶项决定一步能走多远','Hessian H=AᵀA 描述曲率。正曲率方向上的步长过大，会越过谷底并振荡甚至发散。对于正定 H，固定步长梯度下降的条件是 0&lt;η&lt;2/λ<sub>max</sub>(H)。']
+ ],
+ detail:'<h4>1. 从微分定义出发，而不是猜梯度形状</h4>'+formula(mathML('<mi>f</mi><mo>(</mo><mi>x</mi><mo>,</mo><mi>A</mi><mo>)</mo><mo>=</mo><mfrac><mn>1</mn><mn>2</mn></mfrac><msubsup><mrow><mo>‖</mo><mi>A</mi><mi>x</mi><mo>−</mo><mi>b</mi><mo>‖</mo></mrow><mn>2</mn><mn>2</mn></msubsup>'))+
+ '<div class="derivation"><div class="derive-step"><div><p>定义残差 r=Ax−b。因为 df=d(½rᵀr)=rᵀdr，只需要计算残差怎样变化。</p>'+formula('dr = A dx + (dA)x')+'</div></div><div class="derive-step"><div><p>对 x 求导时 dA=0：</p>'+formula('df = rᵀA dx = (Aᵀr)ᵀdx　⇒　∇<sub>x</sub>f = Aᵀr')+'</div></div><div class="derive-step"><div><p>对 A 求导时 dx=0，利用迹把 dA 收到最右边：</p>'+formula('df = rᵀ(dA)x = tr(xrᵀdA) = tr((rxᵀ)ᵀdA)')+'<p>根据 Frobenius 内积 df=tr((∇<sub>A</sub>f)ᵀdA)，得到 ∇<sub>A</sub>f=rxᵀ。</p></div></div></div>'+
+ '<h4>2. 为何一个元素的导数是 rᵢxⱼ？</h4><p>只把 a<sub>ij</sub> 改成 a<sub>ij</sub>+δ，就只有第 i 个输出改变 δx<sub>j</sub>。所以整项损失的精确变化是：</p>'+formula('f(A+δE<sub>ij</sub>,x) = f(A,x) + δr<sub>i</sub>x<sub>j</sub> + ½δ²x<sub>j</sub>²')+'<p>右图实线是真实二次曲线，虚线是前两项的一阶近似。δ 缩小时，它们越来越接近；x<sub>j</sub>=0 时，这个参数对当前样本没有影响。</p>'+
+ '<h4>3. 带数字完整算一次</h4><div class="worked"><p>选择“带数字推导”：A=[[1,2],[0,1]]，x=(1,−1)ᵀ，b=(0,1)ᵀ。</p>'+formula('r = (−1,−2)ᵀ，　f = 2.5')+formula('∇<sub>x</sub>f = (−1,−4)ᵀ，　∇<sub>A</sub>f = '+symMatrix([['−1','1'],['−2','2']]))+'<p>η=0.1 时，x<sub>next</sub>=x−η∇f=(1.1,−0.6)ᵀ，损失降到 1.285。这里负梯度不是指向最小点的直线方向；它只是当前欧氏度量下最陡的下降方向。</p></div>'+
+ '<h4>4. 梯度、Jacobian、Hessian 要分开</h4><table><tr><th>对象</th><th>输入 → 输出</th><th>形状与含义</th></tr><tr><td>梯度 ∇f</td><td>ℝⁿ → ℝ</td><td>n×1；标量函数的一阶变化</td></tr><tr><td>Jacobian J<sub>g</sub></td><td>ℝⁿ → ℝᵐ</td><td>m×n；dg=J<sub>g</sub>dx</td></tr><tr><td>Hessian ∇²f</td><td>标量函数的二阶导</td><td>n×n；局部曲率</td></tr></table>'+formula('∇²<sub>x</sub>f = AᵀA　；　J<sub>Ax+b</sub> = A')+
+ '<h4>5. 步长条件从哪里来？</h4><p>设 H 正定、x* 为最小点，则误差满足 e<sub>k+1</sub>=(I−ηH)e<sub>k</sub>。沿 H 的特征方向，误差每步乘 1−ηλ<sub>i</sub>。要求全部模长小于 1，就得到 0&lt;η&lt;2/λ<sub>max</sub>。若 H 奇异，零空间分量保持不变，最小点未必唯一。</p><p>图中的动画在离散迭代点之间作线性插值；真正的梯度下降更新发生在编号节点上。发散轨迹超出显示范围时会截断展示，不会把数值强行修改成收敛。</p>'+
+ '<h4>6. 常用公式与约束变量</h4>'+formula('∇<sub>x</sub>(xᵀBx)=(B+Bᵀ)x　；　d(X⁻¹)=−X⁻¹(dX)X⁻¹')+'<p>只有 B 对称时第一式才是 2Bx。若参数矩阵强制对称，a<sub>12</sub> 与 a<sub>21</sub> 不是两个独立变量，独立参数的导数还需要链式法则；旋转矩阵 R∈SO(3) 也不能直接更新九个元素后就当作合法旋转。</p>'+sources([srcD]),
+ challenge:['对 A 求导时，∇Af 的形状是什么？','检查 df = tr((∇Af)ᵀdA) 的维度。',['与 A 相同，m × n','一定是 n × 1','一定是一个标量'],0,'矩阵梯度的每个元素对应 A 中一个独立参数的偏导。只有选择一个具体元素 aᵢⱼ 后，才得到单个标量偏导。']},
+ {id:'frames',name:'坐标变换',english:'REFERENCE FRAMES & SE(3)',title:'世界系和机体系，怎样描述同一个点？',subtitle:'移动、转动坐标系 B，保持世界中的目标点不动。比较旋转矩阵与齐次变换的不同作用。',
+ defaults:{rollDeg:0,pitchDeg:20,yawDeg:45,translation:[.7,-.3,.5],point3:[1.4,1,.7],direction:false,yaw:-.65,pitch:.55},
+ presets:[['只换朝向',{rollDeg:0,pitchDeg:0,yawDeg:60,translation:[0,0,0]}],['旋转加平移',{rollDeg:0,pitchDeg:20,yawDeg:45,translation:[.7,-.3,.5]}],['数值例题',{rollDeg:0,pitchDeg:0,yawDeg:90,translation:[1,2,0],point3:[2,3,1],direction:false}]],
+ steps:['重合的两个坐标系','移动并转动 B 系','用 B 系重新表达'],
+ convention:convention3+' 位置采用 p<sub>W</sub>=R<sub>WB</sub>p<sub>B</sub>+t<sub>WB</sub>；t<sub>WB</sub> 是 B 系原点在 W 系中的坐标。',
+ cards:[
+ ['矩阵下标要说明映射方向','R<sub>WB</sub> 的三列，是 B 系三个单位轴在 W 系中的分量。它将 B 系坐标变成 W 系坐标；逆向转换使用 R<sub>WB</sub>ᵀ。'],
+ ['点还需要减去原点的位移','要在 B 系中描述一个世界点，先减去 B 系原点的位置，再转到 B 的轴上：<span class="math">p<sub>B</sub>=Rᵀ(p<sub>W</sub>−t)</span>。两个步骤都不能省略。'],
+ ['自由向量不随原点平移改变','位移、速度等自由向量只需旋转分量：v<sub>B</sub>=Rᵀv<sub>W</sub>。切换“自由向量”，再修改 t，观察数值不再受平移影响。']
+ ],
+ detail:'<h4>1. 从三个轴的线性组合推导坐标公式</h4><p>把 B 系的三个轴用 W 系表示，分别记作 b₁、b₂、b₃。一个点相对 B 原点的几何位移是 p<sub>B,1</sub>b₁+p<sub>B,2</sub>b₂+p<sub>B,3</sub>b₃。再加上 B 原点在 W 系的位置：</p>'+formula('p<sub>W</sub> = [b₁ b₂ b₃]p<sub>B</sub> + t<sub>WB</sub> = R<sub>WB</sub>p<sub>B</sub>+t<sub>WB</sub>')+
+ '<div class="theorem"><strong>逆变换：</strong>p<sub>B</sub>=R<sub>WB</sub>ᵀ(p<sub>W</sub>−t<sub>WB</sub>)。必须先相减，再左乘 Rᵀ；Rᵀp−t 一般不对。</div>'+
+ '<h4>2. 齐次坐标把旋转和平移写在一起</h4>'+formula('T<sub>WB</sub> = '+symMatrix([['R<sub>WB</sub>','t<sub>WB</sub>'],['0ᵀ','1']])+'，　'+symMatrix([['p<sub>W</sub>'],['1']])+' = T<sub>WB</sub>'+symMatrix([['p<sub>B</sub>'],['1']]))+
+ '<p>前三维中的刚体位姿变换是仿射变换；升到齐次坐标后，可以用一个 4×4 矩阵相乘表达。SE(3) 的成员不是任意 4×4 矩阵：旋转块必须属于 SO(3)，最后一行必须是 [0 0 0 1]。</p>'+formula('T<sub>WB</sub>⁻¹ = '+symMatrix([['Rᵀ','−Rᵀt'],['0ᵀ','1']]))+
+ '<h4>3. 为什么向量的最后一个分量是 0？</h4>'+formula('T'+symMatrix([['v'],['0']])+' = '+symMatrix([['Rv'],['0']]))+'<p>平移项乘到 0，自动消失。若把法向量当作位置点变换，会错误加入位移。对一般非正交线性变换 A，表面法向量应按 A⁻ᵀ 变换，而不是直接按 A；纯旋转时二者才一致。</p>'+
+ '<h4>4. 带数字例题</h4><div class="worked"><p>R=Rz(90°)，t=(1,2,0)ᵀ，世界点 p<sub>W</sub>=(2,3,1)ᵀ。先计算 p<sub>W</sub>−t=(1,1,1)ᵀ，再反向旋转：</p>'+formula('p<sub>B</sub> = (1,−1,1)ᵀ')+'<p>如果 (2,3,1)ᵀ 表示的是自由向量，结果则是 v<sub>B</sub>=(3,−2,1)ᵀ。点和向量的三个数字看起来相同，几何含义却不同。</p></div>'+
+ '<h4>5. 多坐标系串联与下标消去</h4>'+formula('T<sub>WC</sub> = T<sub>WB</sub>T<sub>BC</sub>，　R<sub>WC</sub> = R<sub>WB</sub>R<sub>BC</sub>')+'<p>从 C 系到 W 系，先 C→B，再 B→W。中间下标相接，有助于检查顺序。它也适用于机器人“世界—机体—相机”的外参链。</p>'+
+ '<h4>6. 相似变换与坐标变换的联系</h4><p>若线性算子在 W 系为 A<sub>W</sub>，且只更换同原点的正交基，则 A<sub>B</sub>=RᵀA<sub>W</sub>R。这是同一个算子在两套坐标下的表示，不是在给 A 做物理旋转。若位置还包含平移，整个映射通常要作为仿射关系或齐次矩阵处理。</p>'+sources([srcR,srcF]),
+ challenge:['把世界点换到 B 系，正确公式是哪一个？','先确定 B 原点，再决定坐标轴方向。',['Rᵀ(pW − t)','RᵀpW − t','RpW + t'],0,'先相对 B 原点重新计算位移，再把这段位移的分量从 W 系旋转到 B 系。']},
+ {id:'rotation',name:'旋转矩阵',english:'ROTATION MATRICES & SO(3)',title:'一个合法的旋转矩阵，必须满足什么？',subtitle:'改变旋转轴与角度，观察一个有方向标记的几何框架；比较主动旋转与被动坐标变化。',
+ defaults:{axisAz:35,axisEl:40,rotDeg:90,point3:[1.4,.5,.6],yaw:-.65,pitch:.55},
+ presets:[['绕 Z 转 90°',{axisAz:0,axisEl:90,rotDeg:90}],['绕 X 转 90°',{axisAz:0,axisEl:0,rotDeg:90}],['任意轴旋转',{axisAz:35,axisEl:40,rotDeg:115}],['转 180°',{axisAz:55,axisEl:20,rotDeg:180}]],
+ steps:['保持原来的参考系','绕固定轴连续旋转','对比 R 与 Rᵀ'],
+ convention:convention3+' 本实验 R=R(n,θ) 表示在固定世界系内对向量作主动旋转；被动换坐标使用 Rᵀ。',
+ cards:[
+ ['正交约束保持长度和夹角','RᵀR=I 表示三列互相正交且单位长度。它保证 ‖Rv‖=‖v‖、(Ru)ᵀ(Rv)=uᵀv，但还需要 det R=+1 排除镜面反射。'],
+ ['SO(3) 只有三个自由度','矩阵虽然有九个元素，却受到六个独立的正交约束。不能把九个数任意调节后，仍称它为旋转矩阵。这里通过单位旋转轴与角度生成合法 R。'],
+ ['旋转轴本身是特征方向','对三维真旋转，总存在 Rn=n，旋转轴对应特征值 1。垂直于 n 的平面发生二维旋转；通常另外两个特征值是 e<sup>±iθ</sup>。']
+ ],
+ detail:'<h4>1. SO(3) 的定义</h4>'+formula('SO(3) = {R∈ℝ³ˣ³ : RᵀR=I，det R=1}')+'<p>正交矩阵的行列式可以是 ±1。−1 表示含反射，属于 O(3) 却不属于 SO(3)。三列互相垂直只是方向条件，每一列还必须为单位长度。</p>'+
+ '<h4>2. Rodrigues 公式的几何推导</h4><p>对单位轴 n，将 v 分为平行部分 v∥=(nᵀv)n 与垂直部分 v⊥=v−v∥。平行部分不动；在垂直平面内，v⊥ 与 n×v 是正交基：</p>'+formula('Rv = (nᵀv)n + cosθ[v−(nᵀv)n] + sinθ(n×v)')+'<p>整理成矩阵：</p>'+formula('R = cosθ I + (1−cosθ)nnᵀ + sinθ[n]×')+formula('[n]× = '+symMatrix([['0','−n<sub>z</sub>','n<sub>y</sub>'],['n<sub>z</sub>','0','−n<sub>x</sub>'],['−n<sub>y</sub>','n<sub>x</sub>','0']]))+'<p>因为 [n]×²=nnᵀ−I，也可写为 R=I+sinθ[n]×+(1−cosθ)[n]×²。动画直接改变 θ，因此每个中间状态都保持正交。</p>'+
+ '<h4>3. 三个基本旋转矩阵</h4>'+formula('R<sub>x</sub>(φ)='+symMatrix([['1','0','0'],['0','cosφ','−sinφ'],['0','sinφ','cosφ']]))+formula('R<sub>y</sub>(θ)='+symMatrix([['cosθ','0','sinθ'],['0','1','0'],['−sinθ','0','cosθ']]))+formula('R<sub>z</sub>(ψ)='+symMatrix([['cosψ','−sinψ','0'],['sinψ','cosψ','0'],['0','0','1']]))+
+ '<h4>4. 主动与被动到底差在哪里？</h4><p>主动：坐标轴固定，几何向量旋转，v′=Rv。被动：几何向量不动，坐标轴转动，新的分量为 v<sub>B</sub>=Rᵀv<sub>W</sub>。右图把“新分量”画到一个独立的数值坐标图里，它并不表示世界向量真的被反向转动。</p><div class="worked"><p>绕世界 Z 正向转 90°：主动旋转把 (1,0,0) 变成 (0,1,0)。若把坐标轴正向转 90°，固定世界向量 (1,0,0) 的新分量却是 (0,−1,0)。</p></div>'+
+ '<h4>5. 与角速度、指数映射相连</h4>'+formula('Ṙ = [ω<sub>W</sub>]×R = R[ω<sub>B</sub>]×，　R = exp(θ[n]×)')+'<p>左乘增量对应世界系表达的角速度，右乘增量对应机体系表达。近似 R(δθ)≈I+[δθ]× 只在小角度一阶意义下成立；有限角度必须使用合法旋转更新，或在数值计算后做适当正交化。</p>'+sources([srcR,srcQ]),
+ challenge:['RᵀR=I 已经足够保证三维真旋转吗？','试想一个镜面反射矩阵。',['足够','还需要 det R = +1','还需要所有元素为正'],1,'RᵀR=I 也允许 det R=−1 的反射。SO(3) 额外要求 det R=+1。']},
+ {id:'euler',name:'欧拉角变换',english:'ZYX EULER ANGLES & GIMBAL LOCK',title:'三个旋转角，为何会突然只剩两个自由方向？',subtitle:'逐步执行偏航、俯仰、滚转，观察三根瞬时旋转轴；把俯仰调到 90°，直接看见万向节锁。',
+ defaults:{rollDeg:25,pitchDeg:35,yawDeg:40,yaw:-.65,pitch:.55},
+ presets:[['一般姿态',{rollDeg:25,pitchDeg:35,yawDeg:40}],['接近锁定',{rollDeg:20,pitchDeg:85,yawDeg:35}],['俯仰 +90°',{rollDeg:20,pitchDeg:90,yawDeg:35}],['俯仰 −90°',{rollDeg:20,pitchDeg:-90,yawDeg:35}]],
+ steps:['偏航：绕 zW','俯仰：绕中间 y','滚转：绕机体 x'],
+ convention:convention3+' 采用内禀 Z–Y–X：R=Rz(ψ)Ry(θ)Rx(φ)。工程上常统称“欧拉角”；严格说，这三个不同轴构成 Tait–Bryan 角。',
+ cards:[
+ ['旋转顺序是定义的一部分','内禀 Z→Y→X 表示后续围绕已经转动的局部轴。与外禀固定轴 X→Y→Z 的列向量矩阵乘积相同，但不能把“内禀 ZYX”误当成“固定轴依次 ZYX”。'],
+ ['角度变化率不是角速度分量','通常 (φ̇,θ̇,ψ̇) 不等于 (ωx,ωy,ωz)。每个角的瞬时转轴处在不同方向，需要通过 E(φ,θ) 把角度变化率合成为机体系角速度。'],
+ ['万向节锁是参数化奇异','θ=±90° 时，滚转轴与偏航轴平行，E 的两列相关。姿态本身仍是正常的旋转，丢失的是这套三角坐标对局部运动的独立描述能力。']
+ ],
+ detail:'<h4>1. 明确内禀与外禀的计算顺序</h4>'+formula('R = R<sub>z</sub>(ψ) R<sub>y</sub>(θ) R<sub>x</sub>(φ)')+'<p>若解释为内禀旋转，先绕初始 z 轴偏航，随后右乘 Ry，使转轴随当前坐标系运动，再右乘 Rx 滚转。若把同一个乘积作用于一个固定世界向量，则右边 Rx 最先计算，对应外禀 X→Y→Z。两种叙述可以得到同一个矩阵，但各自的“轴”和“顺序”必须配套。</p>'+
+ '<h4>2. 从三个瞬时转轴推导角速度</h4><p>在世界系里，滚转瞬时轴为 Rz(ψ)Ry(θ)eₓ，俯仰轴为 Rz(ψ)eᵧ，偏航轴为 e_z。因此：</p>'+formula('ω<sub>W</sub> = φ̇ RzRy eₓ + θ̇ Rz eᵧ + ψ̇ e_z')+'<p>左乘 Rᵀ，转为机体系分量：</p>'+formula('ω<sub>B</sub> = E(φ,θ) '+symMatrix([['φ̇'],['θ̇'],['ψ̇']]))+formula('E(φ,θ) = '+symMatrix([['1','0','−sinθ'],['0','cosφ','sinφ cosθ'],['0','−sinφ','cosφ cosθ']]))+'<p>右图的三根箭头正是 E 的三列，分别表示三个单位角速度参数对实际角速度的贡献。</p>'+
+ '<h4>3. 为什么在 ±90° 奇异？</h4>'+formula('det E = cosθ')+'<p>θ=+90° 时，第一列是 (1,0,0)ᵀ，第三列变成 (−1,0,0)ᵀ，两者正好反向。增加相同的 φ 与 ψ，会互相抵消，不产生新的姿态变化。θ=−90° 时，两列同向，抵消组合的符号相反。</p><div class="theorem">丢失的是欧拉角坐标图的局部一一对应，不是刚体真实少了一个自由度。旋转矩阵 R 仍然满足 RᵀR=I、det R=1。</div>'+
+ '<h4>4. 直接算出同姿态、多组角度</h4><p>在 θ=90° 时令 δ=φ−ψ：</p>'+formula('R = '+symMatrix([['0','sinδ','cosδ'],['0','cosδ','−sinδ'],['−1','0','0']]))+'<p>矩阵只依赖 φ−ψ。因此 (φ,ψ) 与 (φ+α,ψ+α) 给出相同姿态。选择“俯仰 +90°”，点击“保持姿态，改变两角”，即可数值检验。</p>'+
+ '<h4>5. 接近奇异时为什么数值不稳定？</h4><p>E 的奇异值为 √(1+|sinθ|)、1、√(1−|sinθ|)。因此：</p>'+formula('κ₂(E) = √[(1+|sinθ|)/(1−|sinθ|)]')+'<p>接近 90° 时，最小奇异值趋于零。同一个很小的角速度变化，可能需要很大的欧拉角变化率。欧拉角显示方便，但连续姿态积分通常使用旋转矩阵或单位四元数。</p>'+
+ '<h4>6. 顺序不同，结果真的不同</h4><div class="worked"><p>令 ψ=0、θ=90°、φ=90°。Ry(90°)Rx(90°) 将 eₓ 变成 −e_z，而 Rx(90°)Ry(90°) 将 eₓ 变成 eᵧ。不能因为使用了相同三个角，就认为姿态相同。</p></div><p>注意：图中的三个环用于展示几何转轴，不是某一实际机械万向架的完整结构；锁定依据由矩阵 E 的秩与行列式给出。</p>'+sources([srcR,srcQ]),
+ challenge:['万向节锁时，真正发生了什么？','看右图 E 的第一列与第三列。',['刚体不能旋转了','欧拉角坐标的局部描述变奇异','旋转矩阵变得不可逆'],1,'姿态 R 仍是合法可逆旋转。奇异的是欧拉角变化率到角速度的映射 E，而不是 R。']},
+ {id:'quaternion',name:'四元数',english:'UNIT QUATERNIONS & SLERP',title:'四个数，怎样平滑地表示三维旋转？',subtitle:'把轴角变成单位四元数，观察 q 与 −q 表示同一姿态，并比较最短路径与长路径的插值。',
+ defaults:{axisAz:30,axisEl:40,rotDeg:120,negateQ:false,shortest:true,yaw:-.65,pitch:.55},
+ presets:[['绕 Z 转 90°',{axisAz:0,axisEl:90,rotDeg:90,negateQ:false}],['转 270°',{axisAz:25,axisEl:35,rotDeg:270,negateQ:false}],['同姿态换符号',{axisAz:30,axisEl:40,rotDeg:120,negateQ:true}],['完整一圈',{axisAz:0,axisEl:90,rotDeg:360,negateQ:false}]],
+ steps:['从单位姿态出发','沿四元数球面插值','达到同一个目标姿态'],
+ convention:convention3+' 使用 Hamilton 乘法、标量在前 q=(w,x,y,z)、主动旋转。旋转公式为 [0,v′]=q⊗[0,v]⊗q*；不同软件的顺序与约定可能不同。',
+ cards:[
+ ['单位约束把四个数限制到三维','q=(cos(θ/2), n sin(θ/2))，满足 w²+x²+y²+z²=1。四个分量加一个约束，局部自由度是 3，不是 4。'],
+ ['q 与 −q 表示同一个旋转','两者在四维单位球面上互为对跖点，但 R(q)=R(−q)。切换四元数符号，左侧姿态不变，右侧代表点却会移动到圆的另一端。'],
+ ['SLERP 在球面上走大圆弧','归一化之前直接线性插值可能离开单位球面，甚至在 q 与 −q 的中点变成零。SLERP 保持单位长度；选择最短路径时，先把终点放到与起点同一半球。']
+ ],
+ detail:'<h4>1. Hamilton 乘法，不是逐分量相乘</h4><p>把四元数记为 q=(w,v)、p=(s,u)，其中 v、u 为三维向量：</p>'+formula('q⊗p = (ws−vᵀu,　wu+sv+v×u)')+'<p>交换顺序会改变叉积符号，所以四元数乘法一般不交换。共轭 q*=(w,−v)，逆为 q⁻¹=q*/‖q‖²；只有单位四元数的逆才等于共轭。</p>'+
+ '<h4>2. 为什么出现半角？</h4>'+formula('q = (cos(θ/2),　n sin(θ/2))，　‖n‖=1')+'<p>将纯四元数 [0,v] 左乘 q、右乘 q* 后，乘积中的 cos²(θ/2)−sin²(θ/2) 与 2sin(θ/2)cos(θ/2) 分别形成 cosθ、sinθ，恢复 Rodrigues 旋转。半角不是“实际只转了一半”。</p>'+
+ '<h4>3. 对应的旋转矩阵</h4>'+formula('R(q)='+symMatrix([['1−2(y²+z²)','2(xy−wz)','2(xz+wy)'],['2(xy+wz)','1−2(x²+z²)','2(yz−wx)'],['2(xz−wy)','2(yz+wx)','1−2(x²+y²)']]))+'<p>每一项都是分量的二次组合，因此同时把 w、x、y、z 变号，矩阵不变。这就是从单位球面 S³ 到 SO(3) 的双覆盖。</p>'+
+ '<h4>4. SLERP 的严格定义</h4><p>单位起点为 q₀，单位终点为 q₁。若要求最短姿态路径且 q₀ᵀq₁&lt;0，先用 −q₁ 替代终点。令 Ω=arccos(q₀ᵀq₁)：</p>'+formula(mathML('<mi>q</mi><mo>(</mo><mi>t</mi><mo>)</mo><mo>=</mo><mfrac><mrow><mi>sin</mi><mo>(</mo><mo>(</mo><mn>1</mn><mo>−</mo><mi>t</mi><mo>)</mo><mi>Ω</mi><mo>)</mo></mrow><mrow><mi>sin</mi><mi>Ω</mi></mrow></mfrac><msub><mi>q</mi><mn>0</mn></msub><mo>+</mo><mfrac><mrow><mi>sin</mi><mo>(</mo><mi>t</mi><mi>Ω</mi><mo>)</mo></mrow><mrow><mi>sin</mi><mi>Ω</mi></mrow></mfrac><msub><mi>q</mi><mn>1</mn></msub>'))+
+ '<p>t 从 0 到 1 均匀变化时，对应固定轴的匀角速度旋转。这里的 Ω 是四元数球面角，物理旋转角是它的两倍。Ω≈0 时采用归一化线性插值的极限以避免除以很小的 sinΩ。</p>'+
+ '<h4>5. 对跖点和 360° 的特殊情形</h4><div class="theorem">不做最短路径修正时，q₁=−q₀ 的大圆路径不唯一。实验使用你选定的旋转轴确定一条路径；这不是唯一的 SLERP 解。</div><p>物体绕轴转 360° 后回到原姿态，但 q 从 +1 走到 −1；再转一圈，四元数才回到 +1。右图并非完整 S³ 的二维投影，而是本实验固定轴轨迹所在二维平面的单位圆截面。</p>'+
+ '<h4>6. 数值例题与工程约定</h4><div class="worked"><p>绕 Z 转 90°：q=(√2/2,0,0,√2/2)。将 v=(1,0,0) 代入 q⊗[0,v]⊗q*，得到 (0,1,0)。把 q 整体变号，结果仍相同。</p></div>'+
+ '<h4>7. 四元数微分与姿态积分</h4>'+formula('q̇ = ½q⊗[0,ω<sub>B</sub>] = ½[0,ω<sub>W</sub>]⊗q')+'<p>乘法放在哪一侧，取决于角速度表达在哪个坐标系。离散积分后要控制单位范数误差；误差状态滤波常用三维小旋转 δθ 描述局部误差，而用四元数保存整体姿态。四元数避免了欧拉角的万向节锁，但仍有单位约束、双覆盖和约定一致性问题。</p>'+sources([srcQ]),
+ challenge:['把单位四元数 q 整体变成 −q，会怎样？','切换“显示 −q”，比较左右两图。',['物体反向旋转','姿态相同，四元数代表点改变','四元数不再单位化'],1,'q 与 −q 范数相同，产生相同的 R。改变的是表示，不是物体姿态。']}
+);
+function renderTopicGroups(){
+ return [['线性代数',lessons.slice(0,9),0],['坐标与姿态',lessons.slice(9),9]].map(([label,list,start])=>'<div class="topicgroup"><span class="topicgroup-label">'+label+'</span>'+list.map((x,j)=>{const i=start+j;return'<button class="topic'+(i===topicIndex?' active':'')+(i>=8?' newtopic':'')+'" data-topic="'+i+'" aria-current="'+(i===topicIndex?'page':'false')+'"><span class="num">'+String(i+1).padStart(2,'0')+'</span>'+x.name+'</button>';}).join('')+'</div>').join('');
+}
+const advancedRanges={vx:[-2.5,2.5],vy:[-2.5,2.5],eta:[.01,1],probe:[-1.5,1.5],rollDeg:[-180,180],pitchDeg:[-90,90],yawDeg:[-180,180],axisAz:[-180,180],axisEl:[-90,90],rotDeg:[-180,360]};
+function numberVector(key,label,labels=['x','y','z']){return '<div class="parameter-note">'+label+'</div><div class="numbers3">'+S[key].map((v,i)=>'<label>'+labels[i]+'<input type="number" data-vector="'+key+'" data-component="'+i+'" value="'+fmt(v).replace('−','-')+'" min="-3" max="3" step="0.1" aria-label="'+label+' '+labels[i]+'"></label>').join('')+'</div>';}
+function renderAdvancedControls(){
+ const l=lessons[topicIndex],id=l.id;let h='<div class="controltitle"><span>实验参数</span><span class="dimension">'+(id==='calculus'?'∇ & H':id==='frames'?'SE(3)':id==='quaternion'?'S³ → SO(3)':'SO(3)')+'</span></div>';
+ if(id==='calculus'){
+  h+=matrixEditor('A',S.A)+'<div class="helptext">f(x,A)=½‖Ax−b‖²。拖动左图紫色点设置起点；播放 12 次梯度下降。</div>';
+  h+=slider('vx','起点 x₁',S.v[0],-2.5,2.5)+slider('vy','起点 x₂',S.v[1],-2.5,2.5)+numberVector('bTarget','目标 b',['b₁','b₂'])+slider('eta','学习率 η',S.eta,.01,1,.01);
+  h+='<div class="selectrow"><label for="entrySelect">对哪个元素求导</label><select id="entrySelect" data-entry>'+['A₁₁','A₁₂','A₂₁','A₂₂'].map((x,i)=>'<option value="'+i+'" '+(S.entry===i?'selected':'')+'>'+x+'</option>').join('')+'</select></div>'+slider('probe','元素扰动 δ',S.probe,-1.5,1.5);
+ }else if(id==='frames'||id==='euler'){
+  h+='<div class="helptext">右手系 · 列向量 · Z–Y–X<br>角度滑块用度数，计算使用弧度。拖动画布只改变观察视角。</div>';
+  h+=slider('yawDeg','偏航 ψ · Z（°）',S.yawDeg,-180,180,1)+slider('pitchDeg','俯仰 θ · Y（°）',S.pitchDeg,-90,90,1)+slider('rollDeg','滚转 φ · X（°）',S.rollDeg,-180,180,1);
+  if(id==='frames')h+=numberVector('translation','原点 t_WB（世界系）')+numberVector('point3','固定的世界坐标 p_W / v_W')+'<label class="toggle"><input type="checkbox" data-toggle="direction" '+(S.direction?'checked':'')+'>改看自由向量（不受平移影响）</label>';
+  else h+='<button class="btn small" data-lock-shift '+(Math.abs(Math.cos(deg(S.pitchDeg)))>1e-6?'disabled':'')+'>保持姿态，改变两角</button><div class="parameter-note">俯仰恰为 ±90° 时可验证两角的冗余。</div>';
+ }else{
+  h+='<div class="helptext">选择单位旋转轴 n 与角度 θ。方位角从 +x 向 +y，仰角朝 +z。拖动画布改变视角。</div>';
+  h+=slider('axisAz','轴的方位角（°）',S.axisAz,-180,180,1)+slider('axisEl','轴的仰角（°）',S.axisEl,-90,90,1)+slider('rotDeg','旋转角 θ（°）',S.rotDeg,id==='quaternion'?0:-180,id==='quaternion'?360:180,1);
+  if(id==='rotation')h+=numberVector('point3','待旋转 / 换坐标的向量 v');
+  if(id==='quaternion')h+='<label class="toggle"><input type="checkbox" data-toggle="negateQ" '+(S.negateQ?'checked':'')+'>显示 −q（目标姿态相同）</label><label class="toggle"><input type="checkbox" data-toggle="shortest" '+(S.shortest?'checked':'')+'>自动选择最短姿态路径</label>';
+ }
+ h+='<div class="presetlabel">试一组有代表性的情形</div><div class="presets">'+l.presets.map((p,i)=>'<button class="preset'+(i===selectedPreset?' selected':'')+'" data-preset="'+i+'">'+p[0]+'</button>').join('')+'</div>';
+ if(id!=='calculus')h+='<button class="btn small" data-camera-reset style="margin-top:12px">恢复三维视角</button>';
+ h+='<div class="selectrow"><label for="zoom">观察范围</label><select id="zoom" data-zoom>'+[[.75,'更大范围'],[1,'标准'],[1.3,'放大']].map(([n,t])=>'<option value="'+n+'" '+(S.zoom===n?'selected':'')+'>'+t+'</option>').join('')+'</select></div>';
+ $('controls').dataset.topic=id;$('controls').innerHTML=h;
+ document.querySelectorAll('[data-matrix]').forEach(el=>el.classList.toggle('active-cell',id==='calculus'&&Number(el.dataset.index)===S.entry));
+}
+function setAdvancedParam(key,value){
+ if(!Number.isFinite(value)||!advancedRanges[key])return;
+ const id=lessons[topicIndex].id;if((key==='vx'||key==='vy')&&!S.v)return;if(!['vx','vy'].includes(key)&&!Object.hasOwn(S,key))return;
+ interrupt();let [lo,hi]=advancedRanges[key];if(key==='rotDeg'){lo=id==='quaternion'?0:-180;hi=id==='quaternion'?360:180;}
+ const v=clamp(value,lo,hi);if(key==='vx'||key==='vy')S.v[key==='vx'?0:1]=v;else S[key]=v;
+ S.t=id==='calculus'?0:1;selectedPreset=-1;stepIndex=-1;syncControls();
+ if(id==='euler'){const b=$('controls').querySelector('[data-lock-shift]');if(b)b.disabled=Math.abs(Math.cos(deg(S.pitchDeg)))>1e-6;}
+ renderScene();
+}
+function setVectorComponent(key,i,v){
+ if(!['point3','translation','bTarget'].includes(key)||!Array.isArray(S[key])||!Number.isInteger(i)||i<0||i>=S[key].length||!Number.isFinite(v))return;
+ interrupt();S[key][i]=clamp(v,-3,3);S.t=lessons[topicIndex].id==='calculus'?0:1;selectedPreset=-1;stepIndex=-1;syncControls();renderScene();
+}
+function shiftLockedAngles(){
+ if(lessons[topicIndex].id!=='euler'||Math.abs(Math.cos(deg(S.pitchDeg)))>1e-6)return null;
+ interrupt();const before=eulerR(deg(S.rollDeg),deg(S.pitchDeg),deg(S.yawDeg)),wrap=x=>((x+180)%360+360)%360-180;
+ S.yawDeg=wrap(S.yawDeg+20);S.rollDeg=wrap(S.rollDeg+Math.sign(S.pitchDeg)*20);S.t=1;selectedPreset=-1;
+ const error=norm(sub(before,eulerR(deg(S.rollDeg),deg(S.pitchDeg),deg(S.yawDeg))));renderControls();renderScene();toast('两角已改变，‖R新 − R旧‖F = '+error.toExponential(1));return error;
+}
+function lossData(A,x,b){const r=sub(mv(A,x),b);return{r,f:.5*dot(r,r),gx:mv(tr(A),r),gA:[r[0]*x[0],r[0]*x[1],r[1]*x[0],r[1]*x[1]],H:mm(tr(A),A)};}
+function descentData(){
+ const points=[[...S.v]];let stopped=false;
+ for(let k=0;k<12;k++){const x=points[points.length-1],d=lossData(S.A,x,S.bTarget),next=sub(x,scale(d.gx,S.eta));if(norm(next)>1e4){stopped=true;break;}points.push(next);}
+ const phase=S.t*12,j=Math.min(Math.floor(phase),points.length-1),x=j<points.length-1?mix(points[j],points[j+1],phase-j):points[j];
+ return{points,x,j,stopped,d:lossData(S.A,x,S.bTarget),initial:lossData(S.A,S.v,S.bTarget)};
+}
+function lossContours(p){
+ const cacheKey=JSON.stringify([S.A,S.bTarget,S.zoom]);if(lossContours.key===cacheKey)return lossContours.html;
+ const f=v=>{const r=sub(mv(S.A,v),S.bTarget);return .5*dot(r,r);},levels=[.1,.3,.7,1.5,3,6,12,24],step=.23;let h='';
+ for(const level of levels){let path='';for(let i=0;i<38;i++)for(let j=0;j<32;j++){
+  const x=-4.37+i*step,y=-3.68+j*step,pts=[[x,y],[x+step,y],[x+step,y+step],[x,y+step]],vals=pts.map(f),hits=[];
+  for(let k=0;k<4;k++){const l=(k+1)%4;if((vals[k]<=level&&vals[l]>level)||(vals[l]<=level&&vals[k]>level))hits.push(mix(pts[k],pts[l],(level-vals[k])/(vals[l]-vals[k])));}
+  for(let k=0;k+1<hits.length;k+=2){const a=p(hits[k]),b=p(hits[k+1]);path+='M'+a.join(',')+'L'+b.join(',');}
+ }h+='<path d="'+path+'" fill="none" stroke="'+C.blue+'" stroke-width="1.1" opacity="'+(.28+Math.min(level,8)*.035)+'"/>';}
+ lossContours.key=cacheKey;lossContours.html=h;return h;
+}
+function derivativeSVG(d){
+ const k=S.entry,j=k%2,der=d.d.gA[k],f=d.d.f,xx=d.x[j],g=a=>f+der*a+.5*xx*xx*a*a,max=Math.max(.5,g(-1.5),g(1.5),f)*1.16;
+ const p=v=>[240+v[0]*123,310-v[1]/max*250];let h=svgStart('derivative','单个矩阵元素扰动后的真实损失与一阶切线');
+ for(let i=0;i<=4;i++){const y=max*i/4;h+=line([45,p([0,y])[1]],[438,p([0,y])[1]],'#e7ebf3');h+=textAt([36,p([0,y])[1]+4],fmt(y),C.gray,10,'end');}
+ h+=arrow([45,310],[444,310],C.gray,'δ')+line(p([0,0]),[240,42],'#c5ccda',1,'4 4');
+ for(const a of [-1.5,-1,-.5,0,.5,1,1.5])h+=textAt([p([a,0])[0],329],fmt(a),C.gray,11,'middle');
+ const pts=Array.from({length:81},(_,i)=>p([-1.5+i*3/80,g(-1.5+i*3/80)]));h+='<polyline points="'+pts.map(x=>x.join(',')).join(' ')+'" fill="none" stroke="'+C.blue+'" stroke-width="2.6"/>';
+ h+=line(p([-1.5,f-1.5*der]),p([1.5,f+1.5*der]),C.pink,1.7,'6 4');
+ h+=circle(p([0,f]),5,'white',C.pink,2)+circle(p([S.probe,g(S.probe)]),6,'white',C.teal,2)+line(p([S.probe,0]),p([S.probe,g(S.probe)]),C.teal,1,'4 4');
+ h+=textAt([34,31],'∂f / ∂A'+['₁₁','₁₂','₂₁','₂₂'][k]+' = '+fmt(der),C.pink,15)+textAt([34,355],'g(δ) = f + δ rᵢ xⱼ + ½ δ² xⱼ²',C.ink,13);
+ return h+svgEnd();
+}
+function cross3(a,b){return[a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
+function path3(points,p,color,width=2,opacity=1,dash=''){return '<polyline points="'+points.map(x=>p(x).join(',')).join(' ')+'" fill="none" stroke="'+color+'" stroke-width="'+width+'" opacity="'+opacity+'"'+(dash?' stroke-dasharray="'+dash+'"':'')+'/>';}
+function frame3(p,R=I3,origin=[0,0,0],len=1.8,suffix='B',dashed=false){return [C.blue,C.orange,C.teal].map((c,i)=>{const axis=[R[i],R[3+i],R[6+i]],labels=['x','y','z'];return arrow(p(origin),p(add(origin,scale(axis,len))),c,suffix===null?'':labels[i]+'_'+suffix,'',[[10,15],[-24,-8],[10,-8]][i],dashed);}).join('');}
+function cuboid3(p,depth,R,origin=[0,0,0],ghost=false){
+ const local=[[-.7,-.43,-.26],[1.1,-.43,-.26],[1.1,.43,-.26],[-.7,.43,-.26],[-.7,-.43,.26],[1.1,-.43,.26],[1.1,.43,.26],[-.7,.43,.26]],vs=local.map(v=>add(origin,mv3(R,v)));
+ const faces=[[0,1,2,3],[4,5,6,7],[0,1,5,4],[1,2,6,5],[2,3,7,6],[3,0,4,7]],cols=['#dde5fa','#e9def3','#dcefeb','#f7dfca','#e2e6ef','#dfe5fa'];
+ let h=faces.map((f,i)=>({d:f.reduce((s,k)=>s+depth(vs[k]),0)/4,html:poly(f.map(k=>p(vs[k])),ghost?'#f8f9fc':cols[i],ghost?'#bdc7d5':'#9bacc5',1,ghost?.15:.85)})).sort((a,b)=>b.d-a.d).map(x=>x.html).join('');
+ if(!ghost)h+=circle(p(add(origin,mv3(R,[1.1,.43,.26]))),4,C.pink);return h;
+}
+function scene3(key,title,draw,fit=1){const pr=projector(480,370,1,fit);return svgStart(key,title).replace(' role="img"',' data-camera="true" role="img"')+base3(pr.p)+draw(pr)+textAt([20,349],'拖动：旋转观察视角',C.gray,11)+svgEnd();}
+function ring3(p,n,r,color,origin=[0,0,0]){const a=unit(cross3(n,Math.abs(n[2])<.9?[0,0,1]:[0,1,0])),b=cross3(n,a);return path3(Array.from({length:101},(_,i)=>add(origin,scale(add(scale(a,Math.cos(i*Math.PI/50)),scale(b,Math.sin(i*Math.PI/50))),r))),p,color,1.8,.6);}
+function rotationArc(p,n,v,theta){return path3(Array.from({length:61},(_,i)=>mv3(axisRotation(n,theta*i/60),v)),p,C.purple,2,.6,'3 3');}
+function frameData(){const R=eulerR(deg(S.rollDeg)*S.t,deg(S.pitchDeg)*S.t,deg(S.yawDeg)*S.t),t=scale(S.translation,S.t),vB=mv3(tr3(R),S.direction?S.point3:sub(S.point3,t));return{R,t,vB,recovered:add(mv3(R,vB),S.direction?[0,0,0]:t)};}
+function eulerData(){const u=S.t*3,roll=deg(S.rollDeg)*clamp(u-2,0,1),pitch=deg(S.pitchDeg)*clamp(u-1,0,1),yaw=deg(S.yawDeg)*clamp(u,0,1),E=eulerRateMatrix(roll,pitch),sn=Math.abs(Math.sin(pitch)),min=Math.sqrt(Math.max(0,1-sn)),max=Math.sqrt(1+sn);return{roll,pitch,yaw,R:eulerR(roll,pitch,yaw),E,min,max,condition:min<1e-8?Infinity:max/min};}
+function quaternionData(){const n=axisFromAngles(S.axisAz,S.axisEl),raw=scale(quatAxis(n,deg(S.rotDeg)),S.negateQ?-1:1),q=slerp([1,0,0,0],raw,S.t,S.shortest,n),end=S.shortest&&raw[0]<0?scale(raw,-1):raw;let omega=Math.atan2(dot(end.slice(1),n),end[0]);if(Math.abs(end[0]+1)<1e-8&&norm(end.slice(1))<1e-8)omega=Math.PI;return{n,raw,q,end,omega,R:quatToR(q)};}
+function quaternionCircle(d){
+ const p=v=>[240+125*v[0],185-125*v[1]];let h=svgStart('qcircle','固定轴四元数大圆截面，横轴 w，纵轴 n 与四元数向量部分的内积');
+ h+=line([70,185],[412,185],'#d1d8e5')+line([240,31],[240,337],'#d1d8e5')+circle(p([0,0]),125,'#f9faff','#c9d3e8',1.3);
+ h+=textAt([421,190],'w',C.gray,14)+textAt([248,26],'n · (x,y,z)',C.gray,13)+textAt([240,359],'S³ 中固定轴轨迹的二维截面',C.gray,12,'middle');
+ const pts=Array.from({length:81},(_,i)=>p([Math.cos(d.omega*i/80),Math.sin(d.omega*i/80)]));h+='<polyline points="'+pts.map(x=>x.join(',')).join(' ')+'" fill="none" stroke="'+C.purple+'" stroke-width="4" opacity=".28"/>';
+ const raw=[d.raw[0],dot(d.raw.slice(1),d.n)],cur=[d.q[0],dot(d.q.slice(1),d.n)];
+ h+=line(p(raw),p(scale(raw,-1)),C.gray,1,'4 4')+circle(p(scale(raw,-1)),5,'white',C.orange,2)+textAt(add(p(scale(raw,-1)),[-12,20]),'−q',C.orange,13,'end');
+ h+=circle(p([1,0]),5,C.blue)+textAt([376,208],'q₀ = 1',C.blue,12)+circle(p(raw),6,'white',C.purple,2)+textAt(add(p(raw),[10,-12]),'q目标',C.purple,13);
+ h+=arrow(p([0,0]),p(cur),C.teal,'q(t)','',[10,20])+textAt([23,31],'‖q(t)‖ = '+fmt(norm(d.q),5),C.teal,14);return h+svgEnd();
+}
+function renderAdvancedScene(){
+ const id=lessons[topicIndex].id;let h='',eq='';$('visuals').className='visuals';
+ if(id==='calculus'){
+  const d=descentData(),sigma=svd2(S.A).s,L=sigma[0]**2,limit=L>1e-10?2/L:Infinity;
+  const left=plane2('loss','损失等高线、起点与梯度下降轨迹',I,{circle:false,unitSquare:false,axes:false,extra:p=>{
+   let s=lossContours(p);s+=path3(d.points.map(v=>[...v]),p,C.teal,1.6,.32,'4 4');
+   const visible=d.points.slice(0,d.j+1).concat([d.x]);s+=path3(visible,p,C.teal,2.5);for(const v of d.points)s+=circle(p(v),2.6,C.teal);
+   s+=arrow(p(d.x),p(sub(d.x,scale(d.d.gx,.5))),C.pink,'−½∇f','',[9,-9]);s+=circle(p(d.x),6,'white',C.teal,2);s+=arrow(p([0,0]),p(S.v),C.purple,'x₀','v',[10,19]);
+   return s+textAt([24,29],'f(x) = '+fmt(d.d.f)+'  ·  k ≈ '+fmt(S.t*12,1),C.teal,14);
+  }});
+  h=plot('对向量 x 求导',left,'紫色点可拖动 · 粉色箭头为 −½∇f','ℝ² → ℝ')+plot('对矩阵的一个元素求导',derivativeSVG(d),'蓝色：真实损失 · 粉色虚线：一阶近似','∂f / ∂Aᵢⱼ');
+  eq=token('x(t)',d.x,1)+token('r',d.d.r,1)+token('∇ₓf',d.d.gx,1)+token('∇Af',d.d.gA)+'<div class="badges">'+badge('f(x₀)',fmt(d.initial.f))+badge('f(x(t))',fmt(d.d.f))+badge('2 / λmax(H)',L>1e-10?fmt(limit,3):'无上界')+'</div>';
+  setObs(S.eta<limit?'学习率位于梯度下降的稳定区间':'学习率过大：部分方向会振荡或发散','∇ₓf=Aᵀ(Ax−b)，∇Af=(Ax−b)xᵀ。右图固定当前 x，只扰动所选矩阵元素。'+(L<1e-10?'当前 A=0，对 x 的损失是常数。':sigma[1]<1e-9?'H 存在零特征值：平坦方向不会靠梯度下降自动消失。':'误差在各 Hessian 特征方向上乘以 1−ηλᵢ。')+(d.stopped?' 轨迹数值已超过显示阈值，仅绘制越界前的迭代。':''));
+  setLegend([['起点 x₀',C.purple],['梯度下降',C.teal],['导数 / 切线',C.pink]]);
+ }else if(id==='frames'){
+  const d=frameData(),origin=S.direction?[0,0,0]:d.t,fit=.86/Math.max(1,norm(S.point3)/3.1,norm(d.t)/3.1,norm(d.vB)/3.1);
+  h=plot('同一几何对象 · 世界系视图',scene3('worldFrame','世界坐标架与运动坐标架',({p})=>frame3(p,d.R,d.t,1.35)+arrow(p(origin),p(S.direction?add(origin,S.point3):S.point3),C.purple,S.direction?'v_W':'p','',[10,-8])+line(p([0,0,0]),p(d.t),C.gray,1.5,'4 4')+circle(p(d.t),4,C.ink),fit),'B 坐标架运动；世界对象保持不变','W 与 B')+
+   plot('在 B 系中读出的坐标',scene3('localFrame','同一对象在 B 坐标系中的坐标图',({p})=>frame3(p,I3,[0,0,0],1.35,'B')+arrow(p([0,0,0]),p(d.vB),C.purple,S.direction?'v_B':'p_B','',[10,-10]),fit),'右图以 B 为数值坐标；两幅图的原点含义不同',S.direction?'v_B = Rᵀv_W':'p_B = Rᵀ(p_W − t)');
+  const hp=S.direction?0:1;eq=token('T_WB',homogeneous(d.R,d.t),4)+op('×')+token(S.direction?'[v_B;0]':'[p_B;1]',[...d.vB,hp],1)+op('=')+token(S.direction?'[v_W;0]':'[p_W;1]',[...S.point3,hp],1)+'<div class="badges">'+badge('往返误差',fmt(norm(sub(d.recovered,S.point3)),8))+'</div>';
+  setObs(S.direction?'自由向量只改变分量，不受平移影响':'点没移动，坐标为什么变了？',S.direction?'齐次坐标的最后一项是 0，T 乘法中的平移项被消去。转动 B 系仍会改变向量的三个分量。':'先减去 B 原点的世界坐标 t，再乘 Rᵀ，将差向量投到 B 的三根单位轴上。R_WB 的三列就是 B 的轴在 W 中的坐标。');
+  setLegend([['B 的 x 轴',C.blue],['B 的 y 轴',C.orange],['B 的 z 轴',C.teal],['同一对象',C.purple]]);
+ }else if(id==='rotation'){
+  const n=axisFromAngles(S.axisAz,S.axisEl),a=deg(S.rotDeg)*S.t,R=axisRotation(n,a),v=mv3(R,S.point3),pass=mv3(tr3(R),S.point3);
+  h=plot('主动旋转 · 向量与物体转动',scene3('activeR','轴角旋转物体，坐标系固定',({p,depth})=>cuboid3(p,depth,I3,[0,0,0],true)+cuboid3(p,depth,R)+frame3(p,R,[0,0,0],1.45)+rotationArc(p,n,S.point3,a)+arrow(p([0,0,0]),p(v),C.purple,'Rv','',[10,18])+arrow(p(scale(n,-2)),p(scale(n,2.3)),C.pink,'n')),'实线：当前姿态 · 虚影：初始姿态','v′ = Rv')+
+   plot('被动换坐标 · 物理向量不动',scene3('passiveR','同一固定向量在旋转坐标架中的分量',({p})=>frame3(p,I3,[0,0,0],1.45,'B')+rotationArc(p,n,S.point3,-a)+arrow(p([0,0,0]),p(pass),C.purple,'Rᵀv','',[10,18])+arrow(p(scale(n,-1.8)),p(scale(n,2.2)),C.pink,'n')),'右图显示 B 系分量，不表示物体反向运动','v_B = Rᵀv_W');
+  eq=token('R(n,θt)',R,3)+token('n',n,1)+token('Rv',v,1)+'<div class="badges">'+badge('det R',fmt(det3(R),5))+badge('‖RᵀR − I‖F',fmt(norm(sub(mm3(tr3(R),R),I3)),8))+badge('‖Rv‖ / ‖v‖',norm(S.point3)>1e-9?fmt(norm(v)/norm(S.point3),5):'v = 0')+'</div>';
+  setObs('转的是向量，还是用来描述它的坐标架？','当前旋转角 '+fmt(S.rotDeg*S.t)+'°。主动旋转使用 R；坐标架按同样姿态转动时，固定向量的新分量使用 Rᵀ。旋转轴 n 满足 Rn=n，所有长度与夹角保持不变。');
+  setLegend([['三根旋转后的基轴',C.blue],['旋转轴 n',C.pink],['向量 / 轨迹',C.purple]]);
+ }else if(id==='euler'){
+  const d=eulerData(),RzNow=Rz(d.yaw),Rzy=mm3(RzNow,Ry(d.pitch)),az=[0,0,1],ay=mv3(RzNow,[0,1,0]),ax=mv3(Rzy,[1,0,0]);
+  h=plot('Z → Y → X · 随动轴逐次旋转',scene3('gimbals','欧拉角的三根随动旋转轴',({p,depth})=>ring3(p,az,2.1,C.teal)+ring3(p,ay,1.8,C.orange)+ring3(p,ax,1.5,C.blue)+cuboid3(p,depth,d.R)+frame3(p,d.R,[0,0,0],1.18,null)+arrow(p(scale(az,-2.15)),p(scale(az,2.2)),C.teal,'Z')+arrow(p(scale(ay,-1.85)),p(scale(ay,1.85)),C.orange,'Y′')+arrow(p(scale(ax,-1.6)),p(scale(ax,1.6)),C.blue,'X″'),.85),'环表示旋转轴 · 播放时先 Z、再 Y′、后 X″','内禀 Z–Y–X')+
+   plot('角速度映射 E 的三个列向量',scene3('rateAxes','角速度参数映射矩阵 E 的列空间',({p})=>[C.blue,C.orange,C.teal].map((c,i)=>arrow(p([0,0,0]),p(scale([d.E[i],d.E[3+i],d.E[6+i]],1.8)),c,['eφ','eθ','eψ'][i],'',[[9,-11],[-25,-12],[10,22]][i])).join('')+textAt([24,30],'det E = cosθ = '+fmt(Math.cos(d.pitch),4),C.ink,14)),'箭头均放大 1.8 倍 · 共线意味着参数方向冗余','ω_B = E · [φ̇, θ̇, ψ̇]ᵀ');
+  eq=token('R',d.R,3)+token('E(φ,θ)',d.E,3)+'<div class="badges">'+badge('当前 φ, θ, ψ',fmt(d.roll*180/Math.PI)+'°, '+fmt(d.pitch*180/Math.PI)+'°, '+fmt(d.yaw*180/Math.PI)+'°')+badge('σmin(E)',fmt(d.min,4))+badge('κ₂(E)',Number.isFinite(d.condition)?fmt(d.condition,2):'∞')+'</div>';
+  setObs(d.min<1e-8?'万向节锁：R 可逆，但欧拉角速率映射降秩':d.min<.15?'接近万向节锁：小误差可能放大成很大的角速率':'三根瞬时转轴目前提供三个独立方向','左图描述姿态 R，右图描述参数变化率如何合成为真实角速度。'+(d.min<1e-8?'此时 E 的第一、第三列共线。选择锁定预设后点击“保持姿态，改变两角”，可直接验证表示冗余。':'一般而言 (φ̇, θ̇, ψ̇) 不等于 ω。滑动俯仰到 ±90°，观察最小奇异值趋于零。'));
+  setLegend([['滚转 X″ / eφ',C.blue],['俯仰 Y′ / eθ',C.orange],['偏航 Z / eψ',C.teal]]);
+ }else if(id==='quaternion'){
+  const d=quaternionData(),v=[.4,1.4,.8];
+  h=plot('插值中的真实三维姿态',scene3('quatBody','四元数球面插值对应的三维姿态',({p,depth})=>cuboid3(p,depth,I3,[0,0,0],true)+cuboid3(p,depth,d.R)+frame3(p,d.R,[0,0,0],1.6)+arrow(p(scale(d.n,-1.9)),p(scale(d.n,2.2)),C.pink,'n')+rotationArc(p,d.n,v,2*d.omega)+arrow(p([0,0,0]),p(mv3(d.R,v)),C.purple,'R(q)v','',[10,18])),'相同颜色的三根基轴始终正交 · 物体保持刚性','q(t) → R(q(t))')+
+   plot('四元数表示 · 沿球面走一段弧',quaternionCircle(d),'橙点 −q 与紫点 q 对应同一目标姿态','SLERP · 固定轴截面');
+  eq=token('q目标',d.raw,1)+op('→')+token('q(t)',d.q,1)+token('R(q(t))',d.R,3)+'<div class="badges">'+badge('四元数路径角',fmt(Math.abs(d.omega)*180/Math.PI)+'°')+badge('物理路径角',fmt(Math.abs(d.omega)*360/Math.PI)+'°')+badge('‖R(q) − R(−q)‖F',fmt(norm(sub(quatToR(d.raw),quatToR(scale(d.raw,-1)))),8))+'</div>';
+  setObs(S.shortest?'自动半球修正：选择较短的姿态路径':'不做半球修正：保留所选四元数代表点的路径','q 与 −q 表示同一目标姿态，但从单位起点走向它们的球面路径可能不同。'+(S.shortest&&d.raw[0]<0?'当前目标与起点点积为负，实际插值使用 −q目标。':'当前插值使用图中的目标代表点。')+(Math.abs(d.end[0]+1)<1e-8?' 终点与起点对跖，实验按所选轴确定一条非唯一大圆路径。':''));
+  setLegend([['目标 q',C.purple],['同姿态 −q',C.orange],['当前 q(t)',C.teal],['旋转轴 n',C.pink]]);
+ }
+ $('visuals').innerHTML=h;$('equation').innerHTML=eq;$('progress').value=S.t;$('progressValue').textContent=Math.round(S.t*100)+'%';
+ document.querySelectorAll('.walkstep').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===stepIndex));
+}
+
+const lessonExtensions={
+ transform:'<h4>严格定义：什么才是线性映射？</h4><p>设 V、W 是实向量空间，T:V→W 是线性的，当且仅当对任意 u、v 与实数 α、β，有 T(αu+βv)=αT(u)+βT(v)。取 u=v=0 可得 T(0)=0，因此平移 x↦Ax+b 在 b≠0 时是仿射映射，不是线性映射。</p>'+formula('T(x) = T(Σⱼ xⱼeⱼ) = Σⱼ xⱼT(eⱼ) = [T(e₁) ⋯ T(eₙ)]x')+'<p>这一步解释了为什么矩阵的列是基向量的去向。矩阵是选定输入基、输出基之后的表示；线性映射本身不依赖某一套坐标。</p><h4>矩形矩阵：输入和输出维度可以不同</h4>'+formula('A∈ℝᵐˣⁿ：ℝⁿ → ℝᵐ　；　Ax=Σⱼxⱼaⱼ')+'<p>例如 A=[[1,0],[0,1],[1,1]] 把 (x,y) 映到 (x,y,x+y)，输出落在三维空间中的平面 z=x+y。反之，一个 2×3 矩阵可能把三维空间压到二维。屏幕上的 2×2 实验方便观察，但线性代数并不限于二维。</p><h4>像、核与方程的全部解</h4><div class="theorem">Im(A)=Col(A)={Ax} 描述能到达的输出；ker(A)={x:Ax=0} 描述被完全抹去的输入。Ax=b 有解当且仅当 b∈Col(A)。</div><p>若 x₀ 是一个特解，所有解恰为 x=x₀+z，z∈ker(A)。输出相同的两个输入，其差一定落在核里。这把“图形压扁”与“方程解不唯一”联系起来。</p><h4>一个可验证的例题</h4><div class="worked"><p>A=[[1,2],[0,1]]，x=(2,−1)ᵀ。矩阵的两列是 (1,0)ᵀ 与 (2,1)ᵀ，所以 Ax=2(1,0)−(2,1)=(0,−1)。也可把它理解为先沿 x 方向剪切，y 分量保持不变。</p></div><p>实验中 A(t)=(1−t)I+tA 只是一条用于观察空间变形的连续路径，中间矩阵不一定与目标 A 拥有相同的秩、行列式符号或正交性；旋转矩阵栏目会专门展示始终保持刚性的路径。</p>',
+ basis:'<h4>基存在的条件：独立且张成整个空间</h4><p>在 n 维空间中，n 根向量构成基，当且仅当它们线性无关，也等价于基矩阵 P 可逆。只有这时，每个向量都具有唯一的一组坐标。非正交的基同样合法；“互相垂直”不是基的必要条件。</p>'+formula('v = P[v]ᴮ，　[v]ᴮ = P⁻¹v')+'<h4>斜基不能直接点乘读坐标</h4><div class="theorem">只有 P 的列为标准正交基时，P⁻¹=Pᵀ，坐标才等于与各基轴的点积。一般基要用 P⁻¹；直接用 Pᵀ 会把投影误当作坐标。</div><div class="worked"><p>P=[[1,1],[0,1]]，v=(2,1)ᵀ。正确新坐标是 (1,1)ᵀ，因为 (2,1)=(1,0)+(1,1)。但 Pᵀv=(2,3)ᵀ，它不是这套基中的坐标。</p></div><h4>对偶基与度量矩阵</h4><p>P⁻¹ 的每一行可看作一个线性读数器，作用于 v 后直接给出一个坐标。若旧坐标使用标准欧氏内积，新坐标 c=[v]ᴮ 的长度为：</p>'+formula('‖v‖² = cᵀGc，　G=PᵀP')+'<p>G 称为 Gram 矩阵。斜基中的普通坐标平方和 cᵀc 通常不等于几何长度平方；换坐标没有改变物体长度，改变的是数值分量及它们对应的度量。</p><h4>为什么算子的换基是左右各乘一次？</h4>'+formula('[T(v)]ᴮ = P⁻¹AP[v]ᴮ，　Aᴮ=P⁻¹AP')+'<p>最右边 P 将新坐标变回旧坐标，中间 A 执行映射，左边 P⁻¹ 将结果重新编码。这是相似变换。它保持特征值、迹和行列式，但一般不保持奇异值，因为非正交换基会改变坐标中的欧氏度量。</p><h4>病态的基与数值误差</h4><p>当两根基向量几乎共线，P⁻¹ 的范数会很大。很小的几何误差会变成很大的坐标误差。完全共线时 P 不可逆，“新坐标系”已不再是一套二维基；不能继续套用逆矩阵公式。</p>',
+ determinant:'<h4>行列式的本质：有向体积的缩放</h4><p>对方阵 A∈ℝⁿˣⁿ，det A 衡量有向 n 维体积的缩放。二维是有向面积，三维是有向体积。实际面积或体积乘以 |det A|；符号只记录定向是否翻转，不能解释为“负的物理面积”。</p>'+formula('det(AB)=det A · det B，　det Aᵀ=det A')+'<p>对角矩阵的行列式是对角元素之积。一般方阵的行列式也是所有复特征值按代数重数计算的乘积，因此不能把 det A 当成任意单一方向的长度变化。</p><h4>秩的统一解释</h4>'+formula('rank A = dim Col(A) = dim Row(A) = 非零奇异值的个数')+'<p>若 A 是 m×n 矩阵，秩至多为 min(m,n)。行秩与列秩总是相同，但它们对应的空间分别位于 ℝⁿ 和 ℝᵐ。矩形矩阵通常没有行列式，却仍有完整的秩与零空间理论。</p><h4>秩–零化度定理与可逆性的等价条件</h4>'+formula('rank A + dim ker A = n')+'<p>对 n×n 方阵，以下条件等价：det A≠0；rank A=n；ker A={0}；A 可逆；对每个 b，Ax=b 有唯一解。它们是同一件事的体积、维度、信息和方程视角。</p><h4>秩一矩阵的例题</h4><div class="worked"><p>A=[[1,2],[2,4]] 可写为 (1,2)ᵀ(1,2)。因此 Ax=(x₁+2x₂)(1,2)ᵀ，像空间是一条直线，核是 span{(−2,1)ᵀ}。平面内无穷多个点映到同一个输出，行列式为零。</p></div><h4>数值秩不宜只靠 det 是否接近零判断</h4><p>det 会随整体尺度的 n 次幂变化。diag(10⁻⁸,10⁻⁸) 的行列式极小，但两个方向的相对缩放相同，条件数为 1；diag(10⁸,10⁻⁸) 的行列式为 1，却极度病态。数值计算通常比较奇异值与尺度相关的阈值，而不是只设置一个行列式阈值。</p>',
+ eigen:'<h4>特征空间与代数重数</h4>'+formula('Av=λv，v≠0　；　Eλ=ker(A−λI)')+'<p>λ 可以为负数或复数。负实特征值表示方向翻转并缩放；λ=0 对应非零核向量。特征向量不是唯一的一根箭头，同一特征空间内的任何非零向量都成立。</p><p>特征多项式 det(A−λI) 中根 λ 的次数叫代数重数；dim Eλ 叫几何重数。几何重数至少为 1，至多等于代数重数。</p><h4>可对角化到底需要什么？</h4>'+formula('A=PDP⁻¹ ⇔ 存在 n 个线性无关的特征向量')+'<div class="worked"><p>A=[[1,1],[0,1]] 的唯一特征值是 1，代数重数为 2，但特征空间只有 x 轴，几何重数为 1。它不能对角化，却可以做 SVD。将“有 n 个特征值”误当成“有 n 根独立特征向量”，会漏掉这种情况。</p></div><h4>实对称矩阵的谱定理</h4>'+formula('A=Aᵀ ⇒ A=QΛQᵀ，QᵀQ=I，Λ 为实对角矩阵')+'<p>不同特征值对应的特征向量正交；重复特征值的特征空间中也可以选标准正交基。因此实对称矩阵总能正交对角化。一般非对称矩阵没有这个保证。</p><h4>旋转为什么可能没有实特征方向？</h4><p>二维旋转 90° 的矩阵 [[0,−1],[1,0]] 对任何非零实向量都会改变所在直线，所以没有实特征向量；复特征值为 ±i。三维真旋转则至少有一条不动轴，其特征值为 1。</p><h4>迭代动力系统与谱半径</h4>'+formula('xₖ=Aᵏx₀；若 A=PDP⁻¹，则 Aᵏ=PDᵏP⁻¹')+'<p>在可对角化的情形下，各特征方向每次乘 λ。更一般地，有限维矩阵满足 Aᵏ→0 当且仅当谱半径 ρ(A)=max|λᵢ|&lt;1。非正规矩阵即使最终衰减，也可能出现明显的短期放大；因此仅看特征值还不能描述每一步的最大伸长。</p>',
+ composition:'<h4>先检查维度，再谈乘法顺序</h4>'+formula('B∈ℝᵖˣⁿ，A∈ℝᵐˣᵖ ⇒ AB∈ℝᵐˣⁿ')+'<p>B 把输入从 n 维送到 p 维，A 再从 p 维送到 m 维。AB 的第 j 列是 A(Beⱼ)，也就是 B 的第 j 列继续经过 A 后的结果。即使 AB 有定义，BA 也可能没有定义。</p><h4>矩阵乘法来自复合映射</h4>'+formula('(AB)ᵢⱼ = Σₖ AᵢₖBₖⱼ')+'<p>结合律 (AB)C=A(BC) 来自函数复合的结合律；它允许改变括号，却不允许任意交换次序。一般 AB≠BA，差 AB−BA 称为交换子。</p><h4>逆与转置为什么都要反过来？</h4>'+formula('(AB)⁻¹=B⁻¹A⁻¹，　(AB)ᵀ=BᵀAᵀ')+'<p>撤销复合过程时，先撤销最后发生的 A，再撤销 B。逆矩阵公式要求两个方阵都可逆；转置公式只要求原乘法的维度相容。</p><h4>用一个向量验证不交换</h4><div class="worked"><p>令 S=diag(2,1)，R 为逆时针 90° 旋转。对 e₁=(1,0)ᵀ，先缩放再旋转得到 RSe₁=(0,2)ᵀ；先旋转再缩放得到 SRe₁=(0,1)ᵀ。缩放只加强固定 x 方向，而旋转改变了向量与该方向的关系。</p></div><h4>什么时候会交换？</h4><p>单位矩阵与所有矩阵交换；标量矩阵 cI 也一样。共享同一组特征向量、可以被同一个 P 同时对角化的矩阵会交换。同一固定轴的三维旋转也会交换，但绕不同轴旋转通常不交换。</p>',
+ projection:'<h4>最小二乘从正交条件到正规方程</h4>'+formula('minₓ ½‖Ax−b‖² ⇒ Aᵀ(Ax̂−b)=0')+'<p>残差 r=b−Ax̂ 与 A 的每一列正交，所以 Aᵀr=0。几何上，Ax̂ 是 b 在 Col(A) 上的正交投影。该投影向量是唯一的；系数 x̂ 是否唯一，则取决于 A 是否满列秩。</p><h4>投影矩阵的两个必要结构</h4>'+formula('P=A(AᵀA)⁻¹Aᵀ（A 满列秩），　P=AA⁺（一般情形）')+'<div class="theorem">正交投影矩阵满足 P²=P 与 Pᵀ=P。幂等说明投影两次等于一次；对称性说明投影方向与目标子空间正交。只满足幂等的投影也可能是斜投影。</div><h4>把图中的 3×2 例子算到底</h4><p>实验 A 的两列为 (1,0,s)ᵀ 与 (0,1,0)ᵀ，因此：</p>'+formula('AᵀA=diag(1+s²,1)，　x̂=((b₁+sb₃)/(1+s²), b₂)ᵀ')+'<div class="worked"><p>取 s=1、b=(1,2,3)ᵀ，则 x̂=(2,2)ᵀ，投影 p=(2,2,2)ᵀ，残差 r=(−1,0,1)ᵀ。r 与两列的点积均为零，最小残差范数为 √2。</p></div><h4>为什么实际计算常用 QR 或 SVD？</h4><p>对满列秩 A，κ₂(AᵀA)=κ₂(A)²。形成正规方程可能使数值病态更严重。QR 分解 A=QR 后解 Rx=Qᵀb；若秩亏或需要稳定的最小范数解，可使用 SVD 和伪逆。公式中的逆矩阵用于数学表达，编程时通常求解线性方程而不显式求逆。</p><h4>加权最小二乘与岭回归</h4>'+formula('minₓ ½(Ax−b)ᵀW(Ax−b)，　AᵀW(Ax̂−b)=0')+'<p>W 对称正定时，“垂直”要按加权内积理解。岭回归加入 λ‖x‖²/2 后得到 (AᵀA+λI)x̂=Aᵀb。λ&gt;0 可抑制小奇异值方向的噪声放大，但改变了原始优化目标，会引入收缩偏差。</p>',
+ quadratic:'<h4>二次型只由对称部分决定</h4>'+formula('xᵀAx = xᵀ[(A+Aᵀ)/2]x')+'<p>反对称部分 K 满足 xᵀKx=0。因此分析实二次型时总可以改用对称矩阵。实验把两个非对角元素联动，正是为了直接展示这一代表。</p><h4>正定性与特征值</h4><p>对称矩阵 A 正定，当且仅当所有特征值都大于零；半正定对应全部非负；不定对应同时存在正、负特征值。正定要求对所有非零 x 都有 xᵀAx&gt;0，不能只在少数采样方向上检查。</p>'+formula('A=QΛQᵀ，z=Qᵀx ⇒ xᵀAx=Σᵢλᵢzᵢ²')+'<p>这解释了主轴为什么由特征向量给出。对正定 A，等值线 xᵀAx=c 的半轴长度为 √(c/λᵢ)：曲率更大的方向，等高椭圆反而更窄。</p><h4>二阶导与凸性</h4>'+formula('∇(xᵀAx)=2Ax，　∇²(xᵀAx)=2A（A 对称）')+'<p>若使用 ½xᵀAx，则梯度和 Hessian 分别是 Ax、A。因子 ½ 不改变最小点，却改变梯度数值。二次函数全局凸当且仅当 A 半正定；严格凸当且仅当 A 正定。</p><h4>配方把线性项吸收到中心</h4>'+formula('f(x)=½xᵀAx−bᵀx+c，　x*=A⁻¹b（A 正定）')+formula('f(x)=½(x−x*)ᵀA(x−x*)+f(x*)')+'<div class="worked"><p>A=[[2,1],[1,2]] 的特征值为 3 与 1，方向分别为 (1,1) 与 (1,−1)。等高椭圆沿前者更窄。若改成 [[1,0],[0,−1]]，原点变成鞍点：沿 x 方向升高，沿 y 方向降低。</p></div><h4>相似变换与合同变换不要混用</h4><p>线性算子换基使用 P⁻¹AP；二次型换变量 x=Pz 使用 PᵀAP，称为合同变换。任意可逆合同变换保持正、负、零惯性指数，但一般不保持每个特征值的具体数值。只有正交 P 时，这两个表达才一致。</p>',
+ svd:'<h4>严格定义：矩形矩阵的完整与紧致 SVD</h4><p>对任意实矩阵 A∈ℝᵐˣⁿ，存在 U∈ℝᵐˣᵐ、V∈ℝⁿˣⁿ 为正交矩阵，以及矩形对角矩阵 Σ∈ℝᵐˣⁿ，使 A=UΣVᵀ。非负奇异值按 σ₁≥σ₂≥⋯ 排列。若 rank A=r，可写紧致形式：</p>'+formula('A=UᵣΣᵣVᵣᵀ = Σ<sub>i=1</sub><sup>r</sup> σᵢuᵢvᵢᵀ')+'<p>这里 Uᵣ 为 m×r、Σᵣ 为 r×r、Vᵣ 为 n×r；它们只保留非零奇异值对应的方向。各项 σᵢuᵢvᵢᵀ 都是一个秩一映射：先向 vᵢ 取分量，再把该分量沿 uᵢ 输出。</p><h4>从谱定理推导奇异方向</h4>'+formula('AᵀAvᵢ=σᵢ²vᵢ，　uᵢ=Avᵢ/σᵢ（σᵢ&gt;0）')+'<p>AᵀA 对称半正定，存在标准正交特征基。对两个非零奇异值方向，uᵢᵀuⱼ=vᵢᵀAᵀAvⱼ/(σᵢσⱼ)=δᵢⱼ，因此对应输出方向也正交。零奇异值对应的 u 不能通过除以零求出，需要补齐输出空间中的正交基。</p><h4>四个基本子空间一次看清</h4><table><tr><th>空间</th><th>所在维度</th><th>SVD 给出的基</th></tr><tr><td>列空间 Col(A)</td><td>ℝᵐ</td><td>u₁,…,uᵣ</td></tr><tr><td>左零空间 ker(Aᵀ)</td><td>ℝᵐ</td><td>uᵣ₊₁,…,uₘ</td></tr><tr><td>行空间 Col(Aᵀ)</td><td>ℝⁿ</td><td>v₁,…,vᵣ</td></tr><tr><td>零空间 ker(A)</td><td>ℝⁿ</td><td>vᵣ₊₁,…,vₙ</td></tr></table><h4>长方形矩阵的完整数值例题</h4><div class="worked"><p>取 A=[[3,0],[0,1],[0,0]]。可以选 U=I₃、V=I₂，Σ 就是 A，奇异值为 3、1。若 b=(6,2,4)ᵀ：</p>'+formula('A⁺ = '+symMatrix([['1/3','0','0'],['0','1','0']])+'，　x̂=A⁺b=(2,2)ᵀ')+'<p>Ax̂=(6,2,0)ᵀ。第三维属于左零空间，b 的该部分无法被任何 Ax 拟合。残差 (0,0,4)ᵀ 与列空间正交。</p></div><h4>最佳低秩近似：为什么可以直接截断？</h4>'+formula('Aₖ=Σ<sub>i=1</sub><sup>k</sup> σᵢuᵢvᵢᵀ，　‖A−Aₖ‖₂=σₖ₊₁，　‖A−Aₖ‖F²=Σ<sub>i&gt;k</sub> σᵢ²')+'<p>最后一项求和范围为 i&gt;k。Eckart–Young–Mirsky 定理说明，Aₖ 在所有秩至多 k 的矩阵中，使谱范数误差和 Frobenius 范数误差最小。若截断边界处奇异值重复，最优近似可能不唯一。勾选“只保留最大奇异值”，图中删去的是最弱的输入→输出方向。</p><h4>伪逆、正则化与噪声</h4>'+formula('A⁺b=Σ<sub>i=1</sub><sup>r</sup> (uᵢᵀb/σᵢ)vᵢ')+'<p>很小的 σᵢ 会放大观测 b 在 uᵢ 方向上的扰动。截断伪逆直接删除低于阈值的方向；岭回归把 1/σᵢ 改为 σᵢ/(σᵢ²+λ)。前者是硬截断，后者是连续收缩，二者都在拟合与稳定性之间作取舍。</p><h4>与 PCA、特征分解的区别和联系</h4><p>对按列中心化的数据矩阵 X∈ℝᴺˣᵈ，X=UΣVᵀ，则样本协方差 XᵀX/(N−1)=VΣ²Vᵀ/(N−1)。主成分方向是 V 的列，方差是 σᵢ²/(N−1)，主成分得分为 XV=UΣ。未中心化就直接做 SVD，通常分析的是相对原点的能量方向，而不是通常定义的 PCA。</p><p>对实对称 A，奇异值等于特征值的绝对值；只有半正定时二者逐项相同。一般矩阵的奇异值与特征值没有这种简单对应。数值软件通常直接用稳定的 SVD 算法，不推荐为求 SVD 而显式形成 AᵀA，因为后者会平方条件数。</p>'
+};
+lessonExtensions.calculus='<h4>7. 推广到批量数据与反向传播</h4><p>令 X∈ℝⁿˣᴺ 的每一列是一个样本，W∈ℝᵐˣⁿ，Y∈ℝᵐˣᴺ。对批量平方损失：</p>'+formula('F(W)=½‖WX−Y‖F²，　∇WF=(WX−Y)Xᵀ')+'<p>单样本的 rxᵀ 变成所有样本外积贡献的总和。若前向过程 z=Wx、L=ℓ(z)，上游梯度为 g=∇zℓ，则链式法则给出 ∇xL=Wᵀg、∇WL=gxᵀ。这也是线性层反向传播的基本结构。</p><h4>8. 两个常用但有条件的矩阵微分</h4>'+formula('d log det X = tr(X⁻¹dX)，　∇X log det X=X⁻ᵀ')+'<p>这里使用实值 log det，需在 det X&gt;0 的可逆矩阵开集上讨论；优化里常进一步要求 X 对称正定。若改用 log|det X|，则可在任意可逆矩阵的连通区域讨论同一微分公式。矩阵梯度的转置来自所选 Frobenius 内积约定，不能随意省略。</p>';
+
+selectTopic(0);registerGeometryTools();
+</script>
+</body></html>
