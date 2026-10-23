@@ -1,0 +1,684 @@
+<!doctype html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="逐层探索 π0.5：从图像与语言，到注意力计算、流匹配和机器人动作。面向初学者的中文交互教程。"><meta name="theme-color" content="#7555cf"><title>π0.5 Explainer · 从像素到动作</title><style>:root{--ink:#292737;--muted:#85818f;--line:#e8e5ed;--purple:#7954c9;--purple-bg:#f4effc;--blue:#568fc9;--blue-bg:#edf5fd;--teal:#409e94;--teal-bg:#eaf7f3;--orange:#dc9451;--orange-bg:#fff3e7;--page:#fff;--shadow:0 12px 40px #35304b0d}*{box-sizing:border-box}body{margin:0;background:var(--page);color:var(--ink);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;font-size:14px;line-height:1.65}button,input,select{font:inherit}button,a,input,select{outline-offset:4px}button{cursor:pointer}button{color:inherit}button:disabled{cursor:default;opacity:.45}a{color:var(--purple);text-decoration:none}a:hover{text-decoration:underline}button:focus-visible,a:focus-visible{outline:3px solid #a590d9}button{border:1px solid var(--line);background:#fff;border-radius:7px}button:hover{border-color:#bcb1d7;background:#faf8fe}.topbar{height:82px;border-bottom:1px solid var(--line);padding:0 36px;display:flex;align-items:center;justify-content:space-between;gap:24px;background:#ffffffef;position:sticky;top:0;z-index:10;backdrop-filter:blur(16px)}.brand{display:flex;align-items:center;gap:13px;color:var(--purple);text-decoration:none!important;font-size:16px;font-weight:850;letter-spacing:.6px;line-height:1.25;flex-shrink:0}.brand-pi{font-family:Georgia,serif;font-size:49px;letter-spacing:-5px;line-height:1}.brand-pi small{font:600 16px Inter,sans-serif;letter-spacing:-1px}.brand-sub{display:block;font-size:10px;color:#92909a;letter-spacing:3px;margin-top:5px;font-weight:500}.topbar nav{display:flex;gap:7px}.topbar nav button{border:0;background:transparent;padding:9px 15px;font-size:13px;color:#777480;white-space:nowrap}.topbar nav button.active{background:var(--purple-bg);color:var(--purple);font-weight:650}.nav-dot{display:inline-block;width:5px;height:5px;border-radius:100%;background:var(--orange);margin:0 0 4px 5px}.source-button{display:flex;align-items:center;gap:6px;font-size:12px;padding:8px 12px;white-space:nowrap}.intro{padding:31px 40px 24px;display:flex;justify-content:space-between;align-items:center;gap:24px}.eyebrow{text-transform:uppercase;letter-spacing:2px;color:var(--purple);font-size:10px;font-weight:700}.intro h1{font-size:26px;line-height:1.4;letter-spacing:-.7px;margin:5px 0 8px;font-weight:660}.intro p{margin:0;color:#827e8c;font-size:13px}.intro-actions{display:flex;align-items:center;gap:12px}.primary{background:var(--purple);border-color:var(--purple);color:#fff;padding:9px 16px;font-weight:600}.primary:hover{background:#6942b8;color:white}.badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;letter-spacing:.3px;border:1px solid var(--line);border-radius:5px;padding:3px 7px;color:#7b7489;background:#fcfbfe}.badge.dot:before{content:"";height:5px;width:5px;border-radius:50%;background:var(--teal)}.workbench{margin:0 28px;border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:var(--shadow)}.toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;background:#fcfbfd;border-bottom:1px solid var(--line);padding:12px 17px}.task-control{display:flex;align-items:center;gap:10px}.label-small{color:#8b8595;font-size:11px}.toolbar select{border:1px solid #e4deed;border-radius:6px;background:white;padding:7px 32px 7px 10px;color:#4c445d;font-size:12px;max-width:265px}.play-controls{display:flex;gap:7px;align-items:center}.play-controls button{height:32px;padding:4px 12px;font-size:12px}.play-controls .icon-btn{font-size:16px;padding:4px 10px}.toolbar-right{display:flex;align-items:center;gap:17px}.toggle{display:flex;align-items:center;gap:7px;font-size:11px;color:#7a7485}.toggle input{accent-color:var(--purple)}.map-scroll{overflow:auto;background:radial-gradient(#d8d3e32b .7px,transparent .7px);background-size:16px 16px}.map{min-width:1160px;height:550px;position:relative;padding:0 20px;display:grid;grid-template-columns:228px 196px 230px 248px 180px;gap:25px;justify-content:center;align-items:start}.map-column{position:relative;z-index:2;padding-top:56px}.col-caption{position:absolute;top:16px;left:0;font-size:10px;letter-spacing:1.4px;color:#9a93a4}.col-caption b{margin-right:7px;color:#c6bfce;font-size:13px}.connectors{position:absolute;top:0;left:50%;transform:translateX(-50%);width:1182px;height:550px;z-index:1;pointer-events:none}.connectors path{fill:none;stroke-width:1.3;opacity:.55}.connectors .flowing{stroke-dasharray:5 7;animation:flow 1s linear infinite;stroke-width:2;opacity:.85}.map.paused .flowing{animation-play-state:paused}.node{display:block;width:100%;text-align:left;border:1px solid var(--border,#e2d8f1);border-radius:8px;background:var(--bg,#fcf9ff);position:relative;padding:13px 14px;margin-bottom:14px;transition:border .2s,box-shadow .2s,transform .2s}.node:hover{background:var(--bg);border-color:var(--accent);box-shadow:0 5px 16px #30234b12;transform:translateY(-2px)}.node.selected,.node.current{outline:2px solid var(--accent);outline-offset:3px}.node .expand{position:absolute;right:10px;top:10px;color:var(--accent);border:1px solid currentColor;width:14px;height:14px;border-radius:50%;font:12px/12px sans-serif;text-align:center;opacity:.65}.node-title{font-size:12px;font-weight:650;color:var(--accent);display:block;margin-bottom:4px}.node-desc{font-size:10px;color:#8b8396;display:block;line-height:1.6}.node-shape{font:10px/1.5 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--accent);display:block;margin-top:7px;letter-spacing:-.2px;opacity:.85}.blue{--accent:var(--blue);--border:#d2e3f5;--bg:var(--blue-bg)}.purple{--accent:var(--purple);--border:#dfd3f1;--bg:var(--purple-bg)}.teal{--accent:var(--teal);--border:#c7e8df;--bg:var(--teal-bg)}.orange{--accent:var(--orange);--border:#efd5ba;--bg:var(--orange-bg)}.camera-scene{height:96px;width:100%;display:block;margin:8px 0;border-radius:4px;overflow:hidden}.camera-tabs{display:flex;gap:4px;margin-top:7px}.camera-tabs span{font-size:9px;padding:1px 5px;background:#ffffffa6;color:#7a9db9;border-radius:3px}.node-text{font-size:11px;font-weight:500;color:#6a4c94;display:block;margin:10px 0 3px}.state-values{font:10px ui-monospace,monospace;display:flex;gap:4px;margin:9px 0 0}.state-values i{font-style:normal;background:#ffffffab;padding:4px 7px;border-radius:3px;color:var(--teal)}.patch-node{margin-top:23px}.patch-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:2px;margin:9px 14px}.patch-grid i{aspect-ratio:1;border-radius:1px;opacity:.85}.stack-bars{display:flex;gap:3px;height:40px;align-items:center;margin:12px 2px 4px}.stack-bars i{display:block;flex:1;border-radius:2px;background:var(--accent);opacity:.45;height:28px}.stack-bars i:nth-child(3n){height:35px;opacity:.65}.stack-bars i:nth-child(4n){opacity:.22}.vector-row{display:flex;gap:3px;margin:7px 0}.vector-row i{height:9px;flex:1;background:var(--accent);opacity:.3}.vector-row i:nth-child(3n){opacity:.7}.vector-row i:nth-child(4n){opacity:.15}.node-vision{margin-top:15px}.node-prefix{margin-top:20px}.token-strips{display:flex;gap:3px;height:54px;margin:11px 0}.token-strips div{flex:1;display:flex;flex-direction:column;gap:3px}.token-strips i{height:5px;border-radius:1px;background:var(--blue);opacity:.45}.token-strips div:last-child i{background:var(--purple)}.transformer-box{border:1px solid #ddd3ed;border-radius:10px;background:#fff;padding:12px 11px 7px;position:relative;margin-top:15px;box-shadow:3px 4px #f6f2fb,6px 8px #faf7fd}.transformer-head{font-size:11px;font-weight:600;color:#7c689a;margin-bottom:11px;display:flex;justify-content:space-between}.transformer-head span{font-size:9px;color:#aaa1b7;font-weight:400}.transformer-box .node{margin:0 0 8px;padding:9px 10px}.layer-link{display:block;margin-top:16px;font:9px ui-monospace,monospace;color:#b4a4cb;text-align:center}.mini-attn{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:7px;max-width:124px}.mini-attn i{aspect-ratio:1;background:var(--purple);border-radius:50%;opacity:.12}.mini-attn i:nth-child(5n){opacity:.65}.mini-attn i:nth-child(7n){opacity:.35}.mini-attn i:nth-child(11n){opacity:.9}.attention-inline{display:flex;align-items:center;justify-content:space-between}.qkv{display:flex;gap:5px;font:10px ui-monospace,monospace;margin:7px 0}.qkv span{padding:1px 9px;border-radius:3px}.qkv span:nth-child(1){background:#deeefa;color:#6499c1}.qkv span:nth-child(2){background:#f4dfe4;color:#c38394}.qkv span:nth-child(3){background:#dcf0e7;color:#5caa89}.expert-top{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:20px}.expert-top .node{padding:10px;margin:0}.expert-top .node-title{font-size:11px}.expert-top .node-shape{font-size:9px}.expert-main{margin-top:14px;min-height:133px}.expert-inner{display:flex;gap:6px;margin:12px 0 6px;align-items:center}.expert-inner span{font-size:9px;border:1px solid #ead4be;background:#fff9f2;border-radius:4px;padding:6px 5px}.expert-inner b{font-weight:400;color:#d5b391}.flow-node{margin-top:14px}.flow-track{display:flex;gap:4px;margin-top:11px}.flow-track i{flex:1;height:9px;border-radius:2px;background:#ead9c8}.flow-track i.done{background:#d59557}.flow-labels{display:flex;justify-content:space-between;font:9px ui-monospace,monospace;color:#ae906e;margin-top:4px}.repeat-caption{font-size:9px;color:#b09679;text-align:center;margin-top:5px}.out-node{margin-top:109px}.out-matrix{display:grid;grid-template-columns:repeat(6,1fr);gap:3px;margin-top:12px}.out-matrix i{height:11px;background:#dca266;border-radius:2px;opacity:.3}.out-matrix i:nth-child(3n){opacity:.6}.out-matrix i:nth-child(7n){opacity:.9}.robot-mini{height:80px;width:100%;margin-top:18px}.out-caption{text-align:center;color:#a49b8e;font-size:10px}.canvas-foot{border-top:1px solid var(--line);padding:11px 18px;display:flex;justify-content:space-between;align-items:center;font-size:10px;color:#9b92a3;gap:20px}.legend{display:flex;align-items:center;gap:15px}.legend span{display:flex;align-items:center;gap:5px}.legend i{width:6px;height:6px;border-radius:50%;display:inline-block}.map.no-shapes .node-shape{visibility:hidden}.step-inspector{display:flex;align-items:center;gap:16px;padding:16px 20px;background:#fbf9fe;border-top:1px solid var(--line)}.step-number{font:600 26px Georgia,serif;color:#9f86c9;padding:0 9px;border-right:1px solid #e7deef;min-width:54px}.step-content{flex:1}.step-content b{display:block;font-size:12px;font-weight:600;color:#695582}.step-content p{margin:3px 0 0;color:#908299;font-size:11px}.step-inspector button{padding:6px 13px;font-size:11px}.support-row{margin:24px 40px 33px;display:grid;grid-template-columns:1.15fr 1fr 1fr;gap:28px}.support-item{display:flex;gap:12px;align-items:flex-start}.support-icon{width:29px;height:29px;border:1px solid var(--line);border-radius:7px;color:#9d89bf;display:grid;place-items:center;flex-shrink:0;font-family:Georgia,serif}.support-item b{font-size:12px;font-weight:600}.support-item p{font-size:11px;color:#97909e;margin:4px 0;line-height:1.8}.support-item button{padding:0;border:0;background:none;color:var(--purple);font-size:11px}.page-wrap{max-width:1160px;margin:auto;padding:38px 34px 70px;min-height:75vh}.page-heading{margin-bottom:25px}.page-heading h1{font-size:28px;font-weight:650;letter-spacing:-.5px;margin:5px 0 9px}.page-heading p{color:#8b8199;font-size:13px;margin:0}.lab-nav{display:flex;gap:8px;flex-wrap:wrap;margin:22px 0}.lab-nav button{padding:8px 15px;font-size:12px}.lab-nav button.active{background:var(--purple-bg);border-color:#cdb9e9;color:var(--purple)}.lab-nav button span{opacity:.6;margin-right:7px}.lab-container{min-height:400px}.source-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.source-card{border:1px solid var(--line);border-radius:9px;padding:20px;transition:background .2s}.source-card:hover{background:#fbf9fe}.source-card a{font-weight:600}.source-card p{font-size:12px;color:#92889d;margin-bottom:0}.scope-note{background:#f7f4fb;border-left:3px solid #a88bd0;padding:17px 20px;font-size:12px;color:#88779b;margin:24px 0}.glossary-search{width:100%;border:1px solid var(--line);padding:11px 14px;border-radius:7px;margin:10px 0 20px}.glossary-list{display:grid;grid-template-columns:1fr 1fr;gap:10px}.glossary-list details{border:1px solid var(--line);border-radius:7px;padding:12px 15px}.glossary-list summary{cursor:pointer;font-weight:550;font-size:13px}.glossary-list summary span{font-weight:400;color:#a195ae;margin-left:6px;font-size:11px}.glossary-list p{font-size:12px;color:#84758e}.glossary-list em{font-style:normal;background:#f7f3fc;padding:8px;display:block;font-size:11px;color:#8b71aa}footer{border-top:1px solid var(--line);display:flex;justify-content:space-between;gap:20px;padding:22px 40px;font-size:10px;color:#a59cab}footer a{color:#9280aa}.footer-divider{color:#d7cfdf;margin:0 8px}#scrim{position:fixed;inset:0;background:#20172b24;backdrop-filter:blur(1px);z-index:30}#detail{position:fixed;right:0;top:0;height:100dvh;width:590px;max-width:100%;background:white;border-left:1px solid #e6dfee;z-index:31;box-shadow:-15px 0 60px #35254a16;overflow:auto;animation:slide .2s ease-out}.detail-top{position:sticky;top:0;background:#fffffff5;backdrop-filter:blur(8px);z-index:2;padding:25px 27px 0;border-bottom:1px solid var(--line)}.detail-kicker{font-size:10px;color:var(--accent);letter-spacing:1px;text-transform:uppercase}.detail-top h2{font-size:23px;margin:6px 35px 13px 0;line-height:1.4}.detail-close{position:absolute;right:19px;top:22px;width:29px;height:29px;padding:0;border-radius:50%;font-size:20px;font-weight:300;color:#9889a6}.detail-tabs{display:flex;gap:23px}.detail-tabs button{border:0;border-radius:0;background:none;padding:12px 1px;color:#a397af;font-size:12px}.detail-tabs button.active{border-bottom:2px solid var(--accent);color:var(--accent)}.detail-body{padding:25px 27px 35px}.detail-summary{font-size:14px;color:#71657e;line-height:1.95;margin:0 0 22px}.tensor-io{display:flex;align-items:stretch;gap:12px;margin:18px 0 24px}.tensor-io>div{flex:1;background:var(--bg);border:1px solid var(--border);border-radius:7px;padding:12px}.tensor-io label{display:block;font-size:10px;color:var(--accent);margin-bottom:7px}.tensor-io code{font-size:11px;line-height:1.8;overflow-wrap:anywhere;color:#6e5e7c}.tensor-io>span{align-self:center;color:#b4a5c1}.detail-body h3{font-size:13px;font-weight:600;margin:23px 0 9px}.detail-steps{padding-left:0;list-style:none;counter-reset:steps}.detail-steps li{position:relative;padding-left:34px;margin:19px 0}.detail-steps li:before{counter-increment:steps;content:counter(steps);position:absolute;left:0;top:0;width:22px;height:22px;display:grid;place-items:center;background:var(--bg);color:var(--accent);border:1px solid var(--border);font:11px ui-monospace,monospace;border-radius:50%}.detail-steps b{font-size:12px}.detail-steps p{font-size:12px;line-height:1.95;color:#8a7d96;margin:5px 0}.formula{font:12px/1.9 ui-monospace,SFMono-Regular,Menlo,monospace;white-space:pre-wrap;word-break:break-word;background:#faf8fd;border:1px solid #ece5f3;padding:17px;border-radius:7px;color:#7e629d}.pitfall{font-size:12px;line-height:1.9;color:#9a7a53;background:#fffbf4;border-left:2px solid #e8c18d;padding:13px 15px;margin:24px 0}.detail-sources{border-top:1px solid var(--line);padding-top:15px;display:flex;gap:10px;flex-wrap:wrap;font-size:11px}.detail-lab{width:100%;margin-top:16px;background:var(--bg);color:var(--accent);border:1px solid var(--border);padding:11px;font-size:12px}.detail-example{white-space:pre-wrap;font:12px/1.9 ui-monospace,monospace;background:#f7faf9;color:#547a70;padding:15px;border:1px solid #deebe6;border-radius:7px}.detail-nav{display:flex;justify-content:space-between;margin-top:24px}.detail-nav button{padding:6px 13px;font-size:11px}#toast{position:fixed;bottom:24px;left:50%;transform:translate(-50%,20px);background:#453654;color:white;border-radius:7px;padding:10px 18px;opacity:0;pointer-events:none;transition:.2s;z-index:40;font-size:12px}#toast.show{opacity:1;transform:translate(-50%,0)}.empty{color:#a098aa;padding:25px}.mini-note{font-size:11px;color:#9f91ab;margin-top:20px}.section-title{font-size:19px;margin:34px 0 12px;letter-spacing:-.2px;font-weight:600}.status-pill{color:#9f8d77;font-size:9px;border:1px solid #ebdfd2;background:#fcf9f5;padding:2px 6px;border-radius:4px}.readable{font-size:13px;color:#84748f;line-height:1.95}.flow-time{color:var(--orange);font:600 12px ui-monospace,monospace}body.modal-open{overflow:hidden}[hidden]{display:none!important}@keyframes slide{from{transform:translateX(30px);opacity:0}to{transform:translateX(0);opacity:1}}@keyframes flow{to{stroke-dashoffset:-24}}@media(min-width:1500px){.map{height:580px;grid-template-columns:240px 204px 240px 260px 190px;gap:32px}.connectors{width:1265px;height:580px}.map-column{padding-top:62px}.intro{padding-top:40px;padding-bottom:30px}.workbench{margin:0 40px}}@media(max-width:1000px){.topbar{padding:0 22px;gap:12px}.topbar nav{gap:0}.topbar nav button{padding:8px 10px;font-size:12px}.source-button{font-size:0;padding:9px}.source-button svg{margin:0}.intro{padding:25px}.intro h1{font-size:23px}.intro-actions .badge{display:none}.workbench{margin:0 18px}.toolbar-right{gap:8px}.toolbar select{max-width:225px}.support-row{margin:24px;gap:18px}.canvas-foot{align-items:flex-start}.canvas-foot>span{max-width:320px}.page-wrap{padding:30px 24px}}@media(max-width:700px){body{font-size:13px}.topbar{height:auto;min-height:102px;padding:12px 17px 0;flex-wrap:wrap;gap:5px}.brand{font-size:13px}.brand-pi{font-size:39px}.brand-sub{font-size:9px}.topbar nav{order:3;width:100%;justify-content:space-around;border-top:1px solid #f1edf6;margin-top:5px;padding:5px 0}.topbar nav button{padding:7px 12px;font-size:11px}.source-button{margin-left:auto}.intro{padding:24px 20px;display:block}.intro h1{font-size:23px;max-width:340px}.intro p{font-size:12px}.intro-actions{margin-top:15px}.intro-actions .primary{font-size:12px;padding:7px 12px}.toolbar{padding:12px;flex-wrap:wrap;gap:10px}.task-control{width:100%}.toolbar select{max-width:100%;width:100%;flex:1}.toolbar-right{width:100%;justify-content:space-between}.workbench{margin:0 10px}.map-scroll{position:relative}.map{justify-content:start;padding:0 23px}.canvas-foot{flex-wrap:wrap;gap:10px;padding:12px}.canvas-foot>span{max-width:none}.legend{gap:11px}.step-inspector{padding:12px 10px;gap:9px}.step-inspector button{font-size:10px;padding:6px;white-space:nowrap}.step-content p{font-size:10px;line-height:1.6}.step-number{font-size:22px;min-width:39px;padding:0 6px}.support-row{grid-template-columns:1fr;margin:25px 22px;gap:16px}.support-item p{margin:2px 0}.page-wrap{padding:26px 18px 45px}.page-heading h1{font-size:25px}.source-grid,.glossary-list{grid-template-columns:1fr}footer{padding:20px;flex-direction:column;gap:5px}.detail-top{padding:21px 20px 0}.detail-body{padding:22px 20px}.detail-top h2{font-size:21px}.detail-tabs{gap:20px}.tensor-io{gap:8px}.tensor-io code{font-size:10px}}@media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+.block-order{font:8px/1.7 ui-monospace,monospace;color:#a294b2;margin:-5px 0 9px}.map{height:610px}.map .node-title{padding-right:8px}.map .node-prefix{margin-top:15px}.transformer-box .node{padding:8px 10px}.transformer-box .node-desc{font-size:9px}.map .node-shape{font-size:9px}.map .node-title{font-size:11px}@media(min-width:1500px){.map{height:625px}}@media(max-width:700px){.map{height:610px}}
+</style></head>
+<body>
+<header class="topbar"><a class="brand" href="#map" aria-label="π0.5 Explainer 首页"><span class="brand-pi">π<small>0.5</small></span><span>EXPLAINER<span class="brand-sub">从像素到动作</span></span></a><nav aria-label="主要导航"><button data-view="map" class="active">计算地图</button><button data-view="labs">数值实验室<span class="nav-dot"></span></button><button data-view="lessons">训练与推理</button><button data-view="beginner">从零开始</button></nav><button class="source-button" data-view="sources"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m8 7-5 5 5 5m8-10 5 5-5 5m-3-15-2 20"/></svg> 论文与源码</button></header>
+<main id="main"></main>
+<footer><span>π0.5 EXPLAINER <span class="footer-divider">/</span> 一个可以拆开的机器人模型</span><span>独立教学项目 · 参考 <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">Transformer Explainer ↗</a></span></footer>
+<div id="scrim" hidden></div><aside id="detail" role="dialog" aria-modal="true" aria-labelledby="detail-title" hidden></aside><div id="toast" role="status" aria-live="polite"></div>
+<script>const contentModule=(()=>{
+const repo = 'https://github.com/Physical-Intelligence/openpi/blob/main/';
+const source = (file, title) => ({ title, url: repo + file });
+const pi = source('src/openpi/models/pi0.py', 'openpi · π0 / π0.5 前向与采样');
+const cfg = source('src/openpi/models/pi0_config.py', 'openpi · 默认模型配置');
+const gemma = source('src/openpi/models/gemma.py', 'openpi · Gemma、attention 与 adaRMS');
+const siglip = source('src/openpi/models/siglip.py', 'openpi · SigLIP 图像编码器');
+const tokenizer = source('src/openpi/models/tokenizer.py', 'openpi · 状态分箱与 SentencePiece');
+const transforms = source('src/openpi/transforms.py', 'openpi · 输入输出变换');
+const model = source('src/openpi/models/model.py', 'openpi · 观测格式与像素预处理');
+const training = source('src/openpi/training/config.py', 'openpi · 数据与模型变换配置');
+const paper = { title: 'π0.5 原始论文 · 架构与训练', url: 'https://arxiv.org/html/2504.16054v1' };
+
+// 小矩阵、手算数字与伪码用于教学。它们不是从真实 π0.5 权重抽取的激活。
+// 除非另有说明，尺寸对应 openpi Pi0Config(pi05=True) 的默认配置。
+const MODULES = {
+  images: {
+    id: 'images', title: '相机图像', kicker: '01 · 把现实变成数字', color: 'blue',
+    summary: '相机并不会直接交给模型一个“杯子”。它交出红、绿、蓝三张数字表。模型要从这些像素里学习颜色、边缘、物体以及空间关系。',
+    input: '每路相机：原始 H × W × 3 RGB 图像；像素可为 0…255 的整数',
+    output: '默认每路 [B, 224, 224, 3] 浮点数组，以及一个相机有效性标记',
+    formula: 'pixel_normalized = pixel / 255 × 2 − 1\n[B, H, W, 3] → resize_with_pad → [B, 224, 224, 3]',
+    steps: [
+      { title: '先认识数组', body: '一张彩色图像可以看成高×宽个格子，每格包含 R、G、B 三个数。B 是 batch，也就是一次处理几份观测；本页通常用 B=1。' },
+      { title: '保持比例，缩放并补边', body: '默认数据变换把图像调整到 224×224。resize_with_pad 保留原图比例，用补边填满正方形，避免把圆形杯口强行拉成椭圆。' },
+      { title: '转换到统一数值范围', body: 'uint8 输入经过 x/255×2−1。黑色通道0变成−1，白色255变成1。这个步骤改变数值尺度，没有自动识别任何物体。' },
+      { title: '多视角独立输入', body: '默认配置有机身、左腕、右腕三个图像槽位。每路图像分别编码；无效相机通过 mask 排除。具体机器人可能只提供其中一些视角。' }
+    ],
+    example: '教学像素 RGB = [255, 128, 0]\nR: 255 / 255 × 2 − 1 = 1.000\nG: 128 / 255 × 2 − 1 ≈ 0.00392\nB:   0 / 255 × 2 − 1 = −1.000\n结果：[1.000, 0.00392, −1.000]',
+    pitfall: '这些图像是当前观测，不是未来画面。图像上的示意物体和本页像素均为教学素材；本页没有运行真实相机识别或 π0.5 权重。',
+    code: 'image = resize_with_pad(image, 224, 224)\nif image.dtype == uint8:\n    image = float32(image) / 255 * 2 - 1\nobservation.images[camera] = image\nobservation.image_masks[camera] = is_valid',
+    sources: [model, transforms, cfg], lab: null
+  },
+  patches: {
+    id: 'patches', title: '图像切块与投影', kicker: '02 · 一个 patch，一张信息卡', color: 'blue',
+    summary: 'Transformer 擅长处理一串向量。因此先把大图分成小块，让每块变成一个数字向量；它们以后能彼此交换信息。',
+    input: '每张图 [B, 224, 224, 3]',
+    output: '每张图 [B, 256, 1152] patch 向量',
+    formula: '224 / 14 = 16\n16 × 16 = 256 patches\n14 × 14 × 3 = 588 values / patch\nz_patch = flatten(patch) × W + b\n[588] × [588, 1152] → [1152]',
+    steps: [
+      { title: '切成 16×16 个小方格', body: 'SigLIP So400m/14 使用14×14的patch。224像素恰好分成16段，整张图共有256块；每块包含588个RGB通道数值。' },
+      { title: '给每块换一种表示', body: '每块通过一组可学习权重，变为1152个特征数。实现使用kernel与stride都为14的卷积，与对每个不重叠patch应用同一线性映射等价。' },
+      { title: '所有小块共用同一套权重', body: '左上角和右下角不是各自训练一个投影器。相同的W在所有patch位置复用，有助于复用局部视觉模式。' },
+      { title: '补上“我在哪”', body: '随后给每块向量加位置编码。像素内容告诉模型这一块长什么样，位置编码告诉模型它来自图像的哪个位置。' }
+    ],
+    example: '缩小的教学投影（真实 patch 是588维）：\np = [1, 0, −1]\nW = [[0.2, 0.5], [0.4, −0.1], [0.3, 0.2]]\nb = [0.1, 0.0]\npW+b = [1×0.2+0×0.4−1×0.3+0.1,\n         1×0.5+0×(−0.1)−1×0.2]\n      = [0.0, 0.3]\n这些权重仅用于手算，不是真实模型权重。',
+    pitfall: 'patch token 不是识别出来的一个物体，也没有离散词表ID。它是一小片图像的连续向量；一个杯子往往跨越多个patch。',
+    code: 'x = Conv(features=1152, kernel=(14,14),\n         stride=(14,14), padding="VALID")(image)\n# [B,16,16,1152] → [B,256,1152]\nx = reshape(x, [B, 256, 1152])\nx = x + learned_position_embedding',
+    sources: [siglip, pi], lab: 'patch'
+  },
+  vision: {
+    id: 'vision', title: 'SigLIP 视觉编码器', kicker: '03 · 从局部颜色到上下文特征', color: 'blue',
+    summary: '看一个小方块可能分不清杯子和背景。视觉编码器让每个patch参考其他patch，反复整理出更有用的视觉特征。',
+    input: '每路 [B, 256, 1152]，已经加入位置编码',
+    output: '每路 [B, 256, 2048]；三个有效视角共768个图像token',
+    formula: 'h ← h + SelfAttention(LayerNorm(h))\nh ← h + MLP(LayerNorm(h))\n重复27层；最后 LayerNorm\nimage_tokens = h × W_visual + b\n[256,1152] → [256,2048]',
+    steps: [
+      { title: '先在同一张图内部交流', body: '一个patch可以参考同图中其他patch的信息。例如含把手的小块可以参考旁边的杯身，从上下文获得更有用的表示。这里的例子是功能直觉，并非真实注意力可视化。' },
+      { title: '每层包含交流和加工', body: 'attention在不同patch之间交换信息；MLP对每个patch的特征做非线性加工。残差连接把原输入保留下来，再加上本层的改动。' },
+      { title: '27层逐步处理', body: 'openpi的So400m配置是27层、隐藏宽1152、16个注意力头、MLP宽4304。层数不是图像数量；同一组256个token依次通过这些层。' },
+      { title: '对齐语言模型的向量宽度', body: '视觉输出投影到2048维，匹配语言分支。pool_type="none"意味着保留每个patch token，而不是把一整张图压成一个平均向量。' }
+    ],
+    example: '教学上下文汇总：\n当前patch读到三个位置，权重为[0.6,0.3,0.1]\n它们携带的一个特征分别是[2,4,−1]\n新信息 = 0.6×2 + 0.3×4 + 0.1×(−1) = 2.3\n真实编码器在许多特征和多个head上同时做类似运算。',
+    pitfall: 'SigLIP有自己的27层视觉Transformer；后面的语言/动作分支有18层。不要把它们画成同一个18层堆栈，也不要把视觉特征说成明确的物体标签。',
+    code: 'h = patch_embeddings + position_embeddings\nfor visual_block in range(27):\n    h = h + attention(layer_norm(h))\n    h = h + visual_mlp(layer_norm(h))\nh = layer_norm(h)\nimage_tokens = linear(h, out_features=2048)',
+    sources: [siglip, pi], lab: null
+  },
+  state: {
+    id: 'state', title: '机器人状态 → 文本', kicker: '04 · 让模型知道自己的姿势', color: 'teal',
+    summary: '除了看图，机器人还需要知道自己的关节与夹爪处于什么状态。π0.5 把归一化后的状态分成数值区间，再把区间编号写进提示文字。',
+    input: '实际机器人状态 q，例如关节位置与夹爪状态；维数取决于机器人',
+    output: 'State: 后的一串十进制区间编号，随后交给文字分词器',
+    formula: 'q_norm = 2 × (q − q01) / (q99 − q01 + 10⁻⁶) − 1\nbin = digitize(q_norm, edges) − 1\nedges = [−1, −1+2/256, …, 1−2/256]',
+    steps: [
+      { title: '读出本体感觉', body: '状态来自机器人传感器或控制接口，例如关节角和夹爪开合。它不是从相机猜出的文字，而是观测输入的一部分。' },
+      { title: '按训练数据的尺度归一化', body: 'π0.5默认数据配置采用分位数归一化：q01和q99分别是数据里的1%与99%分位数。它们是每个通道的统计量，不是所有机器人共用的常数。' },
+      { title: '把连续数值放进256个区间', body: '在主要区间[−1,1]内，每段宽度为2/256≈0.0078125。例如−0.5、0、0.5分别对应编号64、128、192。边界和超出统计区间的情况应按具体实现处理。' },
+      { title: '写成文字，再分词', body: '编号会成为“State: 64 128 192”这样的文字。官方变换顺序先构造这段文字，再对状态和动作做维度padding，所以不必把补齐到32维的零也写入提示。' }
+    ],
+    example: '教学单关节：q01=−2，q99=2，当前q=1\nq_norm ≈ 2×(1−(−2))/(2−(−2))−1 = 0.5\n区间编号 = 192\n提示片段：State: 192\n192仍是文字中的数字，不是SentencePiece词表ID。',
+    pitfall: 'π0使用单独的连续state token；π0.5默认把状态放进文字前缀。分位数归一化并不保证所有新输入都落在[−1,1]，源码此处也不是简单的无条件clip。',
+    code: 'q_norm = 2 * (q - stats.q01) / (stats.q99 - stats.q01 + 1e-6) - 1\nedges = linspace(-1, 1, 257)[:-1]\nstate_bins = digitize(q_norm, edges) - 1\nstate_text = " ".join(str(v) for v in state_bins)',
+    sources: [tokenizer, transforms, training], lab: 'state'
+  },
+  text: {
+    id: 'text', title: '语言 token 与 embedding', kicker: '05 · 把任务文字变成向量', color: 'purple',
+    summary: '模型处理的不是字形本身。分词器先把文字拆成词或字词片段，转为整数编号；embedding表再把每个编号换成2048个可计算的数。',
+    input: 'Task: 指令, State: 状态编号; 换行 Action: ',
+    output: 'token IDs [B,200]、有效位mask [B,200]；embedding [B,200,2048]',
+    formula: 'ids = SentencePiece(prompt)\ne_i = E[ids_i] × √2048\nE 的形状 = [257152, 2048]',
+    steps: [
+      { title: '整理提示格式', body: '清理前后空白、下划线和换行后，π0.5把Task、State、Action标记拼成一个输入。输入中的“Action:”是格式提示，本身不是已经生成的动作。' },
+      { title: 'SentencePiece切分', body: '一个词可能变成多个子词，数字也可能拆开。中文和英文的切分方式不同；本页显示的缩小token例子不冒充真实SentencePiece结果。' },
+      { title: '查embedding表', body: '每个离散ID索引一行向量。这个表由训练学到，模型用向量间的关系处理文本；ID数值大不表示词更重要。代码还把查出的向量乘以√2048。' },
+      { title: '补齐长度，并屏蔽padding', body: '默认最多200个文字token槽位。短输入补齐，mask标明哪些是真的；过长会截断并警告。200不是所有输入都恰好有200个有效token。' }
+    ],
+    example: '教学词表（非真实PaliGemma词表）：\n“拿起”→ID 5，“杯子”→ID 9\nE[5]=[0.2,−0.1]，E[9]=[0.7,0.3]\n两维教学embedding若采用相同缩放规则：\nE[9]×√2 ≈ [0.990,0.424]\n真实分支每个向量含2048个值。',
+    pitfall: '状态bin编号、文字token ID、embedding向量是三个不同东西。这里的离散token也不同于连续图像token和连续动作token。',
+    code: 'prompt = f"Task: {task}, State: {state_text};\\nAction: "\nids = sentencepiece.encode(prompt, add_bos=True)\nids, valid_mask = pad_or_truncate(ids, length=200)\ntext_tokens = embedding_table[ids] * sqrt(2048)',
+    sources: [tokenizer, gemma, cfg], lab: null
+  },
+  prefix: {
+    id: 'prefix', title: '多模态前缀与 KV 缓存', kicker: '06 · 汇合一次，反复使用', color: 'purple',
+    summary: '图像与文字现在都是2048维向量，可以排成同一串输入。它们为生成动作提供上下文。一次动作生成中的观测不变，因此这部分计算可以缓存。',
+    input: '三路图像各256×2048；文字最多200×2048；对应有效位mask',
+    output: '三视角默认槽位 [B,968,2048]；每层前缀K/V缓存 [B,968,1,256]',
+    formula: 'P = 3 × 256 + 200 = 968\nprefix = concat(image_1, image_2, image_3, text)\n每层 K_prefix, V_prefix 的形状均为 [B,P,1,256]',
+    steps: [
+      { title: '沿token数量方向拼接', body: '把图像和文字向量一行接一行排列，增加的是token数量，向量宽度仍为2048。不能把它理解成把三张图像的颜色通道叠在一起。' },
+      { title: '让图像和文字相互参考', body: '前缀内部使用双向attention：有效图像与文字token可以彼此交流。padding文本和不存在的相机被有效位mask屏蔽。' },
+      { title: '计算每一层的K和V', body: '每层都有各自的投影权重，因此18层各存一份K/V。它们是动作分支之后可以查询的上下文信息，不是只缓存最终一层输出。' },
+      { title: '同一次生成中复用缓存', body: '采样先运行一次前缀。接下来的10个默认流匹配步复用前缀缓存，只更新动作部分。收到下一帧新观测或改了任务提示时，需要重新计算相应前缀。' }
+    ],
+    example: '小型教学前缀：图像token 2个 + 文字token 3个 = P=5\n动作生成有4个迭代步：\n第0步先编码prefix → 记录各层K/V\n第1、2、3、4步：读同一份prefix K/V，重算动作token\n缓存节省重复工作；不等于跨所有未来观测永久复用。',
+    pitfall: '968是三视角、200文字槽位下的张量长度，包含可能被屏蔽的位置。它不代表有968个物体，也不是任何机器人配置都固定采用968。',
+    code: 'prefix, prefix_mask = embed_images_and_text(obs)\n_, prefix_kv = transformer(\n    [prefix, None], mask=prefix_bidirectional_mask\n)\nfor t in sampling_times:\n    action_hidden = transformer(\n        [None, action_tokens], kv_cache=prefix_kv\n    )',
+    sources: [pi, gemma, cfg], lab: null
+  },
+  attention: {
+    id: 'attention', title: 'Q · K · V 与注意力掩码', kicker: '07 · 每个位置该参考谁', color: 'purple',
+    summary: 'Query像“我正在寻找什么”，Key像“我包含哪类信息”，Value是可以取走的内容。相似度变成权重后，模型把各位置的信息按权重加起来。',
+    input: '当前层前缀隐藏向量2048维，动作隐藏向量1024维',
+    output: '每个token更新后的上下文向量；动作分支仍为1024维',
+    formula: 'Q = hW_Q，K = hW_K，V = hW_V\nQ,K ← RoPE(Q,K,position)\nscores = QKᵀ / √256\nweights = softmax(scores + mask)\ncontext = weights × V\noutput = context × W_O',
+    steps: [
+      { title: '用三套投影提出问题、建立索引、准备内容', body: '同一个h通过不同权重得到Q、K、V。前缀与动作使用各自的参数，但投影后的head维度一致，因而可以计算跨模态相关性。' },
+      { title: '加入位置信息并计算分数', body: 'Gemma使用RoPE旋转Q和K，使attention感知位置。点积表示匹配程度；除以√head_dim控制数值尺度。真实head_dim为256，缩小实验会使用更小维度。' },
+      { title: '先应用mask，再做softmax', body: '禁止读取的位置得到极小分数。softmax把剩余分数变成总和为1的权重。前缀不能读动作；动作可以读有效前缀和本动作chunk内的全部动作位置。' },
+      { title: '按权重读取Value', body: '每个输出是Value向量的加权组合。多头可以学到不同关注方式；默认是8个Query头共享1组K/V头，也叫multi-query attention。' },
+      { title: '投回各自分支宽度', body: '8个256维head合起来有2048个值。动作输出投影回1024维，语言输出投影回2048维。因此动作隐藏宽1024并不意味着head_dim=1024/8。' }
+    ],
+    example: '缩小的单头教学例，d=2：\nQ=[1,0]；K₁=[1,0]，K₂=[0,1]\nscores=[1/√2,0]≈[0.707,0]\nsoftmax≈[0.670,0.330]\nV₁=[2,0]，V₂=[0,4]\ncontext=0.670×[2,0]+0.330×[0,4]\n       ≈[1.340,1.320]\n若mask禁止位置2，权重变[1,0]，输出变[2,0]。',
+    pitfall: '本页注意力热图是小矩阵计算演示，不是真实模型的解释图。权重高也不等于这个位置是模型决策的唯一因果原因。',
+    code: 'q, k, v = project_with_branch_specific_weights(hidden)\nq, k = rope(q, positions), rope(k, positions)\nscores = (q @ transpose(k)) / sqrt(head_dim)\nscores = where(allowed_mask, scores, very_negative)\nweights = softmax(scores, axis="keys")\ncontext = weights @ v\noutput = output_projection(context)',
+    sources: [gemma, pi], lab: 'attention'
+  },
+  norm: {
+    id: 'norm', title: 'RMSNorm 与时间调制', kicker: '08 · 稳定尺度，告诉网络当前生成进度', color: 'purple',
+    summary: '向量的数值可能越算越大。RMSNorm先稳定它的整体尺度；动作分支还根据生成时间调整缩放、偏移与残差强度，让相同网络适应不同噪声程度。',
+    input: '隐藏向量h；动作分支额外接收时间条件向量c(t)',
+    output: '归一化并调制后的向量；动作分支还得到残差gate',
+    formula: 'rms = √(mean(h²) + 10⁻⁶)\nn = h / rms\n普通 RMSNorm：n × (1 + learned_scale)\nadaRMS：(1 + scale(t)) × n + shift(t)\n残差更新：h_next = h + gate(t) × branch_output',
+    steps: [
+      { title: '先求均方根', body: '把向量每个分量平方、求平均、再开方。加上很小的ε避免除零。RMSNorm不会先减均值，这与LayerNorm不同。' },
+      { title: '除去整体量级', body: '用每个分量除以均方根，保留分量之间的相对关系。这个操作使特征的典型量级更稳定，后续运算更容易训练。' },
+      { title: '动作分支用时间调整特征', body: '由时间条件生成scale、shift和gate。scale与shift改变归一化特征；gate作用于残差分支输出，控制这次更新的强度。' },
+      { title: '不要丢掉原来的信息', body: 'attention和MLP后都通过残差将更新加回原h。网络可以学习“小幅修正”，而不必每层从头复制全部有用信息。' }
+    ],
+    example: '教学向量h=[3,4]，忽略极小ε：\nrms=√((9+16)/2)=√12.5≈3.536\nn≈[0.849,1.131]\n假设教学scale=[0.1,−0.2]，shift=[0,0.1]\n调制结果≈[0.934,1.005]\n若分支输出y=[0.2,−0.4]，gate=0.5，\n残差h+gate×y=[3.1,3.8]。',
+    pitfall: 'gate是学到的调制值，不应一概描述成0到1的概率。时间调制也不意味着在推理时修改模型权重；它改变的是本次前向计算。',
+    code: 'n = h / sqrt(mean(h * h, axis=-1) + 1e-6)\nscale, shift, gate = split(linear(time_condition), 3)\nadapted = n * (1 + scale) + shift\ny = attention_or_mlp(adapted)\nh_next = h + gate * y',
+    sources: [gemma, pi], lab: 'norm'
+  },
+  mlp: {
+    id: 'mlp', title: '前馈网络与残差', kicker: '09 · 每个token内部的加工厂', color: 'purple',
+    summary: 'attention负责“读别人的信息”，MLP负责“加工自己的信息”。它在每个token内部组合特征，并用非线性函数表达更复杂的关系。',
+    input: '归一化后的token：语言分支2048维，动作分支1024维',
+    output: '同样数量、同样宽度的token，然后加入残差',
+    formula: 'g = GELU(h × W_gate)\nv = h × W_up\ny = (g ⊙ v) × W_down\n动作分支：1024 → 两路4096 → 1024\n语言分支：2048 → 两路16384 → 2048',
+    steps: [
+      { title: '分成两路投影', body: '同一个token经过两套权重进入更宽的中间空间。一条支路经GELU产生门控特征，另一条支路提供要加工的内容。' },
+      { title: '逐项相乘', body: '两个中间向量的对应位置相乘。这里不是矩阵乘法，而是逐元素乘法；某些特征组合会因此被加强，另一些被减弱。' },
+      { title: '压回原来的宽度', body: '经过W_down得到与输入同宽的更新。这样输出才能与原token做残差相加，也方便送入下一层相同接口。' },
+      { title: '每个token用相同MLP独立加工', body: '本模块不直接混合不同token的位置。token间的信息交流已经由attention完成；MLP的参数在同一分支的不同位置共享。' }
+    ],
+    example: '手算逐元素门控（GELU后的中间值已给定）：\ng=[0.5,2.0]，v=[4.0,−1.0]\ng⊙v=[2.0,−2.0]\nW_down=[[0.2],[0.3]]\ny=2×0.2+(−2)×0.3=−0.2\n若原h=1.5且残差gate=1，更新后h=1.3。\n全部为缩小的教学数字。',
+    pitfall: 'MLP隐藏维4096不是4096个动作，也不表示输出长度增加。token数量不变，只是每个token内部特征先扩展再压回。',
+    code: 'gate_features = gelu(h @ W_gate)\nvalue_features = h @ W_up\nbranch_output = (gate_features * value_features) @ W_down\nh_next = h_before_norm + residual_gate * branch_output',
+    sources: [gemma], lab: null
+  },
+  noise: {
+    id: 'noise', title: '从随机动作块开始', kicker: '10 · 生成的起点', color: 'orange',
+    summary: '模型一次生成一小段未来动作。起点不是一份已经正确的轨迹，而是一块高斯随机数。接下来网络反复给出修正方向，把它变成与观测和指令匹配的动作。',
+    input: '随机数种子；动作块尺寸H×D',
+    output: '默认 x₁ ∈ [B,50,32]，随后线性投影为 [B,50,1024]',
+    formula: 'ε ~ Normal(0, I)\nx₁ = ε\naction_tokens = x₁ × W_action_in + b\n[B,50,32] → [B,50,1024]',
+    steps: [
+      { title: '确定两个维度', body: '50表示一个chunk的动作时间步数，32表示模型预留的动作通道数。每一行是一个未来时间步的整组控制量，不是单个关节的一生。' },
+      { title: '采样标准高斯随机数', body: '每个元素初始来自均值0、标准差1的分布。改变随机种子可能产生不同结果；在真实系统中，多种动作方式都可能完成同一个任务。' },
+      { title: '把动作行映射成token', body: '每个32维动作向量经同一个线性层投到1024维，成为动作专家能处理的连续token。这些不是通过文字词表查出来的token。' },
+      { title: '保持条件观测不变，开始迭代', body: '一次采样中图像、提示和状态前缀固定；随机动作块不断变化。每一步网络同时看当前动作块和当前生成时间。' }
+    ],
+    example: '缩小为3个时间步、2个通道的教学噪声：\nε = [[ 0.8, −0.3],\n     [−1.1,  0.6],\n     [ 0.2,  1.4]]\n这是生成变量，不是立即发给机器人执行的命令。\n真实默认噪声块有50×32=1600个元素。',
+    pitfall: '噪声只存在于生成过程，不能把初始随机动作直接发送给机器人。50步chunk也不自动等于50Hz，时间间隔取决于数据与控制接口。',
+    code: 'noise = random_normal(seed, shape=(B, 50, 32))\nx = noise\ntime = 1.0\naction_tokens = linear(x, out_features=1024)',
+    sources: [pi, cfg], lab: 'flow'
+  },
+  time: {
+    id: 'time', title: '生成时间 t', kicker: '11 · 告诉网络还剩多少噪声', color: 'orange',
+    summary: '同样一组数字，出现在生成开始和接近完成时，应该采用的修正可能不同。时间t让网络知道自己正处在哪个生成阶段。它不是现实世界里的秒。',
+    input: '一个标量 t；本页使用 openpi 的 t=1→0 约定',
+    output: '每个样本一个1024维时间条件向量，用于动作专家adaRMS',
+    formula: 'φ(t) = concat(sin(2πt / period_i), cos(2πt / period_i))\nperiod_i 在0.004到4之间按几何尺度排列\nc(t) = swish(W₂ · swish(W₁ · φ(t)))\nswish(z) = z · sigmoid(z)',
+    steps: [
+      { title: '先选清楚时间方向', body: 'openpi把t=1定义成纯噪声端，t=0定义成动作端。原论文使用的端点参数化与代码不同；本页所有混合、速度和更新公式都统一按openpi解释。' },
+      { title: '用多种频率描述同一个时间', body: '一个标量先进入sin和cos函数。低频变化平滑，高频能区分相近的时间值；把它们拼起来，让网络容易识别生成阶段。' },
+      { title: '经过两层时间MLP', body: '时间编码通过Linear、swish、Linear、swish，产生1024维条件。网络学习怎样把时间位置转换为每层需要的调制信号。' },
+      { title: '注入动作专家的归一化层', body: 'π0.5通过adaRMS调节动作分支，而不是像π0那样把时间向量与动作embedding拼起来。每层有自己的调制参数。' }
+    ],
+    example: '只用周期4的一个教学sin/cos对：\nt=1时：sin(2π×1/4)=1，cos(2π×1/4)=0\nt=0.5时：两项均≈0.707\nt=0时：[0,1]\n真实实现同时计算512组sin/cos，拼成1024维。',
+    pitfall: 't不是动作chunk里的第几个控制时间步，也不是模型版本号中的0.5。一个生成时间t会作用于整个50步动作块。',
+    code: 'periods = geometric_sequence(0.004, 4.0, length=512)\nphi = concat(sin(2*pi*t/periods), cos(2*pi*t/periods))\nc = swish(linear_in(phi))\nc = swish(linear_out(c))\n# c供动作专家的adaptive RMSNorm使用',
+    sources: [pi, paper], lab: null
+  },
+  expert: {
+    id: 'expert', title: '18层动作专家', kicker: '12 · 结合“看到了什么”和“准备怎么动”', color: 'orange',
+    summary: '动作专家是一组专门处理连续动作的Transformer权重。它每次读当前候选动作，并通过注意力读取图像与语言上下文，预测整块动作应该往哪个方向改变。',
+    input: '50个1024维动作token、时间条件、每层前缀KV缓存',
+    output: '[B,50,32] 生成向量场 vθ(x_t,t,obs)',
+    formula: 'h₀ = Linear_in(x_t)\nhₗ₊₁ = ActionBlockₗ(hₗ, prefix_KVₗ, c(t))\n重复18层\nvθ = Linear_out(final_adaRMS(h₁₈,t))',
+    steps: [
+      { title: '每个动作位置带着候选控制量进入', body: '50个位置对应未来50个动作时间步。通过投影后，每个位置都有1024维隐藏表示；时间条件告诉它们当前噪声程度。' },
+      { title: '逐层读取视觉语言上下文', body: '动作的Query可以读每层缓存的前缀K/V，也可以读动作块内部其他位置。这样整段动作能够协调，而不是各自孤立预测。' },
+      { title: '专家是不同权重，不是另一个聊天机器人', body: 'VLM分支与动作分支在每层使用不同投影和MLP参数，但通过同一attention机制交互。openpi默认动作专家约300M量级，隐藏宽1024。' },
+      { title: '输出一次修正场', body: '18层和最后的归一化结束后，线性层把1024维压回32个动作通道。这个输出还不是最终动作，需要参与一次数值积分更新。' },
+      { title: '同一专家会被重复调用', body: '默认一次动作生成有10个流匹配步。每个步都会运行18层动作专家；“18层”是网络深度，“10步”是生成迭代数。' }
+    ],
+    example: '教学中只看一个动作通道：\n当前候选值x=0.90，时间t=0.80\n专家根据图像、指令、状态与整个动作块输出v=0.60\n若dt=−0.10，下一候选值为0.90−0.06=0.84\n0.60是教学示意输出，不是加载权重后的真实预测。',
+    pitfall: 'π0.5的动作专家输出连续向量场，不是在词表里挑“向左”“抓取”。本页也没有把论文的高层子任务生成当作openpi sample_actions()中的自动步骤。',
+    code: 'h = action_in_projection(x_t)\nfor layer in range(18):\n    h = action_block(\n        h, context=prefix_kv[layer],\n        time_condition=time_embedding,\n        allow_all_action_positions=True\n    )\nh = final_adaptive_rmsnorm(h, time_embedding)\nv = action_out_projection(h)',
+    sources: [pi, gemma, cfg], lab: null
+  },
+  flow: {
+    id: 'flow', title: 'Flow Matching：学习与生成', kicker: '13 · 从噪声走向动作', color: 'orange',
+    summary: '训练时，给网络看“正确动作与噪声的混合物”，教它预测变化方向。推理时没有正确答案，网络靠学到的方向，一小步一小步把随机数变成动作。',
+    input: '训练：真值动作a、噪声ε、随机时间t；推理：当前x_t、观测、t',
+    output: '训练得到误差与参数更新；推理得到t=0端的动作块',
+    formula: '训练：x_t = tε + (1−t)a\n目标场：u_t = ε−a\nloss = mean((vθ(x_t,t,obs) − u_t)²)\n推理：dt = −1/N\nx_{t+dt} = x_t + dt × vθ(x_t,t,obs)\n从 t=1 重复到 t=0；默认 N=10',
+    steps: [
+      { title: '训练时先准备一道有答案的题', body: '数据集给出观测和真实动作块a。随机采样同形状噪声ε及时间t，用线性插值得到x_t。因为a和ε已知，可以算出目标场ε−a。' },
+      { title: '让模型预测，并计算误差', body: '网络只以混合动作、时间和观测为输入，预测v。其结果与目标场比较；误差经反向传播用于更新可训练参数。本页小实验只演示数值，不训练大模型。' },
+      { title: '推理不再持有真值动作', body: '给新观测采样一块随机噪声。网络预测的v必须来自已训练权重，不能偷偷使用未知的正确动作计算答案。' },
+      { title: '用Euler法朝t=0走', body: 'openpi的dt为负数。例如N=10时dt=−0.1。每次用当前预测场更新整块动作，再把时间减0.1；默认10次后输出结果。' },
+      { title: '区分训练单步与推理多步', body: '一次训练样本通常随机选一个t来学习场；一次推理要沿时间路径反复调用网络。生成步数是计算量与近似精度的选择，并非步数越多就必然控制更安全。' }
+    ],
+    example: '训练手算例：a=0.2，ε=1.0，t=0.75\nx_t=0.75×1.0+0.25×0.2=0.8\nu_t=1.0−0.2=0.8\n假设模型预测v=0.6，则该维loss=(0.6−0.8)²=0.04\n\n独立的推理更新例：x=1.0，dt=−0.1，预测v=0.8\nx_next=1.0+(−0.1)×0.8=0.92\n预测v在真实推理中必须由模型算出。',
+    pitfall: '这里的“速度场”描述生成变量随生成时间如何变化，不等于机械臂的物理速度。实验室使用明确标注的教学场；真实推理并不知道目标a。',
+    code: '# 训练\neps = normal_like(actions)\nt = 0.001 + 0.999 * beta(1.5, 1.0)\nx_t = t * eps + (1 - t) * actions\ntarget = eps - actions\nloss = mean((model(obs, x_t, t) - target)**2)\n\n# 推理：此时没有actions真值\nx, t, dt = normal_noise(), 1.0, -1.0 / N\nfor step in range(N):\n    v = model(obs, x, t, cached_prefix_kv)\n    x, t = x + dt * v, t + dt\nreturn x',
+    sources: [pi, paper], lab: 'flow'
+  },
+  output: {
+    id: 'output', title: '动作块 → 机器人执行', kicker: '14 · 回到现实，再观察', color: 'orange',
+    summary: '模型最后输出的是经过数据变换定义的动作数组。系统还要恢复物理尺度、选择真正使用的通道，并按机器人接口发送；执行后获取新观测，再生成下一段。',
+    input: '默认 [B,50,32] 生成完成的归一化动作块',
+    output: '机器人适配后的动作目标序列；实际通道、单位与控制频率由机器人配置决定',
+    formula: 'a_physical = (a_normalized+1)/2 × (q99−q01+10⁻⁶) + q01\n若某通道采用相对动作：a_absolute = a_delta + state\nobserve → predict chunk → execute chosen steps → observe again',
+    steps: [
+      { title: '恢复训练时采用的数值尺度', body: '反归一化把模型空间的值映射回数据对应的单位。归一化动作0.5不应直接解读成0.5弧度、0.5米或0.5牛米，必须检查该通道的统计量和语义。' },
+      { title: '适配到具体机器人', body: '移除或忽略padding通道，按适配器还原坐标与动作定义。如果训练采用相对关节位移，还要与当前状态组合恢复目标；并不是所有机器人都用同一变换。' },
+      { title: '执行一段，再重新观察', body: '动作chunk给出一段未来控制目标。实际系统决定一次执行多少步、何时重新规划以及怎样衔接chunk；这个执行策略不是50×32张量本身规定的。' },
+      { title: '底层控制器跟踪目标', body: '模型输出不必直接是电机电流。机器人驱动或底层控制器负责跟踪相应的位置、姿态或速度目标，具体取决于接口。' },
+      { title: '形成观测与动作闭环', body: '动作改变环境，下一次相机和状态读数也会变化。重新推理可以响应这些变化；但闭环反应能力本身不构成形式化安全保证。' }
+    ],
+    example: '假设某教学关节动作通道：q01=−2 rad，q99=2 rad\n生成的归一化值a_norm=0.5\na_physical≈(0.5+1)/2×(2−(−2))−2=1 rad\n只有在该通道确实表示绝对关节角时，才是1 rad目标。\n若通道表示相对变化，还需按适配器进一步还原。',
+    pitfall: '动作生成成功不等于机器人一定安全。π0.5主要展示学习到的操作能力，并不自动提供碰撞约束、形式化稳定性证明或航天GNC认证；这些需要独立系统设计。',
+    code: 'normalized_chunk = model.sample_actions(observation)\nchunk = unnormalize(normalized_chunk, dataset_stats)\nchunk = robot_output_adapter(chunk, current_state)\nexecute(chunk[:execution_horizon])\nnew_observation = read_cameras_and_state()\n# 用新观测生成下一块；不是永久沿用旧图像',
+    sources: [transforms, training, paper], lab: null
+  }
+};
+
+const GLOSSARY = [
+  { term: 'VLA', english: 'Vision–Language–Action', meaning: '把视觉、语言和机器人动作联系起来的模型。', example: '看见桌面，理解“拿起杯子”，输出动作目标。' },
+  { term: '张量', english: 'Tensor', meaning: '带有多个维度的数字数组；形状描述每个维度的长度。', example: '[1,50,32]：1份样本、50个动作时间步、32个通道。' },
+  { term: '批次', english: 'Batch', meaning: '一次并行处理的样本集合，用B表示数量。', example: 'B=1时，仅演示一份观测。' },
+  { term: 'Token', english: 'Token', meaning: '序列里的一个位置或信息单元。在VLA中既有离散文字，也有连续图像/动作表示。', example: '一块图像形成一个连续token；它不一定对应一个物体。' },
+  { term: '嵌入', english: 'Embedding', meaning: '把输入表示成适合神经网络计算的向量。', example: '一个文字ID查表后变成2048维向量。' },
+  { term: 'Patch', english: 'Image patch', meaning: '从图像中划出的一小块像素。', example: '224×224的图用14×14切块，得到256块。' },
+  { term: '权重', english: 'Parameter / Weight', meaning: '训练中学到、推理时通常固定的数值，用于把输入变换成输出。', example: '线性层y=xW+b中的W和b。注意力权重则是本次输入算出的另一类数值。' },
+  { term: '注意力', english: 'Attention', meaning: '按照当前Query与各Key的匹配程度，读取并汇总Value信息。', example: '一个动作token可以读取图像、指令与其他动作位置。' },
+  { term: '掩码', english: 'Mask', meaning: '规定哪些位置有效、哪些信息允许被读取。', example: '前缀不能读取动作suffix；padding也会被屏蔽。' },
+  { term: 'Softmax', english: 'Softmax', meaning: '把一组分数转换为非负且总和为1的权重。', example: '[0.707,0]大约变为[0.670,0.330]。' },
+  { term: '残差连接', english: 'Residual connection', meaning: '保留原输入，把当前模块的更新加回去。', example: 'h_next=h+update；动作分支还可以用gate调制更新。' },
+  { term: '归一化', english: 'Normalization', meaning: '调整数值尺度。数据归一化与网络内部RMSNorm是不同操作。', example: '像素从0…255变到−1…1；RMSNorm则处理隐藏向量。' },
+  { term: 'KV缓存', english: 'Key–Value cache', meaning: '保存已经计算好的Key和Value，减少重复计算。', example: '同一动作块的生成迭代复用图像与文字前缀缓存。' },
+  { term: '动作块', english: 'Action chunk', meaning: '一次预测的一段未来动作序列。', example: '默认50步是序列长度，不自动等于50Hz或1秒。' },
+  { term: '流匹配', english: 'Flow matching', meaning: '训练模型预测生成空间中的变化方向，再通过积分生成样本。', example: 'openpi从t=1的噪声走到t=0的动作。' },
+  { term: '损失函数', english: 'Loss', meaning: '量化预测与训练目标之间差异的计算规则。', example: '预测0.6、目标0.8时，平方误差为0.04。' },
+  { term: '反向传播', english: 'Backpropagation', meaning: '计算损失对各个可训练参数的导数，帮助优化器更新参数。', example: '训练会调整W；普通推理只使用已学到的W。' },
+  { term: '本体状态', english: 'Proprioceptive state', meaning: '机器人对自身关节、夹爪等状态的读数。', example: '它与图像一起构成观测，而不是由动作专家凭空生成。' },
+  { term: '推理', english: 'Inference', meaning: '使用训练好的模型，为新的输入计算输出。', example: '新相机画面进入，经过缓存前缀与10步采样得到动作块。' }
+];
+
+const READING = [
+  { title: 'π0.5：原始论文', url: 'https://arxiv.org/html/2504.16054v1', why: '阅读完整模型的异构数据训练、FAST动作表示、连续动作专家和高层子任务设计。论文完整系统与openpi发布接口要分别理解。' },
+  { title: 'Physical Intelligence：π0.5介绍', url: 'https://www.pi.website/blog/pi05', why: '从真实家务任务理解开放世界泛化、语言指令和长任务分解。演示能力不是形式化安全保证。' },
+  { title: 'openpi：发布范围与运行入口', url: 'https://github.com/Physical-Intelligence/openpi', why: '仓库说明π0.5当前支持flow matching head的训练与推理；检查实际checkpoint、机器人适配和运行要求。' },
+  { title: 'pi0.py：从输入到10步采样', url: repo + 'src/openpi/models/pi0.py', why: '核对prefix/suffix、时间条件、flow loss、KV缓存及t=1→0的Euler更新。代码中的pi05开关选择π0.5路径。' },
+  { title: 'gemma.py：展开一层Transformer', url: repo + 'src/openpi/models/gemma.py', why: '核对8个Query头、1个KV头、RoPE、adaRMS、MLP与残差。网站尺寸以openpi代码默认配置为准。' },
+  { title: 'Knowledge Insulation：后续训练方法', url: 'https://www.pi.website/research/knowledge_insulation', why: '理解离散动作训练与连续动作推理如何结合，以及动作专家梯度隔离的动机。不要把该训练分支误画成每次推理都要运行的模块。' }
+];
+
+return {MODULES,GLOSSARY,READING};
+})();
+const labsModule=(()=>{
+/* Self-contained, deliberately tiny numerical teaching models. No model weights are loaded. */
+const activeLabs = new WeakMap();
+const fmt = (v, n = 4) => !Number.isFinite(v) ? '−∞' : Number(v.toFixed(n)).toString();
+const esc = s => String(s).replace(/[&<>"']/g, x => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[x]));
+const finite = (v, fallback = 0) => Number.isFinite(Number(v)) ? Number(v) : fallback;
+const dot = (a,b) => a.reduce((s,v,i)=>s+v*b[i],0);
+const transpose = a => a[0].map((_,i)=>a.map(r=>r[i]));
+const matmul = (a,b) => a.map(r=>transpose(b).map(c=>dot(r,c)));
+const softmax = a => { const m=Math.max(...a); const e=a.map(x=>Math.exp(x-m)); const z=e.reduce((s,x)=>s+x,0); return e.map(x=>x/z); };
+const seedNoise = seed => { let n=(seed>>>0)||1; const rnd=()=>{n=(Math.imul(1664525,n)+1013904223)>>>0;return (n+1)/4294967297;};return Array.from({length:6},()=>Math.sqrt(-2*Math.log(rnd()))*Math.cos(2*Math.PI*rnd())); };
+const tone = v => v < 0 ? `rgba(53,131,208,${Math.min(.65,.08+Math.abs(v)*.19)})` : `rgba(239,150,63,${Math.min(.65,.08+Math.abs(v)*.19)})`;
+const css = `<style>
+.lab-root{color:#2c2942;font-size:14px;font-family:inherit;--lab-purple:#7255c5;--lab-line:#e7e4ef;--lab-soft:#f8f7fc;line-height:1.65}.lab-root *{box-sizing:border-box}.lab-root button,.lab-root input,.lab-root select{font:inherit}.lab-root button,.lab-root select{cursor:pointer}.lab-root button:focus-visible,.lab-root input:focus-visible,.lab-root select:focus-visible{outline:3px solid #c9b6ff;outline-offset:2px}.lab-disclaimer{display:flex;gap:8px;align-items:flex-start;color:#76638f;font-size:12px;background:#f5f0fc;border:1px solid #e5daf5;padding:9px 12px;border-radius:7px;margin:0 0 20px}.lab-disclaimer b{white-space:nowrap}.lab-root h3{font-size:20px;line-height:1.35;margin:0 0 8px}.lab-root h4{font-size:14px;margin:0 0 12px}.lab-root p{margin:8px 0 16px}.lab-muted{color:#837d93;font-size:12px}.lab-columns{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:18px}.lab-card{border:1px solid var(--lab-line);border-radius:10px;padding:18px;background:white;min-width:0}.lab-formula{background:var(--lab-soft);border:1px solid var(--lab-line);padding:12px 14px;border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere;font:13px/1.8 ui-monospace,SFMono-Regular,Menlo,monospace;color:#433362}.lab-controls{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:15px 0}.lab-btn{border:1px solid #d9d0e9;border-radius:6px;background:white;color:#5d437e;padding:7px 13px;transition:background .15s}.lab-btn:hover{background:#f2eef9}.lab-btn.primary{background:var(--lab-purple);color:white;border-color:var(--lab-purple)}.lab-btn:disabled{opacity:.45;cursor:default}.lab-tabs{display:flex;gap:5px;border-bottom:1px solid var(--lab-line);margin-bottom:20px;padding-bottom:9px}.lab-tab{border:0;background:transparent;color:#81788f;padding:8px 14px;border-radius:6px}.lab-tab[aria-selected=true]{background:#eee8fa;color:#6240aa;font-weight:700}.lab-root label.lab-field{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:13px;margin:10px 0}.lab-field input[type=number]{width:78px;border:1px solid #dcd7e7;border-radius:5px;padding:5px 7px;background:white;color:#51436b}.lab-field input[type=range]{flex:1;min-width:100px;accent-color:#7955c6}.lab-root select{padding:6px 9px;border:1px solid #ddd5e8;border-radius:5px;background:white;color:#51436b}.lab-matrix-scroll{overflow-x:auto;padding:3px 1px 8px}.lab-matrix{display:inline-grid;gap:4px;padding:7px;border-left:2px solid #c1b3d5;border-right:2px solid #c1b3d5;border-radius:5px;vertical-align:middle}.lab-cell{min-width:56px;min-height:36px;border:1px solid transparent;border-radius:4px;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,SFMono-Regular,Menlo,monospace;padding:4px 5px;color:#3b3551;background:#f0edf7}.lab-cell:hover{border-color:#9e86c9}.lab-cell.lab-edit{width:58px;text-align:center;border:1px solid #dcd5e8;background:white}.lab-cell.lab-selected{outline:2px solid #8462c4;outline-offset:1px}.lab-matrix-label{font-size:12px;font-weight:700;color:#75678a;margin-bottom:7px}.lab-matrix-row{display:flex;gap:14px;align-items:flex-start;flex-wrap:wrap}.lab-matrix-row>div{min-width:0}.lab-op{font-size:23px;color:#b2a2c6;padding-top:35px}.lab-result{border-left:3px solid #9d78d3;background:#faf7ff;padding:13px 16px;margin:16px 0;border-radius:0 6px 6px 0}.lab-result strong{color:#664397}.lab-numeral{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:#664397}.lab-caption{font-size:12px;color:#81768d;margin-top:9px}.lab-output-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:15px;margin-top:18px}.lab-output-grid .lab-card{padding:13px}.lab-tiny-table{border-collapse:collapse;width:100%;font-size:12px;text-align:center}.lab-tiny-table td,.lab-tiny-table th{padding:8px 7px;border:1px solid #e4dfea}.lab-tiny-table th{background:#faf9fc;color:#797086;font-weight:500}.lab-yes{background:#eee6fb;color:#64439b}.lab-no{background:#f5f4f7;color:#b1aab9}.lab-slider-value{min-width:45px;text-align:right;font:13px ui-monospace,monospace;color:#70539f}.lab-bar{height:12px;border-radius:4px;background:linear-gradient(90deg,#e59c58,#a28bd7);position:relative;margin:16px 0 5px}.lab-marker{position:absolute;height:22px;width:3px;background:#493361;top:-5px}.lab-between{display:flex;justify-content:space-between;font-size:11px;color:#8b7e99}.lab-stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0}.lab-stat{padding:12px 9px;border:1px solid #e5ddec;border-radius:6px;background:#fdfbff}.lab-stat span{font-size:11px;color:#8d809a;display:block}.lab-stat b{font-size:22px;font-weight:600;color:#6a4f91;font-family:ui-monospace,monospace}.lab-progress{height:6px;background:#eee8f6;border-radius:10px;overflow:hidden;margin:12px 0}.lab-progress>span{display:block;background:#9c7bce;height:100%;transition:width .25s}.lab-trace{max-height:180px;overflow:auto;border:1px solid var(--lab-line);border-radius:6px}.lab-trace table{font-size:11px}.lab-graph{width:100%;display:block;background:#fdfcfe;border:1px solid var(--lab-line);border-radius:8px}.lab-graph text{font:11px system-ui,sans-serif;fill:#8d8299}.lab-chips{display:flex;gap:6px;flex-wrap:wrap;margin:12px 0}.lab-chip{padding:4px 9px;border:1px solid #dfd4ed;border-radius:4px;background:#f4effb;color:#685181;font:12px ui-monospace,monospace}.lab-patch-grid{display:grid;grid-template-columns:repeat(16,1fr);gap:1px;max-width:320px;aspect-ratio:1;outline:1px solid #e8e3ed;background:white}.lab-patch{padding:0;border:0;min-width:0;position:relative;aspect-ratio:1}.lab-patch:hover:after,.lab-patch[aria-pressed=true]:after{content:'';position:absolute;inset:-1px;outline:3px solid #7047b3;z-index:2}.lab-pixel-detail{max-width:160px;aspect-ratio:1;border-radius:4px;margin:10px 0;display:flex;align-items:center;justify-content:center;font:12px ui-monospace,monospace}.lab-path{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:14px 0}.lab-path>span{border:1px solid #e4dbed;padding:8px 10px;border-radius:6px;background:#faf7fe;font:12px ui-monospace,monospace}.lab-note{padding:12px 14px;border:1px dashed #d5c9e2;border-radius:7px;background:#fcfaff;font-size:12px;color:#7a6a88}.lab-inline-input{width:65px;padding:6px;border:1px solid #ddd5e8;border-radius:5px;background:white;font:13px ui-monospace,monospace;color:#634b85}.lab-green{color:#288879}.lab-hidden{display:none!important}@media(max-width:720px){.lab-columns,.lab-output-grid{grid-template-columns:1fr}.lab-card{padding:14px}.lab-cell{min-width:49px;font-size:11px}.lab-cell.lab-edit{width:50px}.lab-root h3{font-size:18px}.lab-disclaimer{flex-direction:column;gap:1px}.lab-stat b{font-size:19px}}
+</style>`;
+
+function shell(container,title,intro){container.innerHTML=css+`<div class="lab-root"><div class="lab-disclaimer"><b>教学数值实验</b><span>可重算教学例子，未加载 π0.5 权重。真实模型尺寸会另外标注。</span></div><h3>${title}</h3><p>${intro}</p><div class="lab-body"></div></div>`;return container.querySelector('.lab-body');}
+function matrix(a,tag,editable=false){return `<div class="lab-matrix" style="grid-template-columns:repeat(${a[0].length},1fr)">${a.flatMap((r,i)=>r.map((x,j)=>editable?`<input class="lab-cell lab-edit" type="number" step="0.1" aria-label="${tag} 第 ${i+1} 行第 ${j+1} 列" data-matrix="${tag}" data-row="${i}" data-col="${j}" value="${x}">`:`<button class="lab-cell" type="button" data-inspect="${tag}" data-row="${i}" data-col="${j}" aria-label="展开 ${tag} 第 ${i+1} 行第 ${j+1} 列计算" style="background:${tone(x)}">${fmt(x)}</button>`)).join('')}</div>`;}
+function readonlyMatrix(a){return `<div class="lab-matrix" style="grid-template-columns:repeat(${a[0].length},1fr)">${a.flat().map(v=>`<span class="lab-cell" style="background:${tone(v)}">${fmt(v)}</span>`).join('')}</div>`;}
+function labeledMatrix(a,tag,editable=false){return `<div><div class="lab-matrix-label">${tag} · ${a.length} × ${a[0].length}</div>${matrix(a,tag,editable)}</div>`;}
+
+function attentionLab(container){
+ const body=shell(container,'让注意力的一次乘加变得可见','3 个 token，每个 token 暂时只有 2 个数字。修改任何白色输入格，下面所有矩阵会立即重算；点击彩色结果格，就能追溯它从哪里来。');
+ const data={X:[[1,0],[0,1],[1,1]],WQ:[[1,0],[0,1]],WK:[[1,1],[0,1]],WV:[[1,0],[1,2]]};let causal=false,selected=['O',2,0],result={};
+ body.innerHTML=`<div class="lab-card"><h4>① 输入和学到的权重（这里由我们手动设定）</h4><div class="lab-matrix-row">${Object.entries(data).map(([k,v])=>labeledMatrix(v,k,true)).join('')}</div><p class="lab-caption">X 的每行是一个 token；WQ / WK / WV 是三张不同的“换算表”。真实模型的这些权重从训练中学习。</p></div><div class="lab-controls"><label>示例可见范围 <select class="lab-mask" aria-label="注意力掩码"><option value="bidirectional">前缀内双向注意力</option><option value="causal">因果注意力（对照实验）</option></select></label><button class="lab-btn lab-reset" type="button">恢复示例</button></div><div class="lab-attention-results"></div><div class="lab-result lab-calculation" aria-live="polite"></div><div class="lab-columns"><div class="lab-card"><h4>π0.5 的真实“谁可以看谁”</h4><table class="lab-tiny-table"><thead><tr><th>读取者 ↓ / 被读取 →</th><th>图文前缀</th><th>动作块</th></tr></thead><tbody><tr><th>图文前缀</th><td class="lab-yes">允许</td><td class="lab-no">禁止</td></tr><tr><th>动作块</th><td class="lab-yes">允许</td><td class="lab-yes">允许</td></tr></tbody></table></div><div class="lab-note">本实验的 3 × 3 矩阵演示一个注意力头。切换“因果”只是为了理解 mask，不能把它当作 π0.5 整个模型的掩码。真实连续动作块内部可互相读取；padding 位置另外被屏蔽。真实 openpi 每头维度为 256，所以实际缩放除以 √256 = 16。</div></div>`;
+ function calc(){const Q=matmul(data.X,data.WQ),K=matmul(data.X,data.WK),V=matmul(data.X,data.WV);const scores=matmul(Q,transpose(K)).map((r,i)=>r.map((x,j)=>causal&&j>i?-Infinity:x/Math.sqrt(2)));const P=scores.map(softmax),O=matmul(P,V);result={Q,K,V,S:scores,P,O};body.querySelector('.lab-attention-results').innerHTML=`<div class="lab-output-grid">${['Q','K','V'].map(k=>`<div class="lab-card"><h4>${k} = X × W${k}</h4>${labeledMatrix(result[k],k)}</div>`).join('')}</div><div class="lab-output-grid">${[['S','② 相似度 S = QKᵀ / √2'],['P','③ 权重 P = softmax(S)'],['O','④ 输出 O = PV']].map(([k,t])=>`<div class="lab-card"><h4>${t}</h4>${labeledMatrix(result[k],k)}${k==='P'?'<p class="lab-caption">每行加起来 = 1。屏蔽项的概率 = 0。</p>':''}</div>`).join('')}</div>`;explain();}
+ function explain(){const [tag,i,j]=selected;let formula='',desc='';if(['Q','K','V'].includes(tag)){const W=data['W'+tag];formula=`${tag}[${i+1},${j+1}] = ${data.X[i].map((x,k)=>`${fmt(x)} × ${fmt(W[k][j])}`).join(' + ')}\n= ${fmt(result[tag][i][j])}`;desc='一行输入乘一列权重，再把乘积相加。';}else if(tag==='S'){if(causal&&j>i){formula=`S[${i+1},${j+1}] = −∞\nsoftmax 后权重为 0`;desc='这个位置在对照实验中被 mask 禁止读取。不能用 0 分数代替 −∞。';}else{formula=`S[${i+1},${j+1}] = (${result.Q[i].map((x,k)=>`${fmt(x)} × ${fmt(result.K[j][k])}`).join(' + ')}) / √2\n= ${fmt(result.S[i][j])}`;desc=`第 ${i+1} 个 token 的问题 Q，与第 ${j+1} 个 token 的标签 K 做点积。`;}}else if(tag==='P'){const row=result.S[i],m=Math.max(...row),e=row.map(x=>Math.exp(x-m)),sum=e.reduce((s,x)=>s+x,0);formula=`P[${i+1},${j+1}] = exp(${fmt(row[j])} − ${fmt(m)}) / Σ exp(S − ${fmt(m)})\n= ${fmt(e[j])} / ${fmt(sum)} = ${fmt(result.P[i][j])}`;desc='先减去本行最大值，再指数化并归一化。这与普通 softmax 数学等价，但不容易数值溢出。';}else{formula=`O[${i+1},${j+1}] = ${result.P[i].map((p,k)=>`${fmt(p)} × ${fmt(result.V[k][j])}`).join(' + ')}\n= ${fmt(result.O[i][j])}`;desc='按注意力比例混合所有 V。这个结果还不是动作，只是一份更新后的 token 表示。';}body.querySelector('.lab-calculation').innerHTML=`<strong>点击追踪 · ${tag} 的第 ${i+1} 行、第 ${j+1} 列</strong><p>${desc}</p><div class="lab-formula">${esc(formula)}</div>`;body.querySelectorAll('[data-inspect]').forEach(e=>e.classList.toggle('lab-selected',e.dataset.inspect===tag&&+e.dataset.row===i&&+e.dataset.col===j));}
+ body.addEventListener('input',e=>{if(e.target.dataset.matrix){const el=e.target;data[el.dataset.matrix][+el.dataset.row][+el.dataset.col]=Math.max(-100,Math.min(100,finite(el.value)));calc();}});
+ body.querySelector('.lab-mask').addEventListener('change',e=>{causal=e.target.value==='causal';calc();});
+ body.addEventListener('click',e=>{const el=e.target.closest('[data-inspect]');if(el){selected=[el.dataset.inspect,+el.dataset.row,+el.dataset.col];explain();}});
+ body.querySelector('.lab-reset').addEventListener('click',()=>attentionLab(container));calc();return ()=>{};
+}
+
+function flowLab(container){
+ const body=shell(container,'动作不是一个个猜出来，而是整块逐步生成','先在“训练”里看清监督信号，再到“推理”里对一整块噪声反复更新。这里统一使用 openpi 的时间方向：t = 1 是噪声，t = 0 是动作。');
+ let tab='train',timer=null,step=0,seed=42,k=2,N=10,condition=0,history=[],values=[],last=null;
+ const stop=()=>{if(timer){clearInterval(timer);timer=null;}const b=body.querySelector('.lab-play');if(b)b.textContent='播放生成';};
+ const centers=[[.2,.6,.4,.8,.6,1],[-.4,.2,-.2,.3,0,.4]];
+ body.innerHTML=`<div class="lab-tabs" role="tablist" aria-label="Flow matching 模式"><button class="lab-tab" role="tab" aria-selected="true" data-flow-tab="train">训练：知道正确动作</button><button class="lab-tab" role="tab" aria-selected="false" data-flow-tab="infer">推理：只有观测与噪声</button></div><div class="lab-training"><div class="lab-columns"><div class="lab-card"><h4>选择一维训练样本</h4><label class="lab-field">真值动作 a <input type="number" class="lab-a" value="0.2" step="0.1"></label><label class="lab-field">抽到的噪声 ε <input type="number" class="lab-epsilon" value="1" step="0.1"></label><label class="lab-field">噪声时间 t <input type="range" class="lab-t" min="0" max="1" value="0.75" step="0.01"><output class="lab-slider-value lab-t-label">0.75</output></label><label class="lab-field">模型预测 v <input type="number" class="lab-v" value="0.6" step="0.1"></label><p class="lab-caption">a 来自示范数据；ε 是随机采样；v 在真实训练中由神经网络计算，这里让你手动修改。</p></div><div class="lab-card lab-training-result" aria-live="polite"></div></div><div class="lab-note" style="margin-top:16px">真实训练对整块 [50, 32] 动作及一批样本计算均方误差，并反向传播更新权重。这里仅取一个数，方便手算。模型需要学习不同噪声程度下的变化方向，并不只是记住一个最终坐标。</div></div><div class="lab-inference lab-hidden"><div class="lab-note"><b>解析教学向量场：</b>v(x,t,c) = k(x − c)。c 是从下方演示条件选择的手工参数，不是数据集真值，也不是 π0.5 的预测。我们用它解释数值积分；真实推理中的 v 应由训练好的动作专家给出。</div><div class="lab-controls"><label class="lab-field">种子 <input type="number" class="lab-seed" value="42" min="1" max="99999" step="1"></label><label class="lab-field">步数 <select class="lab-n"><option value="5">5</option><option value="10" selected>10</option><option value="20">20</option></select></label><label class="lab-field">强度 k <select class="lab-k"><option value="1">1</option><option value="2" selected>2</option><option value="4">4</option></select></label><label class="lab-field">条件 <select class="lab-condition"><option value="0">托盘在右侧（示意）</option><option value="1">托盘在左侧（示意）</option></select></label></div><div class="lab-controls"><button class="lab-btn primary lab-step" type="button">计算一步</button><button class="lab-btn lab-play" type="button">播放生成</button><button class="lab-btn lab-reset-flow" type="button">重置噪声</button><span class="lab-current lab-muted"></span></div><div class="lab-progress"><span></span></div><div class="lab-columns"><div class="lab-card"><h4>当前动作块 · 3 个物理时间步 × 2 个通道</h4><div class="lab-current-matrix"></div><p class="lab-caption">每次生成迭代，6 个数字同时更新。缩小的 3 × 2 示例对应真实模型默认的 50 × 32。</p><div class="lab-current-formula lab-formula"></div></div><div class="lab-card"><h4>6 个动作值沿生成步骤的变化</h4><div class="lab-trajectory"></div><p class="lab-caption">横轴是生成迭代次数，不是机器人运行的物理时间；纵轴是模型空间中的动作值。</p></div></div><div class="lab-trace" style="margin-top:16px"><table class="lab-tiny-table"><thead><tr><th>步</th><th>t</th><th>更新前 x₁</th><th>预测场 v₁</th><th>Δt</th><th>更新后 x₁</th></tr></thead><tbody class="lab-log"></tbody></table></div><p class="lab-caption">真实 π0.5 在每一步重新计算动作专家，复用已缓存的图像／文本前缀。这里的 v 是生成空间的向量场，不等于机械臂的物理速度。</p></div>`;
+ function train(){const a=finite(body.querySelector('.lab-a').value),eps=finite(body.querySelector('.lab-epsilon').value),t=finite(body.querySelector('.lab-t').value),v=finite(body.querySelector('.lab-v').value),x=t*eps+(1-t)*a,u=eps-a,loss=(v-u)**2;body.querySelector('.lab-t-label').textContent=fmt(t,2);body.querySelector('.lab-training-result').innerHTML=`<h4>这一维的数据流</h4><div class="lab-bar"><span class="lab-marker" style="left:${t*100}%"></span></div><div class="lab-between"><span>t=0 · 正确动作</span><span>t=1 · 噪声</span></div><div class="lab-stat-grid"><div class="lab-stat"><span>带噪输入 xₜ</span><b>${fmt(x)}</b></div><div class="lab-stat"><span>目标速度 u</span><b>${fmt(u)}</b></div><div class="lab-stat"><span>这一维 MSE</span><b>${fmt(loss)}</b></div></div><div class="lab-formula">xₜ = tε + (1−t)a\n   = ${fmt(t)} × ${fmt(eps)} + ${fmt(1-t)} × ${fmt(a)} = ${fmt(x)}\nu  = ε − a = ${fmt(eps)} − (${fmt(a)}) = ${fmt(u)}\nL  = (v − u)² = (${fmt(v)} − ${fmt(u)})² = ${fmt(loss)}</div>`;}
+ function graph(){const w=420,h=210,p=30,all=history.flatMap(r=>r.x),lo=Math.min(-1,...all)-.15,hi=Math.max(1,...all)+.15,px=i=>p+i/N*(w-2*p),py=v=>h-p-(v-lo)/(hi-lo)*(h-2*p);const colors=['#b073cc','#7456bc','#d99b4a','#dd7953','#4da49b','#6b9fcc'];return `<svg class="lab-graph" viewBox="0 0 ${w} ${h}" role="img" aria-label="六个教学动作值随生成迭代变化的曲线">${[0,.5,1].map(fr=>{const y=p+fr*(h-2*p);return `<line x1="${p}" y1="${y}" x2="${w-p}" y2="${y}" stroke="#ece7f2"/><text x="3" y="${y+3}">${fmt(hi-fr*(hi-lo),1)}</text>`;}).join('')}<line x1="${p}" y1="${h-p}" x2="${w-p}" y2="${h-p}" stroke="#d9d0e5"/>${[0,N/2,N].map(i=>`<text x="${px(i)-3}" y="${h-9}">${i}</text>`).join('')}${colors.map((c,j)=>`<polyline fill="none" stroke="${c}" stroke-width="2" points="${history.map((r,i)=>`${px(i)},${py(r.x[j])}`).join(' ')}"/><circle cx="${px(step)}" cy="${py(values[j])}" r="3" fill="${c}"/>`).join('')}</svg>`;}
+ function draw(){body.querySelector('.lab-current').textContent=`第 ${step} / ${N} 步 · t = ${fmt(1-step/N,2)} · Δt = ${fmt(-1/N,2)}`;body.querySelector('.lab-progress>span').style.width=`${step/N*100}%`;body.querySelector('.lab-current-matrix').innerHTML=readonlyMatrix([values.slice(0,2),values.slice(2,4),values.slice(4,6)]);body.querySelector('.lab-current-formula').textContent=last?`第一维：v = ${k} × (${fmt(last.old)} − ${centers[condition][0]}) = ${fmt(last.v)}\nx新 = ${fmt(last.old)} + (${fmt(-1/N)}) × ${fmt(last.v)}\n    = ${fmt(values[0])}`:`初始 x₁ = ${fmt(values[0])}\n点击“计算一步”，观察 Euler 更新。`;body.querySelector('.lab-trajectory').innerHTML=graph();body.querySelector('.lab-step').disabled=step>=N;body.querySelector('.lab-play').disabled=step>=N;body.querySelector('.lab-log').innerHTML=history.slice(1).map((r,i)=>`<tr><td>${i+1}</td><td>${fmt(1-i/N,2)} → ${fmt(1-(i+1)/N,2)}</td><td>${fmt(r.old)}</td><td>${fmt(r.v)}</td><td>${fmt(-1/N)}</td><td>${fmt(r.x[0])}</td></tr>`).join('')||'<tr><td colspan="6">还没有执行更新。第一行将记录真实的教学算式。</td></tr>';}
+ function reset(){stop();step=0;values=seedNoise(seed);history=[{x:[...values]}];last=null;draw();}
+ function advance(){if(step>=N)return;const old=values[0],v=k*(old-centers[condition][0]);values=values.map((x,i)=>x-(k/N)*(x-centers[condition][i]));step++;last={old,v};history.push({x:[...values],old,v});if(step>=N)stop();draw();}
+ body.querySelectorAll('[data-flow-tab]').forEach(b=>b.addEventListener('click',()=>{tab=b.dataset.flowTab;stop();body.querySelectorAll('[data-flow-tab]').forEach(t=>t.setAttribute('aria-selected',String(t.dataset.flowTab===tab)));body.querySelector('.lab-training').classList.toggle('lab-hidden',tab!=='train');body.querySelector('.lab-inference').classList.toggle('lab-hidden',tab!=='infer');}));
+ body.querySelector('.lab-training').addEventListener('input',train);
+ body.querySelector('.lab-step').addEventListener('click',advance);body.querySelector('.lab-reset-flow').addEventListener('click',reset);body.querySelector('.lab-play').addEventListener('click',()=>{if(timer){stop();return;}body.querySelector('.lab-play').textContent='暂停';timer=setInterval(()=>{if(!container.isConnected){stop();return;}advance();},550);});
+ [['.lab-seed',v=>seed=Math.max(1,Math.min(99999,Math.round(finite(v,42))))],['.lab-n',v=>N=+v],['.lab-k',v=>k=+v],['.lab-condition',v=>condition=+v]].forEach(([sel,fn])=>body.querySelector(sel).addEventListener('change',e=>{fn(e.target.value);reset();}));train();reset();return stop;
+}
+
+function patchLab(container){
+ const body=shell(container,'图像怎样变成 256 个 token？','先把每个像素的红、绿、蓝数值归一化，再以 14 × 14 的小方块切分图像。点击下面任意方块，追踪它的坐标与后续形状变化。');
+ let patch=119;
+ const rgb=(r,c)=>{const cup=(c-6)**2/7+(r-9)**2/16<1;const tray=r>9&&c>9&&c<15;return cup?[194+r*2,92+c*3,94+r]:tray?[138+r*3,173+c*2,162]:[226-r*3,220-c*2,236-r*2];};
+ body.innerHTML=`<div class="lab-columns"><div class="lab-card"><h4>一张 224 × 224 的 RGB 示意图</h4><div class="lab-patch-grid">${Array.from({length:256},(_,i)=>{const r=Math.floor(i/16),c=i%16;return `<button class="lab-patch" type="button" data-patch="${i}" aria-label="选择 patch 第 ${r+1} 行第 ${c+1} 列" aria-pressed="${i===patch}" style="background:rgb(${rgb(r,c).join(',')})"></button>`;}).join('')}</div><p class="lab-caption">此图是程序绘制的色块示意，不是模型输入照片或模型注意力热图。</p></div><div class="lab-card lab-patch-description" aria-live="polite"></div></div><div class="lab-path"><span>224 × 224 × 3</span>→<span>256 × 588</span>→<span>256 × 1152</span>→<span>27 层视觉编码</span>→<span>256 × 2048</span></div><p class="lab-caption">真实 openpi 默认：SigLIP So400m/14 内部宽 1152；每个 patch 包含 14×14×3 = 588 个像素通道值，最后每个视觉 token 投影到语言模型的 2048 维。256 = 16×16；并不平均成一个全图向量。</p><div class="lab-card"><h4>把投影缩小到一个能手算的例子</h4><p>用 2 × 2 像素、每像素 RGB 的小块，共 12 个数。这里只计算输出向量的第 1 维；真实模型会同时计算 1152 维。</p><label class="lab-field">左上像素的 R <input class="lab-r" type="range" min="0" max="255" step="1" value="128"><output class="lab-slider-value lab-r-value">128</output></label><div class="lab-projection-result"></div></div>`;
+ function describe(){const r=Math.floor(patch/16),c=patch%16,color=rgb(r,c);body.querySelectorAll('[data-patch]').forEach(b=>b.setAttribute('aria-pressed',String(+b.dataset.patch===patch)));body.querySelector('.lab-patch-description').innerHTML=`<h4>Patch #${patch} · 从 0 开始编号</h4><div class="lab-pixel-detail" style="background:rgb(${color.join(',')})">row ${r} / col ${c}</div><div class="lab-formula">图像行：${r*14} … ${r*14+13}\n图像列：${c*14} … ${c*14+13}\n像素值：14 × 14 × 3 = 588 个数\n示意 RGB = [${color.join(', ')}]\n归一化 = [${color.map(x=>fmt(x/255*2-1,3)).join(', ')}]</div><p class="lab-caption">公式：x_norm = x_uint8 / 255 × 2 − 1。位置编码让网络知道这个 patch 原来位于哪里。</p>`;}
+ function project(){const r=+body.querySelector('.lab-r').value;body.querySelector('.lab-r-value').textContent=r;const pixels=[r,64,32,200,100,50,20,160,80,240,220,200],x=pixels.map(v=>v/255*2-1),w=[.1,.2,-.1,.05,.15,-.2,.1,-.05,.2,.1,.05,-.1],bias=.03,y=dot(x,w)+bias;body.querySelector('.lab-projection-result').innerHTML=`<div class="lab-chips">${pixels.map((v,i)=>`<span class="lab-chip">${['R','G','B'][i%3]}${Math.floor(i/3)+1}: ${v}</span>`).join('')}</div><div class="lab-formula">x = [${x.map(v=>fmt(v,3)).join(', ')}]\nw = [${w.join(', ')}]\ny₁ = Σ(xᵢ × wᵢ) + 0.03\n   = ${x.map((v,i)=>`${fmt(v,3)}×${w[i]}`).join(' + ')} + 0.03\n   = ${fmt(y)}</div><p class="lab-caption">上面的 w 和偏置 0.03 都是手工教学权重。像素展平后乘权重，与步长等于 patch 大小的卷积在这里表达同一类线性投影。</p>`;}
+ body.addEventListener('click',e=>{const b=e.target.closest('[data-patch]');if(b){patch=+b.dataset.patch;describe();}});body.querySelector('.lab-r').addEventListener('input',project);describe();project();return ()=>{};
+}
+
+function stateLab(container){
+ const body=shell(container,'机器人的状态怎样变成文字？','机器人状态可以是关节角、夹爪开合等数值。π0.5 的公开实现把归一化状态分箱，再将这些整数写进文本提示。状态数字不是直接送入语言模型的词表 ID。');
+ body.innerHTML=`<div class="lab-columns"><div class="lab-card"><h4>观察一维归一化状态 s</h4><label class="lab-field">s <input class="lab-state-slider" type="range" min="-1" max="1" step="0.0078125" value="0"><output class="lab-slider-value lab-state-value">0</output></label><div class="lab-bar" style="background:linear-gradient(90deg,#78b7c7,#dfc8ef)"><span class="lab-marker lab-state-marker" style="left:50%"></span></div><div class="lab-between"><span>−1</span><span>0</span><span>+1</span></div><div class="lab-controls"><button type="button" class="lab-btn" data-state="-0.5">−0.5</button><button type="button" class="lab-btn" data-state="0">0</button><button type="button" class="lab-btn" data-state="0.5">+0.5</button></div><p class="lab-caption">这里只操作“已经归一化”的状态。实际归一化由数据集统计量与机器人适配器决定，不能直接把任意关节角塞进此滑块。</p></div><div class="lab-card lab-state-result" aria-live="polite"></div></div><div class="lab-card" style="margin-top:18px"><h4>拼成字符串，再做真正的分词</h4><div class="lab-state-prompt lab-formula"></div><div class="lab-path"><span>状态分箱整数</span>→<span>文本中的数字字符</span>→<span>SentencePiece token ID</span>→<span>查表得到 embedding</span></div><p class="lab-note">“128”是状态所在区间的编号。分词器可能将一个数字串拆成多个 token；不能断言 128 就是词表 ID 128，也不能断言每个状态占一个 token。本网页没有加载官方 SentencePiece 分词器，因此不伪造真实 token ID。</p></div>`;
+ function draw(){const s=+body.querySelector('.lab-state-slider').value;const raw=Math.floor((s+1)*128),bin=Math.min(255,Math.max(0,raw));const low=-1+bin/128,high=low+1/128;body.querySelector('.lab-state-value').textContent=fmt(s,4);body.querySelector('.lab-state-marker').style.left=`${(s+1)*50}%`;body.querySelector('.lab-state-result').innerHTML=`<h4>落在第 ${bin} 号区间</h4><div class="lab-stat-grid"><div class="lab-stat"><span>区间总数</span><b>256</b></div><div class="lab-stat"><span>区间宽度</span><b style="font-size:16px">1/128</b></div><div class="lab-stat"><span>分箱编号</span><b>${bin}</b></div></div><div class="lab-formula">bin = clip(floor((s + 1) × 128), 0, 255)\n    = clip(floor((${fmt(s)} + 1) × 128), 0, 255)\n    = ${bin}\n区间 ≈ [${fmt(low,6)}, ${fmt(high,6)}${bin===255?']':')'}</div><p class="lab-caption">这是 [-1,1] 内的等价教学写法，端点 +1 对应 255。源码使用 np.digitize 与 256 个左边界；对超出范围的输入不能假定源码自动做同样的双边截断。</p>`;body.querySelector('.lab-state-prompt').textContent=`Task: pick up the red cup, State: 64 ${bin} 192;\nAction: `;}
+ body.querySelector('.lab-state-slider').addEventListener('input',draw);body.querySelectorAll('[data-state]').forEach(b=>b.addEventListener('click',()=>{body.querySelector('.lab-state-slider').value=b.dataset.state;draw();}));draw();return ()=>{};
+}
+
+function normLab(container){
+ const body=shell(container,'归一化与时间条件，具体改了哪些数？','RMSNorm 先控制一排数字的整体大小。动作专家再用时间条件产生的 scale、shift、gate 调节计算。下面直接编辑这些调节量，观察每一项发生的变化。');
+ let vector=[1,2,-1,0];
+ body.innerHTML=`<div class="lab-columns"><div class="lab-card"><h4>输入向量 h · 教学 4 维</h4><div class="lab-chips">${vector.map((v,i)=>`<input class="lab-inline-input lab-h" type="number" value="${v}" step="0.1" data-i="${i}" aria-label="h 的第 ${i+1} 维">`).join('')}</div><label class="lab-field">scale <input type="number" class="lab-scale" value="0.2" step="0.1"></label><label class="lab-field">shift <input type="number" class="lab-shift" value="0.1" step="0.1"></label><label class="lab-field">gate <input type="number" class="lab-gate" value="0.5" step="0.1"></label><p class="lab-caption">真实模型由 t 的 embedding 和学习到的线性层产生逐维调节量。此处使用标量并广播到 4 个维度，便于观察。</p></div><div class="lab-card lab-norm-result" aria-live="polite"></div></div><div class="lab-result lab-norm-steps"></div><div class="lab-note">RMSNorm 不减均值：它不是 LayerNorm。gate 控制的是注意力／MLP 计算后的残差分支。下面为手算把那个分支函数简化为恒等映射 F(z)=z；真实网络里 F 包含注意力或门控 MLP，不能把本例当作完整 Transformer 层。</div>`;
+ function draw(){vector=[...body.querySelectorAll('.lab-h')].map(e=>finite(e.value));const scale=finite(body.querySelector('.lab-scale').value),shift=finite(body.querySelector('.lab-shift').value),gate=finite(body.querySelector('.lab-gate').value),mean=vector.reduce((s,v)=>s+v*v,0)/vector.length,rms=Math.sqrt(mean+1e-6),norm=vector.map(v=>v/rms),z=norm.map(v=>v*(1+scale)+shift),out=z.map((v,i)=>vector[i]+gate*v);body.querySelector('.lab-norm-result').innerHTML=`<h4>同一输入的逐层变化</h4><table class="lab-tiny-table"><thead><tr><th>维度</th><th>h</th><th>归一化</th><th>调制后 z</th><th>残差结果</th></tr></thead><tbody>${vector.map((v,i)=>`<tr><th>${i+1}</th><td>${fmt(v)}</td><td>${fmt(norm[i])}</td><td>${fmt(z[i])}</td><td style="background:${tone(out[i])}">${fmt(out[i])}</td></tr>`).join('')}</tbody></table>`;body.querySelector('.lab-norm-steps').innerHTML=`<strong>把第 1 个数完整算一遍</strong><div class="lab-formula">mean(h²) = (${vector.map(v=>`(${fmt(v)})²`).join(' + ')}) / 4 = ${fmt(mean)}\nrms = √(${fmt(mean)} + 0.000001) = ${fmt(rms,6)}\nĥ₁ = ${fmt(vector[0])} / ${fmt(rms,6)} = ${fmt(norm[0])}\nz₁ = ĥ₁ × (1 + scale) + shift\n   = ${fmt(norm[0])} × ${fmt(1+scale)} + ${fmt(shift)} = ${fmt(z[0])}\ny₁ = h₁ + gate × F(z)₁，教学 F(z)=z\n   = ${fmt(vector[0])} + ${fmt(gate)} × ${fmt(z[0])} = ${fmt(out[0])}</div>`;}
+ body.addEventListener('input',draw);draw();return ()=>{};
+}
+
+function renderLab(type, container){
+ const old=activeLabs.get(container);if(old)old();
+ const factories={attention:attentionLab,flow:flowLab,patch:patchLab,state:stateLab,norm:normLab};
+ const cleanup=(factories[type]||attentionLab)(container);activeLabs.set(container,cleanup);return cleanup;
+}
+
+const teachingMath = {dot,matmul,softmax,seedNoise};
+
+return {renderLab,teachingMath};
+})();
+const lessonsModule=(()=>{
+// Self-contained teaching panels. All numerical examples below are deliberately tiny.
+const SOURCES = {
+  readme: 'https://github.com/Physical-Intelligence/openpi#readme',
+  model: 'https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/pi0.py',
+  tokenizer: 'https://github.com/Physical-Intelligence/openpi/blob/main/src/openpi/models/tokenizer.py',
+  paper: 'https://arxiv.org/html/2504.16054v1',
+  blog: 'https://www.pi.website/blog/pi05',
+  ki: 'https://www.pi.website/research/knowledge_insulation',
+  release: 'https://github.com/Physical-Intelligence/openpi/issues/650',
+};
+
+let lessonInstance = 0;
+
+const STYLE = `
+.lesson-root{--lesson-ink:#243044;--lesson-muted:#667287;--lesson-line:#e1e6ed;--lesson-purple:#7554cc;--lesson-blue:#3979c8;--lesson-teal:#178e91;--lesson-orange:#c77826;color:var(--lesson-ink);font-size:14px;line-height:1.8;text-align:left}
+.lesson-root *{box-sizing:border-box}.lesson-root [hidden]{display:none!important}.lesson-root a{color:#416bb5;text-underline-offset:3px}.lesson-root button,.lesson-root input{font:inherit}.lesson-root button{cursor:pointer}.lesson-root button:focus-visible,.lesson-root summary:focus-visible,.lesson-root input:focus-visible{outline:3px solid #a9b7ef;outline-offset:3px}.lesson-root h2,.lesson-root h3,.lesson-root h4,.lesson-root p{margin:0}.lesson-root h2{font-size:26px;line-height:1.4;letter-spacing:-.5px}.lesson-root h3{font-size:19px;line-height:1.5}.lesson-root h4{font-size:15px;line-height:1.6}.lesson-root p+p{margin-top:10px}.lesson-root code{font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:.91em;color:#4d5282;background:#f3f4f9;border-radius:4px;padding:1px 4px}.lesson-head{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;margin-bottom:22px}.lesson-kicker{font-size:11px;letter-spacing:1.8px;font-weight:700;color:var(--lesson-purple);margin-bottom:7px!important}.lesson-intro{color:var(--lesson-muted);max-width:790px;margin-top:9px!important}.lesson-badge{display:inline-flex;align-items:center;white-space:nowrap;border:1px solid #dadfee;border-radius:5px;font-size:11px;line-height:1.6;padding:4px 8px;color:#67738b;background:#fafbfe}.lesson-tabs{display:flex;gap:5px;overflow-x:auto;border-bottom:1px solid var(--lesson-line);padding:0 0 8px;margin-bottom:22px}.lesson-tab{border:0;background:transparent;color:#6a7383;padding:10px 15px;border-radius:6px;white-space:nowrap;font-weight:600}.lesson-tab[aria-selected=true]{background:#f0ecfa;color:#6345b7}.lesson-tab:hover{background:#f4f5fa}.lesson-panel{animation:lesson-appear .18s ease-out}.lesson-panel-lead{margin-bottom:18px}.lesson-panel-lead p{color:var(--lesson-muted);margin-top:7px}.lesson-flow{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:18px 0}.lesson-flow-step{position:relative;background:#fff;border:1px solid var(--lesson-line);border-top:3px solid var(--lesson-blue);border-radius:7px;padding:15px;min-height:150px}.lesson-flow-step:not(:last-child):after{content:'→';position:absolute;right:-12px;top:48%;z-index:1;background:white;color:#9aa4b5;font-size:15px;line-height:18px}.lesson-flow-step.lesson-purple{border-top-color:var(--lesson-purple)}.lesson-flow-step.lesson-teal{border-top-color:var(--lesson-teal)}.lesson-flow-step.lesson-orange{border-top-color:var(--lesson-orange)}.lesson-step-n{display:block;font-size:11px;color:#8390a1;letter-spacing:.9px;margin-bottom:5px}.lesson-flow-step p{font-size:12.5px;color:var(--lesson-muted);margin-top:7px}.lesson-flow-step code{display:inline-block;margin-top:6px;overflow-wrap:anywhere;font-size:11px}.lesson-callout{border-left:3px solid var(--lesson-purple);background:#f8f6fd;border-radius:0 6px 6px 0;padding:13px 16px;margin:18px 0;font-size:13px}.lesson-callout.lesson-teal{border-color:var(--lesson-teal);background:#f2fafa}.lesson-callout.lesson-orange{border-color:var(--lesson-orange);background:#fff9f2}.lesson-details{border:1px solid var(--lesson-line);border-radius:7px;background:white;margin-top:10px;overflow:hidden}.lesson-details>summary{cursor:pointer;padding:14px 16px;font-weight:600;list-style:none;display:flex;align-items:center;gap:9px}.lesson-details>summary::-webkit-details-marker{display:none}.lesson-details>summary:before{content:'+';font-size:19px;line-height:18px;font-weight:400;color:#929bb0}.lesson-details[open]>summary:before{content:'−'}.lesson-details[open]>summary{border-bottom:1px solid #eef0f4}.lesson-detail-body{padding:16px 19px;color:#536075}.lesson-detail-body p,.lesson-detail-body li{font-size:13px}.lesson-detail-body ul,.lesson-detail-body ol{margin:10px 0;padding-left:21px}.lesson-detail-body li+li{margin-top:5px}.lesson-equation{background:#f8f9fc;border:1px solid #e9ecf3;border-radius:6px;padding:13px 16px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:13px;line-height:1.9;overflow-x:auto;margin:12px 0;white-space:pre-wrap;overflow-wrap:anywhere;color:#414d67}.lesson-equation strong{color:#704abe}.lesson-two{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:15px 0}.lesson-box{border:1px solid var(--lesson-line);border-radius:7px;padding:17px;background:#fff}.lesson-box p{font-size:13px;color:var(--lesson-muted);margin-top:7px}.lesson-mini-label{font-size:10px;letter-spacing:1.2px;color:var(--lesson-teal);font-weight:700;margin-bottom:6px!important}.lesson-source{font-size:11px!important;color:#7c889b;margin-top:16px!important;line-height:1.8}.lesson-source a{margin-right:12px}.lesson-clock-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:15px}.lesson-clock{padding:16px;border:1px solid var(--lesson-line);border-radius:7px;background:white}.lesson-clock b{display:block;font-size:22px;line-height:1.3;color:var(--lesson-purple);font-variant-numeric:tabular-nums;margin-bottom:8px}.lesson-clock:nth-child(2) b{color:var(--lesson-orange)}.lesson-clock:nth-child(3) b{color:var(--lesson-teal)}.lesson-clock p{font-size:12px;color:var(--lesson-muted);margin-top:6px}.lesson-section{margin-top:30px;padding-top:24px;border-top:1px solid var(--lesson-line)}.lesson-section-head{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:13px}.lesson-small{font-size:12px!important;color:var(--lesson-muted)}.lesson-training{border:1px solid #dce3f0;border-radius:8px;padding:20px;margin-top:19px;background:linear-gradient(120deg,#fff,#fafbff)}.lesson-controls{display:flex;flex-wrap:wrap;align-items:center;gap:13px;margin:16px 0}.lesson-control{display:flex;align-items:center;gap:8px;font-size:12px}.lesson-control input{width:145px;accent-color:var(--lesson-purple)}.lesson-control output{min-width:40px;font-variant-numeric:tabular-nums;color:var(--lesson-purple);font-weight:600}.lesson-btn{border:1px solid #d9dfeb;border-radius:5px;background:white;padding:6px 11px;font-size:12px;color:#58657a}.lesson-btn:hover{border-color:#aebcda;background:#fafbfe}.lesson-btn.lesson-primary{background:#7554cc;color:white;border-color:#7554cc}.lesson-numbers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:15px 0}.lesson-number{border:1px solid #e6e9f2;border-radius:6px;background:white;padding:12px}.lesson-number span{display:block;color:var(--lesson-muted);font-size:11px}.lesson-number b{display:block;font-size:22px;line-height:1.5;font-variant-numeric:tabular-nums;color:#596b9a}.lesson-number:last-child b{color:var(--lesson-orange)}.lesson-update{min-height:52px;background:#f0f8f7;border-radius:5px;padding:10px 13px;font-size:12px;color:#386c70}.lesson-quiz{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:16px}.lesson-question{border:1px solid var(--lesson-line);border-radius:7px;padding:16px;background:#fff}.lesson-question h4{font-size:13px;min-height:45px}.lesson-answer{display:block;width:100%;text-align:left;border:1px solid #e1e6ef;background:#fff;color:#657084;padding:8px 10px;border-radius:5px;font-size:12px!important;line-height:1.5;margin-top:8px}.lesson-answer:hover{border-color:#aea2d3;background:#fbfaff}.lesson-answer[aria-pressed=true]{background:#f1edfa;border-color:#9c85ce;color:#6545af}.lesson-answer.lesson-correct{border-color:#6daf9f;background:#eff8f5;color:#397364}.lesson-feedback{min-height:60px;margin-top:11px!important;font-size:12px;color:#7c889b}.lesson-feedback.lesson-is-correct{color:#2f7b69}.lesson-feedback.lesson-is-wrong{color:#9a681e}.lesson-beginner-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.lesson-beginner-grid .lesson-details{margin:0;align-self:start}.lesson-beginner-grid .lesson-details>summary{padding:16px;align-items:flex-start}.lesson-term-index{font-size:12px;color:#a2aac0;font-variant-numeric:tabular-nums;min-width:22px;margin-top:2px}.lesson-term-title{display:block;color:#364259;font-size:15px}.lesson-term-desc{display:block;font-size:12px;color:#8a94a6;font-weight:400;line-height:1.6;margin-top:3px}.lesson-term-example{padding:12px;border-radius:5px;background:#f6f8fc;margin-top:10px;font-family:ui-monospace,SFMono-Regular,Consolas,monospace;font-size:12px;line-height:1.9;color:#516081;white-space:pre-wrap;overflow-wrap:anywhere}.lesson-toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:15px}.lesson-read-count{margin-left:auto;color:#8792a5;font-size:11px}.lesson-footnote{margin-top:15px!important;font-size:11px!important;color:#8c96a7}.lesson-compare{width:100%;border-collapse:collapse;font-size:12px;margin-top:12px}.lesson-compare th,.lesson-compare td{text-align:left;vertical-align:top;padding:11px;border:1px solid #e6e9f0}.lesson-compare th{background:#f8f9fc;font-weight:600;color:#69748a}.lesson-table-wrap{overflow:auto}.lesson-inline-tag{color:#7f58c3;background:#f3eefb;border-radius:3px;font-size:10px;padding:2px 5px;vertical-align:middle;margin-left:6px}@keyframes lesson-appear{from{opacity:.65;transform:translateY(3px)}to{opacity:1;transform:translateY(0)}}@media(max-width:900px){.lesson-flow{grid-template-columns:repeat(2,minmax(0,1fr))}.lesson-flow-step:nth-child(2):after{display:none}.lesson-quiz{grid-template-columns:1fr}.lesson-question h4{min-height:0}.lesson-feedback{min-height:0}.lesson-head{flex-wrap:wrap}}@media(max-width:600px){.lesson-root h2{font-size:23px}.lesson-two,.lesson-clock-grid,.lesson-beginner-grid{grid-template-columns:1fr}.lesson-flow{gap:9px}.lesson-flow-step{padding:12px;min-height:155px}.lesson-flow-step p{font-size:12px}.lesson-tab{padding:9px 11px;font-size:12px}.lesson-numbers{grid-template-columns:repeat(2,minmax(0,1fr))}.lesson-training{padding:15px}.lesson-section-head{align-items:flex-start;flex-direction:column;gap:6px}.lesson-compare{min-width:520px}.lesson-control input{width:130px}.lesson-head{gap:10px}}@media(prefers-reduced-motion:reduce){.lesson-panel{animation:none}}
+`;
+
+function installStyle() {
+  if (document.getElementById('pi05-lesson-style')) return;
+  const style = document.createElement('style');
+  style.id = 'pi05-lesson-style';
+  style.textContent = STYLE;
+  document.head.appendChild(style);
+}
+
+function hostFor(container) {
+  const host = typeof container === 'string' ? document.querySelector(container) : container;
+  if (!host || typeof host.replaceChildren !== 'function') throw new TypeError('Please pass a container element to the lesson renderer.');
+  installStyle();
+  return host;
+}
+
+function sourceLinks(items) {
+  return `<p class="lesson-source">对照原始资料：${items.map(([key, label]) => `<a href="${SOURCES[key]}" target="_blank" rel="noopener noreferrer">${label} ↗</a>`).join('')}</p>`;
+}
+
+function details(title, body, open = false) {
+  return `<details class="lesson-details"${open ? ' open' : ''}><summary>${title}</summary><div class="lesson-detail-body">${body}</div></details>`;
+}
+
+function flow(steps) {
+  return `<div class="lesson-flow">${steps.map(([color, title, desc, code], i) => `<div class="lesson-flow-step lesson-${color}"><span class="lesson-step-n">0${i + 1}</span><h4>${title}</h4><p>${desc}</p>${code ? `<code>${code}</code>` : ''}</div>`).join('')}</div>`;
+}
+
+function publicPath() {
+  return `<div class="lesson-panel-lead"><h3>给它此刻的观察，得到下一段动作</h3><p>从公开代码中的 <code>sample_actions</code> 看一次调用：已有的语言指令与相机画面作为条件，动作专家不断更新一整块动作数值。</p></div>
+  ${flow([
+    ['blue', '准备观察', '相机图像、任务文字、当前机器人状态。先经过与训练一致的预处理。', 'observation'],
+    ['purple', '编码共同条件', '图像转为视觉表示，指令与离散化状态转为文字 token；计算前缀表示。', 'prefix → K / V cache'],
+    ['orange', '生成动作块', '初始化整块高斯噪声。反复预测向量场并积分，所有时间槽一起更新。', 't : 1 → 0'],
+    ['teal', '转换与执行', '得到动作数组，经机器人接口转换为目标。环境变化后，再获取新观察。', 'actions [B, H, D]'],
+  ])}
+  <div class="lesson-callout"><strong>这一条公开动作路径没有“先说出子任务”的步骤。</strong> <code>sample_actions</code> 返回动作，不负责生成高层计划。论文里的分层推理要看下一个标签页；不能只凭一次公开动作采样调用就认定完整分层系统已实现。</div>
+  ${details('为什么机器人状态会出现在文字序列里？', `<p>关节位置、夹爪等状态本来是连续数值。π0.5 将处理后的状态分箱为整数，再组成文本并交给 tokenizer。这样视觉语言骨干也能接触身体状态。</p><div class="lesson-equation">连续状态 q → 归一化 → 分箱编号 → 文本 → token IDs → embedding</div><p>分箱是“把某个数放进一个区间”。教学例子：把 [−1, 1] 分成 4 格，−0.8 进入第 0 格，0.2 进入第 2 格。真实实现的分箱数与格式见源码；这里的 4 格只用于理解。</p><p>注意：分箱编号标记数值区间，不是词表ID，token ID 也不是关节角度本身。状态文字并不会绕过查表和后续神经网络。</p>${sourceLinks([['tokenizer', 'tokenizer.py']])}`)}
+  ${details('一整段动作怎么同时更新？', `<p>设动作块有 H 个未来时间槽，每槽 D 个控制量，它就是 H × D 的数表。每次 flow 计算会为整张表输出同形状的变化方向，随后所有格子更新一次。</p><div class="lesson-equation">输入：当前动作草稿 zₜ ∈ ℝᴴˣᴰ
+输出：预测向量场 vθ(zₜ, t, 条件) ∈ ℝᴴˣᴰ
+更新：zₜ₊Δₜ = zₜ + Δt · vθ</div><p>例如 H=3、D=2，一轮会共同更新 6 个数。H 是“计划覆盖多少个物理时刻”，积分步数是“这张计划表被修订多少轮”，两者不是同一个长度。</p><p>模型可以在一次采样中缓存固定观察的前缀信息；噪声动作和 flow 时间变化，动作专家仍需重新计算。缓存是复用已算出的信息，不是把未来动作预先写好。</p>${sourceLinks([['model', 'pi0.py / sample_actions']])}`)}
+  ${details('公开代码、模型权重与论文配方是什么关系？', `<p>公开 README 说明 π0.5 路径支持 flow matching head 的训练与推理。已发布权重使用了 Knowledge Insulation；这不表示当前公开训练入口完整重现了原始异构预训练和高层文本生成系统。</p><p>阅读代码时分别问三件事：这个函数执行什么？这个 checkpoint 以前怎么训练？论文评估的是哪套完整系统？三者相关，但不能互相代替。</p>${sourceLinks([['readme', 'openpi README'], ['release', '维护者对发布权重的说明']])}`)}
+  ${sourceLinks([['model', '动作采样与 flow loss'], ['tokenizer', '状态文本编码'], ['readme', '公开实现范围']])}`;
+}
+
+function paperPath() {
+  return `<div class="lesson-panel-lead"><h3>同一个模型，先决定子任务，再产生动作</h3><p>2025 年 π0.5 论文讨论的是一个分层系统。可以先用“整理桌面”这个大任务决定下一步做什么，再为这一步生成连续控制目标。</p></div>
+  ${flow([
+    ['blue', '观察 + 总任务', '看到桌面和物体，输入“整理桌面”。这些信息约束当前任务的含义。', 'o, ℓ'],
+    ['purple', '预测子任务文字', '自回归生成一个语义步骤，例如“拿起红杯”。它是模型生成的文本。', 'p(子任务 | 观察, 总任务)'],
+    ['orange', '条件化动作专家', '以当前观察和子任务为条件，从噪声生成一个连续动作块。', 'p(动作块 | 观察, 子任务)'],
+    ['teal', '在世界中执行', '低层控制器跟踪目标。新的观察为后续动作或子任务选择提供反馈。', '动作 → 新观察'],
+  ])}
+  <div class="lesson-callout lesson-teal"><strong>“拿起红杯”不是电机指令。</strong> 它规定行为目标；动作专家仍需结合物体位置和机器人姿态，输出适合此刻的连续控制量。一个子任务可能需要多段动作才能完成。</div>
+  ${details('高层文字与低层动作，为什么要分两种输出？', `<p>高层输出是有限词表中的 token，一个接一个地生成。低层输出需要连续数值，动作专家用 flow matching 同时修订整段动作。这是两条不同的输出路径。</p><p>“同一个模型”指论文设计中的共享视觉语言基础与相连的动作专家，不是把所有运算塞进一个完全相同的输出头。也不能从模型生成了一句子任务文字，推断它已经证明这一步安全或可完成。</p><div class="lesson-equation">总任务：整理桌面
+语义步骤：拿起红杯
+连续控制：未来若干时刻的各控制维度数值</div>${sourceLinks([['paper', '论文 IV-A：分层分布'], ['blog', '官方高层／低层示意']])}`)}
+  ${details('怎样理解 50 个动作、10 次去噪与 50 Hz？', `<p>论文系统的动作块包含 50 个控制时刻，约覆盖 1 秒；采样该动作块使用 10 次去噪计算。50 Hz 描述物理目标发送的频率，不表示视觉语言模型每秒完整运行 50 次。</p><p>这组数字属于论文设置，不是所有公开配置和机器人都必须遵守的常数。实际 H、D、采样步数以及执行多少步后重新规划，应以所用配置和控制循环为准。</p>${sourceLinks([['paper', '论文 IV-B / IV-E / 附录 A-E']])}`)}
+  ${details('“开放世界泛化”能保证不碰撞吗？', `<p>泛化实验考察模型在未见过的家庭、物体和布局下能否完成任务。它不等价于对所有初始条件、传感器误差、执行器故障都给出数学安全保证。</p><p>理解论文时，把“任务表现”“实时性”“约束安全”作为不同问题。若以后研究航天 GNC，可以把 VLA 的语义决策思路与可靠控制结合；安全滤波、验证和故障接管需要单独设计，不能当成 π0.5 原有模块。</p>${sourceLinks([['blog', '官方结果与局限'], ['paper', '论文系统与评估范围']])}`)}
+  ${sourceLinks([['paper', 'π0.5 原始论文 v1'], ['blog', '官方模型介绍']])}`;
+}
+
+function trainingPath() {
+  return `<div class="lesson-panel-lead"><h3>训练用答案改参数，推理用参数算新答案</h3><p>训练时，示范数据提供观察、指令和目标动作。模型先预测，再计算误差，把误差对参数的影响反向传回去。部署时通常固定参数，只做前向计算。</p></div>
+  ${flow([
+    ['blue', '取一个示范', '例如：这个画面和这条指令下，示范者接下来怎样移动。', '(观察, 指令, 目标动作)'],
+    ['orange', '构造学习问题', '抽取噪声和 flow 时间，把已知动作混成中间样本，目标方向可计算。', 'zₜ = tε + (1−t)A'],
+    ['purple', '预测并算损失', '动作专家预测向量场，与监督目标比较；文字路径则比较 token 概率。', '预测 → loss'],
+    ['teal', '反传与更新', '梯度说明参数朝哪个方向改变会影响损失；优化器据此改参数。', 'θ ← θ − η∇θL'],
+  ])}
+  <div class="lesson-two"><div class="lesson-box"><p class="lesson-mini-label">训练：答案已知</p><h4>插值制造一道练习题</h4><p>取目标动作 A=0.8、噪声 ε=−0.4、t=0.5，得到 zₜ=0.2；监督向量场为 ε−A=−1.2。目标可见，所以能计算误差。</p><div class="lesson-equation">预测 v = −1.0
+平方误差 = (−1.0 − (−1.2))²
+         = 0.04</div></div><div class="lesson-box"><p class="lesson-mini-label">推理：答案未知</p><h4>按学到的方向修订草稿</h4><p>从噪声出发，只给观察和任务条件。每一轮由网络预测 v。不能偷看示范动作 A，也不能直接把草稿插值到已知答案。</p><div class="lesson-equation">当前 z = 0.2，预测 v = −1.0
+Δt = −0.1
+下一步 z = 0.2 + (−0.1)×(−1.0)
+         = 0.3</div></div></div>
+  <p class="lesson-small">这里统一使用 openpi 的时间方向：t=1 是噪声，t=0 是动作。数学文献可能采用相反方向；比较时要同时检查插值定义、向量场符号和积分方向。</p>
+  ${details('原始 π0.5、后续 KI 与公开训练入口，分开看', `<div class="lesson-table-wrap"><table class="lesson-compare"><thead><tr><th>对象</th><th>要理解的训练路线</th><th>别混淆的地方</th></tr></thead><tbody><tr><td>2025 年 4 月原始论文</td><td>先以离散 token 预训练；后训练加入连续动作专家，并结合文字与连续动作目标。</td><td>这是论文原始的两阶段叙述。</td></tr><tr><td>2025 年 5 月 KI 后续研究</td><td>联合学习离散动作与连续动作，阻断动作专家梯度流回视觉语言骨干，发展为单阶段配方。</td><td>KI 阻断特定梯度路径；不是让整个骨干永远冻结。</td></tr><tr><td>openpi 公开 π0.5 路径</td><td>发布权重采用 KI；公开说明支持 flow head 的训练和推理。</td><td>一个 flow loss 函数，不等于完整复现上述所有训练任务。</td></tr></tbody></table></div>${sourceLinks([['paper', '原始论文 IV-C / IV-D'], ['ki', 'KI 官方介绍'], ['readme', '公开范围'], ['release', '发布权重说明']])}`)}
+  ${details('Knowledge Insulation 到底“隔开”了什么？', `<p>设骨干参数为 θ，动作专家参数为 φ。动作专家读取骨干提供的信息，但在 KI 中，来自连续动作损失的梯度不会沿这个接口更新 θ。骨干仍可由离散 token 任务训练。</p><div class="lesson-equation">视觉语言骨干 ──特征──→ 动作专家
+     ↑                    ↑
+离散 token 损失        连续动作损失
+     ↑                    ╳── 不沿接口回传到骨干</div><p>“信息能通过”和“梯度能通过”是两件事。KI 改变训练时的更新路径，并不意味着推理时动作专家看不到图像或指令；也不意味着已经给机器人提供安全保证。</p>${sourceLinks([['ki', 'Knowledge Insulation 官方研究']])}`)}
+  ${details('文字 loss 与动作 loss 为什么不是同一个式子？', `<p>文字输出在词表里分配概率。若正确 token 的概率为 p，常用的交叉熵项为 −ln(p)：p=0.2 时约 1.609，p=0.8 时约 0.223。把正确答案的概率抬高，会降低这项损失。</p><p>连续动作专家预测一张实数向量场，常用均方误差比较预测值与目标值。两类 loss 监督不同输出；模型可能用加权组合共同训练，具体组合和梯度路径取决于训练配方。</p><p>损失值低，说明模型在这些样本上的训练目标更吻合；它本身不是未见场景成功率，也不是闭环稳定性证书。</p>${sourceLinks([['paper', '论文 IV-B：联合目标'], ['model', '公开 flow loss']])}`)}
+  <div class="lesson-training" data-lesson-trainer>
+    <div class="lesson-section-head"><h4>亲手更新一个参数</h4><span class="lesson-badge">教学模型 · 只有 1 个权重</span></div>
+    <p class="lesson-small">用最小模型 ŷ=w×x 理解反向传播。固定输入 x=2、目标 y=3；我们只调整 w。这里为方便求导，使用 L=½(ŷ−y)²。</p>
+    <div class="lesson-controls"><label class="lesson-control">权重 w <input type="range" min="-0.5" max="2.5" step="0.05" value="0.5" data-lesson-weight aria-label="教学模型权重 w"><output data-lesson-weight-label>0.50</output></label><label class="lesson-control">学习率 η <input type="range" min="0.01" max="0.3" step="0.01" value="0.1" data-lesson-rate aria-label="梯度下降学习率"><output data-lesson-rate-label>0.10</output></label><button type="button" class="lesson-btn lesson-primary" data-lesson-step>执行一次梯度下降</button><button type="button" class="lesson-btn" data-lesson-reset>重置</button></div>
+    <div class="lesson-numbers"><div class="lesson-number"><span>参数 w</span><b data-lesson-w>0.500</b></div><div class="lesson-number"><span>预测 ŷ = 2w</span><b data-lesson-pred>1.000</b></div><div class="lesson-number"><span>梯度 ∂L/∂w</span><b data-lesson-grad>−4.000</b></div><div class="lesson-number"><span>损失 L</span><b data-lesson-loss>2.000</b></div></div>
+    <div class="lesson-equation" data-lesson-chain></div><div class="lesson-update" data-lesson-update role="status" aria-live="polite">点击一次，查看梯度怎样改变权重。梯度为负时，减去负数会让权重增大。</div>
+    <p class="lesson-footnote">这里的数值由浏览器实时计算。真实 Transformer 同样使用链式法则，但有许多参数、许多样本和更复杂的优化器；这个例子不运行 π0.5 权重。</p>
+  </div>${sourceLinks([['model', '公开训练损失'], ['paper', '原始训练配方'], ['ki', 'KI 后续配方']])}`;
+}
+
+function clocks() {
+  return `<section class="lesson-section"><div class="lesson-section-head"><h3>三个“时间”，分清就不绕</h3><span class="lesson-small">生成文字 ≠ 修订动作 ≠ 执行运动</span></div><div class="lesson-clock-grid"><div class="lesson-clock"><b>k → k+1</b><h4>文字生成的序号</h4><p>第几个 token。属于论文的高层文本输出；词表中的 token 逐个生成。“一句话有几个 token”不是动作时长。</p></div><div class="lesson-clock"><b>t : 1 → 0</b><h4>Flow 计算时间</h4><p>从噪声走到动作的积分坐标。10 次修订意味着整块动作被更新 10 轮，不是机器人运动了 10 秒。</p></div><div class="lesson-clock"><b>h = 0…H−1</b><h4>机器人物理时间槽</h4><p>动作块的每一行对应一个未来控制时刻。若 H=50、周期20 ms，覆盖约1秒；实际执行策略依系统配置而定。</p></div></div></section>`;
+}
+
+const QUIZ = [
+  { question: '01 · 动作块有 50 行，采样 10 轮。发生了什么？', options: ['每轮只生成 5 行动作', '整块 50 行共同修订 10 次', '机器人已经运动了 10 秒'], correct: 1, success: '对。动作时间槽与 flow 积分轮数是两个维度。', retry: '再想想：一次向量场预测与整个动作块形状相同，每一轮都会更新所有时间槽。' },
+  { question: '02 · 推理时为什么不能直接插值到示范动作？', options: ['当前新场景的正确动作还未知', '插值只能使用整数', '所有推理都需要重新训练'], correct: 0, success: '对。训练有监督答案；推理依靠学到的条件向量场生成新动作。', retry: '区分训练与推理：示范里的目标用于构造练习题，新场景的正确动作不能事先偷看。' },
+  { question: '03 · openpi 的 sample_actions 会先写一段子任务文本吗？', options: ['会，所有 π0.5 调用都如此', '不会；它是公开的连续动作采样路径', '只要多采样几轮就会'], correct: 1, success: '对。论文的高层／低层系统与公开动作采样入口必须分开理解。', retry: '看函数的输入与输出：这个入口读取观察并返回连续动作。高层文本生成是另一项系统能力。' },
+];
+
+function quizMarkup() {
+  return `<section class="lesson-section"><div class="lesson-section-head"><h3>三道小检查</h3><span class="lesson-small">不用背名词，能解释流程就够了</span></div><div class="lesson-quiz">${QUIZ.map((q, i) => `<article class="lesson-question" data-lesson-question="${i}"><h4>${q.question}</h4>${q.options.map((o, j) => `<button type="button" class="lesson-answer" data-lesson-answer="${j}" aria-pressed="false">${o}</button>`).join('')}<p class="lesson-feedback" role="status" aria-live="polite">选择一个答案，查看解释。</p></article>`).join('')}</div></section>`;
+}
+
+function bindTrainer(root) {
+  const trainer = root.querySelector('[data-lesson-trainer]');
+  const weight = trainer.querySelector('[data-lesson-weight]');
+  const rate = trainer.querySelector('[data-lesson-rate]');
+  let w = 0.5;
+  let updates = 0;
+  const f = value => Math.abs(value) < 0.0005 ? '0.000' : value.toFixed(3);
+  function draw() {
+    const prediction = 2 * w;
+    const error = prediction - 3;
+    const gradient = 2 * error;
+    trainer.querySelector('[data-lesson-weight-label]').textContent = w.toFixed(2);
+    trainer.querySelector('[data-lesson-rate-label]').textContent = Number(rate.value).toFixed(2);
+    trainer.querySelector('[data-lesson-w]').textContent = f(w);
+    trainer.querySelector('[data-lesson-pred]').textContent = f(prediction);
+    trainer.querySelector('[data-lesson-grad]').textContent = f(gradient);
+    trainer.querySelector('[data-lesson-loss]').textContent = f(0.5 * error * error);
+    trainer.querySelector('[data-lesson-chain]').textContent = `前向：ŷ = ${f(w)} × 2 = ${f(prediction)}\n误差：ŷ − y = ${f(prediction)} − 3 = ${f(error)}\n反向：∂L/∂w = (∂L/∂ŷ) × (∂ŷ/∂w) = ${f(error)} × 2 = ${f(gradient)}`;
+  }
+  weight.addEventListener('input', () => {
+    w = Number(weight.value); updates = 0; draw();
+    trainer.querySelector('[data-lesson-update]').textContent = '你手动改变了参数。现在可以观察预测和损失，或让梯度下降执行一次更新。';
+  });
+  rate.addEventListener('input', draw);
+  trainer.querySelector('[data-lesson-step]').addEventListener('click', () => {
+    const old = w;
+    const gradient = (2 * w - 3) * 2;
+    const eta = Number(rate.value);
+    const previousLoss = 0.5 * (2 * w - 3) ** 2;
+    w -= eta * gradient;
+    weight.value = String(w);
+    updates += 1;
+    draw();
+    trainer.querySelector('[data-lesson-update]').textContent = `第 ${updates} 次更新：w ← ${f(old)} − ${eta.toFixed(2)} × (${f(gradient)}) = ${f(w)}。损失从 ${f(previousLoss)} 变为 ${f(0.5 * (2 * w - 3) ** 2)}。目标是让 2w 接近 3。`;
+  });
+  trainer.querySelector('[data-lesson-reset]').addEventListener('click', () => {
+    w = 0.5; updates = 0; weight.value = '0.5'; rate.value = '0.1'; draw();
+    trainer.querySelector('[data-lesson-update]').textContent = '已恢复 w=0.5、η=0.1。点击一次更新：你会得到 w=0.9，损失由 2 降至 0.72。';
+  });
+  draw();
+}
+
+/** Render the inference/training walkthrough into a DOM element or selector. */
+function renderLessons(container) {
+  const host = hostFor(container);
+  const id = `lesson-${++lessonInstance}`;
+  const root = document.createElement('div');
+  root.className = 'lesson-root';
+  const names = ['openpi 公开动作路径', '论文分层系统', '训练如何进行'];
+  root.innerHTML = `<div class="lesson-head"><div><p class="lesson-kicker">FROM OBSERVATION TO ACTION</p><h2>训练与推理：一张图里的不同阶段</h2><p class="lesson-intro">先分清你正在看哪套系统，再追踪数据怎样流动。展开每一步，会看到数字、参数和程序各自承担什么工作。</p></div><span class="lesson-badge">论文／源码／教学例子分开标明</span></div><div class="lesson-tabs" role="tablist" aria-label="选择学习路径">${names.map((name, i) => `<button type="button" role="tab" class="lesson-tab" id="${id}-tab-${i}" aria-controls="${id}-panel-${i}" aria-selected="${i === 0}" tabindex="${i === 0 ? 0 : -1}" data-lesson-tab="${i}">${name}</button>`).join('')}</div>${[publicPath(), paperPath(), trainingPath()].map((content, i) => `<section class="lesson-panel" id="${id}-panel-${i}" role="tabpanel" aria-labelledby="${id}-tab-${i}" tabindex="0"${i !== 0 ? ' hidden' : ''}>${content}</section>`).join('')}${clocks()}${quizMarkup()}<p class="lesson-footnote">内容对应 π0.5 原始论文、后续 KI 研究及公开 openpi 路径。页面中的小数字模型用于教学，不表示读取了真实模型的中间激活。</p>`;
+  host.replaceChildren(root);
+  const tabs = [...root.querySelectorAll('[data-lesson-tab]')];
+  const panels = [...root.querySelectorAll('[role="tabpanel"]')];
+  function activate(index, focus = false) {
+    tabs.forEach((tab, i) => { tab.setAttribute('aria-selected', String(i === index)); tab.tabIndex = i === index ? 0 : -1; panels[i].hidden = i !== index; });
+    if (focus) tabs[index].focus();
+  }
+  tabs.forEach((tab, index) => {
+    tab.addEventListener('click', () => activate(index));
+    tab.addEventListener('keydown', event => {
+      const offset = { ArrowRight: 1, ArrowLeft: -1 }[event.key];
+      let target = offset ? (index + offset + tabs.length) % tabs.length : event.key === 'Home' ? 0 : event.key === 'End' ? tabs.length - 1 : null;
+      if (target !== null) { event.preventDefault(); activate(target, true); }
+    });
+  });
+  root.querySelectorAll('[data-lesson-question]').forEach(card => {
+    const q = QUIZ[Number(card.dataset.lessonQuestion)];
+    const buttons = [...card.querySelectorAll('[data-lesson-answer]')];
+    buttons.forEach(button => button.addEventListener('click', () => {
+      const correct = Number(button.dataset.lessonAnswer) === q.correct;
+      buttons.forEach(other => { other.setAttribute('aria-pressed', String(other === button)); other.classList.toggle('lesson-correct', other === button && correct); });
+      const feedback = card.querySelector('.lesson-feedback');
+      feedback.className = `lesson-feedback ${correct ? 'lesson-is-correct' : 'lesson-is-wrong'}`;
+      feedback.textContent = correct ? q.success : q.retry;
+    }));
+  });
+  bindTrainer(root);
+  return root;
+}
+
+const BEGINNER_TERMS = [
+  ['向量', 'Vector · 一排有顺序的数字', `<p>向量可以记下一个对象的多个量。比如机器人状态 [0.2, −0.1, 0.8]，可以依次表示两个关节位置和夹爪状态。顺序和单位由系统约定。</p><div class="lesson-term-example">[1, 2] + [3, 4] = [4, 6]\n2 × [1, 2] = [2, 4]</div><p>embedding 也是向量，不过每一维通常不是人工指定的“颜色”或“大小”。这些数由训练学到，应把它们看成共同工作的表示。</p>`],
+  ['矩阵', 'Matrix · 按行排好的向量', `<p>把多个向量排在一起，就得到矩阵。3 个 token，每个用 2 个数表示，可以排成一个 3×2 矩阵。一行对应一个 token，一列对应一种表示维度。</p><div class="lesson-term-example">X = [ [1, 0],\n      [0, 1],\n      [1, 1] ]   → 3 行 × 2 列</div><p>矩阵乘法会把输入的各个数字按权重混合。它不是把相同位置的数简单相乘；你在注意力实验里看到的 Q、K、V 就来自这种转换。</p>`],
+  ['权重', 'Weight · 决定怎样混合输入的参数', `<p>权重像计算规则里的可调系数。输入变了，输出会变；即使输入不变，修改权重也会改变输出。</p><div class="lesson-term-example">输入 x = [2, 3]，权重 w = [0.5, −1]\n输出 y = 2×0.5 + 3×(−1) = −2</div><p>神经网络里有许多这样的系数。训练主要改变这些参数；通常的推理使用已经学好的参数。注意力权重则是针对当前输入算出来的混合比例，不能与固定的模型参数完全等同。</p>`],
+  ['训练', 'Training · 用有答案的练习改变参数', `<p>给模型一个输入和正确示范，让它先预测；用损失量化偏差，再通过反向传播求出参数对损失的影响，最后由优化器更新参数。</p><div class="lesson-term-example">模型 ŷ = w×2，答案 y=3，起始 w=0.5\n预测 ŷ=1 → 存在误差 → 调整 w\n若 w=1.5，则 ŷ=3</div><p>这只是单个样本。真实训练需要很多样本，目标是学到能用于新情形的规律，而不是只把某一道题记住。下面“训练如何进行”提供一次可计算的更新。</p>`],
+  ['推理', 'Inference · 用学好的参数处理新输入', `<p>推理时输入新观察，运行网络得到输出。一般不提供这个新场景的正确答案，也不在每次调用时更新权重。</p><div class="lesson-term-example">已学好 w=1.5\n新输入 x=4 → ŷ=1.5×4=6</div><p>一次推理内部可以进行许多轮计算。flow matching 的多轮修订会改变“动作草稿”，通常不会改变模型参数。所以“算了 10 轮”不等于“训练了 10 次”。</p>`],
+  ['Shape', '张量形状 · 先看每个轴代表什么', `<p>shape 记录每个方向有多少个数。例如动作数组 [B,H,D]：B 是并行样本数，H 是未来时间槽，D 是每个时刻的动作维度。</p><div class="lesson-term-example">[B,H,D] = [1,3,2]\n1 个样本 × 3 个时刻 × 2 个控制量 = 6 个数</div><p>矩阵相乘要让中间尺寸一致：(3×2) × (2×4) → (3×4)。在这里，一组 3 个、每个 2 维的表示，被变成 3 个、每个 4 维的表示。</p>`],
+  ['注意力', 'Attention · 算出该怎样汇总其他位置', `<p>当前位置的 Q 与其他位置的 K 计算匹配分数，softmax 把分数变成和为 1 的比例，再用这些比例对 V 做加权求和。</p><div class="lesson-term-example">比例 [0.25,0.75]，内容值 [2,6]\n汇总 = 0.25×2 + 0.75×6 = 5</div><p>这不是“只选最重要的一个”。多个位置可以同时影响结果；mask 决定哪些位置允许被读取。匹配分数和权重是计算中间量，不是人类思考的直接证据。</p>`],
+  ['Flow', 'Flow matching · 学会朝哪里修订动作草稿', `<p>想象一整段动作最初是一张随机数表。网络观察它、读取任务条件，预测一张同样大小的“变化方向表”；沿方向走一小步，再重复。</p><div class="lesson-term-example">当前草稿 z=0.2，向量场 v=−1.0\n时间步 Δt=−0.1\n新草稿 z←z+Δt×v = 0.3</div><p>本页使用 t 从 1 走向 0 的约定，所以步长为负。flow 的“时间”是生成算法的坐标，不是机器人运动的秒数；训练让网络学方向，推理沿学到的方向生成动作。</p>`],
+];
+
+/** Render a compact, expandable glossary for readers with no ML background. */
+function renderBeginner(container) {
+  const host = hostFor(container);
+  const root = document.createElement('div');
+  root.className = 'lesson-root';
+  root.innerHTML = `<div class="lesson-head"><div><p class="lesson-kicker">START WITH THE NUMBERS</p><h2>零基础，从八个小概念开始</h2><p class="lesson-intro">不需要先学完机器学习。按顺序展开，先理解“一排数怎样变成下一排数”，再进入上方的计算实验。</p></div><span class="lesson-badge">建议顺序 · 约 8 分钟</span></div><div class="lesson-toolbar"><button class="lesson-btn" type="button" data-lesson-expand>全部展开</button><button class="lesson-btn" type="button" data-lesson-collapse>全部收起</button><span class="lesson-read-count" aria-live="polite" data-lesson-count>已展开 1 / 8</span></div><div class="lesson-beginner-grid">${BEGINNER_TERMS.map(([term, subtitle, content], i) => `<details class="lesson-details"${i === 0 ? ' open' : ''}><summary><span class="lesson-term-index">0${i + 1}</span><span><span class="lesson-term-title">${term}</span><span class="lesson-term-desc">${subtitle}</span></span></summary><div class="lesson-detail-body">${content}</div></details>`).join('')}</div><div class="lesson-callout lesson-teal"><strong>接下来这样看：</strong>先在输入实验中追踪“文字 → ID → 向量”；再到注意力实验点开一个矩阵格；最后观察一整段动作如何经过多轮 flow 更新。遇到公式，先看输入、输出和 shape。</div><p class="lesson-footnote">以上向量、权重、动作值均为可手算的教学例子，不是 π0.5 的真实权重或机器人控制单位。</p>`;
+  host.replaceChildren(root);
+  const cards = [...root.querySelectorAll('details')];
+  const count = root.querySelector('[data-lesson-count]');
+  const update = () => { count.textContent = `已展开 ${cards.filter(card => card.open).length} / ${cards.length}`; };
+  cards.forEach(card => card.addEventListener('toggle', update));
+  root.querySelector('[data-lesson-expand]').addEventListener('click', () => { cards.forEach(card => { card.open = true; }); update(); });
+  root.querySelector('[data-lesson-collapse]').addEventListener('click', () => { cards.forEach(card => { card.open = false; }); update(); });
+  return root;
+}
+
+return {renderLessons,renderBeginner};
+})();
+(()=>{ const {MODULES,GLOSSARY,READING}=contentModule; const {renderLab}=labsModule; const {renderLessons,renderBeginner}=lessonsModule;
+
+const $=s=>document.querySelector(s), main=$('#main');
+const order=['images','patches','vision','state','text','prefix','attention','norm','mlp','noise','time','expert','flow','output'];
+const labNames={patch:'图像与 Patch',state:'状态变成文字',attention:'亲手计算注意力',norm:'归一化与时间条件',flow:'流匹配生成动作'};
+let activeView='map',activeLab='attention',currentStep=-1,playing=false,timer=null,task=0,showShapes=true,drawerTab='intuition',activeModule=null,returnFocus=null,labCleanup=null;
+const tasks=[{cn:'把红杯放到托盘上',en:'put the red cup on the tray',obj:'红色杯子',color:'#cf6b61'},{cn:'把蓝色积木放进盒子',en:'put the blue block in the box',obj:'蓝色积木',color:'#6b9bc8'},{cn:'将绿色杯子移到右侧',en:'move the green cup to the right',obj:'绿色杯子',color:'#69a495'}];
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const grid=(n,fn)=>Array.from({length:n},(_,i)=>fn?fn(i):'<i></i>').join('');
+const bars=()=>`<div class="vector-row">${grid(13)}</div>`;
+function scene(){return `<svg viewBox="0 0 210 100" class="camera-scene" role="img" aria-label="教学场景：机械臂、${tasks[task].obj}和托盘"><defs><linearGradient id="wall" x2="0" y2="1"><stop stop-color="#e2ebf4"/><stop offset="1" stop-color="#f2f5f8"/></linearGradient></defs><rect width="210" height="100" fill="url(#wall)"/><path d="M0 66 210 55V100H0Z" fill="#d7e1e9"/><path d="m0 73 210-10M0 87l210-9M35 64l-8 36M95 61l5 39M153 58l24 42" stroke="#cbd7e2" stroke-width=".7"/><ellipse cx="142" cy="77" rx="27" ry="9" fill="#b8c9d7"/><ellipse cx="142" cy="75" rx="25" ry="7" fill="#e8eff5" stroke="#a5b8c7"/><ellipse cx="88" cy="79" rx="16" ry="4" fill="#a6b5c450"/>${task===1?`<path d="m78 60 13-4 12 7-1 16-16 3-8-7Z" fill="${tasks[task].color}"/>`:`<path d="M79 58h19v18c-3 6-16 6-19 0Z" fill="${tasks[task].color}"/><ellipse cx="88.5" cy="58" rx="9.5" ry="3" fill="#e3b4a6"/><path d="M99 62c14-3 11 13 0 11" fill="none" stroke="${tasks[task].color}" stroke-width="4"/>`}<path d="m27 82 9-24 16-8 2-28 27 10" fill="none" stroke="#697d8d" stroke-width="11" stroke-linecap="round" stroke-linejoin="round"/><path d="m27 80 9-23 17-7 2-27 25 9" fill="none" stroke="#f3f6f8" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/><circle cx="36" cy="57" r="5" fill="#a5b6c5"/><circle cx="54" cy="24" r="5" fill="#a5b6c5"/><path d="m81 30 4 6-3 6m2-6 7 2-1 6" fill="none" stroke="#617b8e" stroke-width="2"/><rect x="16" y="80" width="23" height="8" rx="3" fill="#b3c3d1"/><rect x="7" y="7" width="39" height="12" rx="3" fill="#ffffff9e"/><text x="12" y="15" font-family="monospace" font-size="6.5" fill="#6e8ba3">CAM 01</text><path d="M190 8h12v12M8 89v5h12" fill="none" stroke="#fff"/></svg>`}
+function robot(){return `<svg viewBox="0 0 180 82" class="robot-mini" aria-hidden="true"><ellipse cx="85" cy="70" rx="69" ry="6" fill="#f6f2ec"/><path d="M31 69 45 43 74 34 96 51" fill="none" stroke="#dbc3aa" stroke-width="11" stroke-linejoin="round"/><path d="M31 69 45 43 74 34 96 51" fill="none" stroke="#f1e6d8" stroke-width="7" stroke-linejoin="round"/><circle cx="45" cy="43" r="4" fill="#c7a786"/><circle cx="74" cy="34" r="4" fill="#c7a786"/><path d="m95 51 4 6-5 5m5-5 5 5" fill="none" stroke="#b89b7c" stroke-width="2"/><rect x="21" y="68" width="23" height="5" rx="2" fill="#d2b89d"/><path d="M115 57h14v11q-7 6-14 0Z" fill="${tasks[task].color}"/><ellipse cx="143" cy="70" rx="20" ry="4" fill="#e5d6c4"/><path d="M112 41q21-12 31 8" fill="none" stroke="#d7aa76" stroke-dasharray="3 3"/><path d="m138 46 6 4 1-7" fill="none" stroke="#d7aa76"/></svg>`}
+function node(id,inner='',cls=''){const m=MODULES[id];const title=id==='norm'?'RMSNorm（前归一化）':id==='prefix'?'拼接多模态前缀':m.title;const kicker=id==='norm'?'VLM 无时间调制；专家使用 adaRMS':m.kicker.replace(/^\d+ · /,'');return `<button class="node ${m.color} ${cls}" data-module="${id}" aria-label="展开${esc(m.title)}"><span class="expand">+</span><span class="node-title">${esc(title)}</span><span class="node-desc">${esc(kicker)}</span>${inner}<span class="node-shape">${esc(shortShape(id))}</span></button>`}
+function shortShape(id){return ({images:'3 × [224, 224, 3]',patches:'256 patches / camera',vision:'[B, 256, 2048]',state:'s ∈ [−1, 1] → 256 bins',text:'≤ 200 text slots',prefix:'[B, 968, 2048]¹',attention:'Q · Kᵀ / √256 → softmax',norm:'h / RMS(h)',mlp:'2048 → 16384 → 2048',noise:'[B, 50, 32]',time:'t = 1.0 → 0.0',expert:'[B, 50, 1024]',flow:'x ← x + Δt · vθ',output:'[B, 50, 32] → robot'})[id]}
+function renderMap(){main.innerHTML=`<section class="intro"><div><span class="eyebrow">An interactive guide to vision-language-action</span><h1>机器人如何把「看见」变成「行动」？</h1><p>跟随一段数据，拆开 π0.5 的每一步计算。点击模块里的 <b>＋</b>，看看里面发生了什么。</p></div><div class="intro-actions"><span class="badge dot">openpi π0.5</span><button class="primary" id="tour">跟着走一遍 <span aria-hidden="true">↗</span></button></div></section>
+<section class="workbench" aria-label="交互式模型数据流"><div class="toolbar"><div class="task-control"><label class="label-small" for="task">示例任务</label><select id="task">${tasks.map((t,i)=>`<option value="${i}" ${i===task?'selected':''}>${t.cn}</option>`).join('')}</select></div><div class="toolbar-right"><span class="status-pill">教学可视化 · 非真实权重推理</span><label class="toggle"><input type="checkbox" id="shapes" ${showShapes?'checked':''}>显示张量形状</label><div class="play-controls"><button id="play">▷ 播放数据流</button><button id="step">单步 →</button><button id="reset" class="icon-btn" aria-label="重置数据流">↺</button></div></div></div>
+<div class="map-scroll"><div class="map paused ${showShapes?'':'no-shapes'}" id="model-map"><svg class="connectors" viewBox="0 0 1182 550" aria-hidden="true"><defs><marker id="arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0 0L5 2.5 0 5" fill="#bba8d2" stroke="none"/></marker></defs><path d="M235 140C250 140 251 140 267 140" stroke="#7da5d1" marker-end="url(#arr)"/><path d="M365 233V255" stroke="#7da5d1"/><path d="M460 308C480 308 473 122 493 122" stroke="#7da5d1"/><path d="M235 310C325 310 365 186 493 142" stroke="#a18ac6"/><path d="M235 423C355 423 397 203 493 157" stroke="#65b5a9"/><path d="M600 211V244" stroke="#b199d1"/><path d="M722 307C741 307 743 270 758 270" stroke="#b299d1"/><path d="M722 323C740 323 742 285 758 285" stroke="#b299d1"/><path d="M811 160V202M939 160V202" stroke="#dcba97"/><path d="M883 340V359" stroke="#d2a370"/><path d="M1005 395C1021 395 1020 232 1037 232" stroke="#d2a370" marker-end="url(#arr)"/><path class="flowing" d="M1001 410C1023 410 1021 467 990 467H777C739 467 735 218 759 218" stroke="#dfbb94"/><path d="M1125 385V416" stroke="#dfbb94"/></svg>
+<div class="map-column"><div class="col-caption"><b>01</b> OBSERVATIONS · 输入</div>${node('images',scene()+`<div class="camera-tabs"><span>主视角</span><span>左腕</span><span>右腕</span></div>`)}${node('text',`<span class="node-text">“${tasks[task].en}”</span>`)}${node('state',`<div class="state-values"><i>−0.50</i><i>0.00</i><i>0.50</i><i>…</i></div>`)}</div>
+<div class="map-column"><div class="col-caption"><b>02</b> ENCODING · 编码</div>${node('patches',`<div class="patch-grid">${grid(32,i=>`<i style="background:hsl(${i%7===0?19:210},${i%7===0?43:37}%,${61+(i*7)%26}%)"></i>`)}</div>`,'patch-node')}${node('vision',`<div class="stack-bars">${grid(15)}</div><span class="node-desc" style="text-align:center">SigLIP · 27 layers</span>`,'node-vision')}${node('prefix',`<div class="token-strips">${grid(4,()=>`<div>${grid(6)}</div>`)}</div>`,'node-prefix')}</div>
+<div class="map-column"><div class="col-caption"><b>03</b> UNDERSTANDING · 融合</div><div class="node purple" id="fused-tokens" style="cursor:default;margin-top:20px"><span class="node-title">视觉语言前缀</span><span class="node-desc">图像 + 指令 + 离散状态文本</span>${bars()}${bars()}<span class="node-shape">2048 features / token</span></div><div class="transformer-box"><div class="transformer-head">Gemma Transformer <span>× 18 层</span></div><div class="block-order">RMS → Attention → 残差 → RMS → MLP → 残差</div>${node('norm')}${node('attention',`<div class="attention-inline"><div><div class="qkv"><span>Q</span><span>K</span><span>V</span></div><span class="node-desc">让 token 交换信息</span></div><div class="mini-attn">${grid(24)}</div></div>`)}${node('mlp')}</div><span class="layer-link">每层 K / V 缓存 → 动作专家</span></div>
+<div class="map-column"><div class="col-caption"><b>04</b> ACTION EXPERT · 生成</div><div class="expert-top">${node('noise',`<div class="vector-row">${grid(6)}</div>`)}${node('time',`<div class="flow-time" id="time-value">1.00</div>`)}</div>${node('expert',`<div class="expert-inner"><span>adaRMS</span><b>→</b><span>Attention</span><b>→</b><span>MLP</span></div><span class="node-desc">另一组权重 · 18 层 · 输出向量场</span>`,'expert-main')}${node('flow',`<div class="flow-track">${grid(10,i=>`<i class="${i===0?'done':''}"></i>`)}</div><div class="flow-labels"><span>噪声 t=1</span><span>动作 t=0</span></div>`,'flow-node')}<div class="repeat-caption">↻ 复用前缀缓存 · 默认积分 10 次</div></div>
+<div class="map-column"><div class="col-caption"><b>05</b> EXECUTION · 输出</div>${node('output',`<div class="out-matrix">${grid(42)}</div><span class="node-desc" style="margin-top:9px">50 个动作时间步<br>反归一化 → 机器人适配器</span>`,'out-node')}${robot()}<div class="out-caption">执行部分动作，再观察</div></div></div></div>
+<div class="canvas-foot"><div class="legend"><span><i style="background:var(--blue)"></i>视觉</span><span><i style="background:var(--purple)"></i>语言 / 融合</span><span><i style="background:var(--teal)"></i>机器人状态</span><span><i style="background:var(--orange)"></i>连续动作</span></div><span>¹ 3 路相机 × 256 + 200 文本槽位；填充位置有掩码。B = 批量大小。</span></div>
+<div class="step-inspector" aria-live="polite"><div class="step-number" id="step-number">↗</div><div class="step-content"><b id="step-title">从任意一个你感兴趣的模块开始</b><p id="step-description">先看直觉，再展开张量和公式，最后用一组小数字亲手算一遍。</p></div><button id="step-detail">展开当前模块 ↗</button></div></section>
+<div class="support-row"><div class="support-item"><div class="support-icon">01</div><div><b>第一次接触机器学习？</b><p>先用 8 个小概念认识向量、权重与训练。</p><button data-view="beginner">从零开始 →</button></div></div><div class="support-item"><div class="support-icon">Σ</div><div><b>让公式真的算起来</b><p>修改一个数，观察 Q、K、V 和输出如何变化。</p><button data-lab="attention">打开数值实验室 →</button></div></div><div class="support-item"><div class="support-icon">⇄</div><div><b>模型是怎么学会的？</b><p>区分训练、推理，以及论文中的分层系统。</p><button data-view="lessons">查看完整学习过程 →</button></div></div></div>`;
+$('#task').onchange=e=>{task=Number(e.target.value);pause();currentStep=-1;renderMap();toast('已切换教学场景；计算示例使用透明的教学参数');};
+$('#shapes').onchange=e=>{showShapes=e.target.checked;$('#model-map').classList.toggle('no-shapes',!showShapes)};
+$('#play').onclick=()=>playing?pause():play();$('#step').onclick=()=>{pause();advance()};$('#reset').onclick=()=>{pause();currentStep=-1;renderMap()};$('#tour').onclick=()=>{pause();currentStep=0;updateStep();openModule(order[0])};$('#step-detail').onclick=()=>openModule(order[Math.max(0,currentStep)]);
+bindCommon(main);if(currentStep>=0)updateStep();requestAnimationFrame(drawConnections);}
+function drawConnections(){
+ const map=$('#model-map');if(!map)return;const svg=map.querySelector('.connectors');const rect=map.getBoundingClientRect();
+ const box=id=>{const el=id==='fused'?$('#fused-tokens'):map.querySelector(`[data-module="${id}"]`);const r=el.getBoundingClientRect();return {x:r.x-rect.x,y:r.y-rect.y,w:r.width,h:r.height}};
+ const paths=[];const line=(from,to,color,vertical=false)=>{const a=box(from),b=box(to);if(vertical){const x=a.x+a.w/2,y=a.y+a.h,X=b.x+b.w/2,Y=b.y;paths.push(`<path d="M${x} ${y} C${x} ${(y+Y)/2} ${X} ${(y+Y)/2} ${X} ${Y}" stroke="${color}" marker-end="url(#arr)"/>`)}else{const x=a.x+a.w,y=a.y+a.h/2,X=b.x,Y=b.y+b.h/2;paths.push(`<path d="M${x} ${y} C${x+16} ${y} ${X-16} ${Y} ${X} ${Y}" stroke="${color}" marker-end="url(#arr)"/>`)}};
+ line('images','patches','#79a5d1');line('patches','vision','#79a5d1',true);line('vision','prefix','#79a5d1',true);line('text','prefix','#a18ac6');line('state','prefix','#65b5a9');line('prefix','fused','#a18ac6');line('fused','norm','#a18ac6',true);line('attention','expert','#a18ac6');line('noise','expert','#d2a370',true);line('time','expert','#d2a370',true);line('expert','flow','#d2a370',true);line('flow','output','#d2a370');
+ const f=box('flow'),e=box('expert');paths.push(`<path class="flowing" d="M${f.x+f.w} ${f.y+f.h*.7} C${f.x+f.w+17} ${f.y+f.h*.7} ${f.x+f.w+17} ${e.y+e.h*.8} ${e.x+e.w} ${e.y+e.h*.8}" stroke="#d2a370" marker-end="url(#arr)"/>`);
+ svg.setAttribute('viewBox',`0 0 ${rect.width} ${map.scrollHeight}`);svg.style.width=rect.width+'px';svg.style.height=map.scrollHeight+'px';svg.innerHTML='<defs><marker id="arr" markerWidth="5" markerHeight="5" refX="4" refY="2.5" orient="auto"><path d="M0 0L5 2.5 0 5" fill="#bba8d2" stroke="none"/></marker></defs>'+paths.join('');
+}
+window.addEventListener('resize',()=>requestAnimationFrame(drawConnections));
+function toast(t){$('#toast').textContent=t;$('#toast').classList.add('show');setTimeout(()=>$('#toast').classList.remove('show'),3000)}
+function pause(){playing=false;clearInterval(timer);timer=null;if($('#play'))$('#play').textContent='▷ 播放数据流';$('#model-map')?.classList.add('paused')}
+function play(){playing=true;$('#play').textContent='Ⅱ 暂停';$('#model-map').classList.remove('paused');if(currentStep<0||currentStep===order.length-1)currentStep=-1;advance();timer=setInterval(()=>{if(currentStep===order.length-1){pause();return}advance()},2200)}
+function advance(){currentStep=(currentStep+1)%order.length;updateStep()}
+function updateStep(){if(activeView!=='map')return;const id=order[currentStep],m=MODULES[id];if(!m)return;document.querySelectorAll('.node.current').forEach(n=>n.classList.remove('current'));const n=document.querySelector(`[data-module="${id}"]`);n?.classList.add('current');if(n&&innerWidth<1180)n.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});$('#step-number').textContent=String(currentStep+1).padStart(2,'0');$('#step-title').textContent=m.title;$('#step-description').textContent=m.summary.slice(0,110);$('#step-detail').textContent='展开计算 ↗';const p=currentStep>=12?10:0;document.querySelectorAll('.flow-track i').forEach((el,i)=>el.classList.toggle('done',i<p));$('#time-value').textContent=p===10?'1 → 0':'1.00'}
+function bindCommon(el){el.querySelectorAll('[data-module]').forEach(b=>b.onclick=()=>openModule(b.dataset.module));el.querySelectorAll('[data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));el.querySelectorAll('[data-lab]').forEach(b=>b.onclick=()=>{activeLab=b.dataset.lab;closeDrawer();navigate('labs')})}
+function navigate(view,hash=true){pause();labCleanup?.();labCleanup=null;closeDrawer();activeView=view;document.querySelectorAll('.topbar [data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));if(view==='map')renderMap();else if(view==='labs')renderLabs();else if(view==='lessons'){main.innerHTML='<div class="page-wrap" id="lesson-root"></div>';renderLessons($('#lesson-root'));}else if(view==='beginner'){main.innerHTML='<div class="page-wrap"><div id="beginner-root"></div><h2 class="section-title">随时可以查的小词典</h2><input class="glossary-search" id="glossary-search" aria-label="搜索术语" placeholder="搜索一个词，例如：token、张量、梯度…"><div class="glossary-list" id="glossary"></div></div>';renderBeginner($('#beginner-root'));renderGlossary('');$('#glossary-search').oninput=e=>renderGlossary(e.target.value)}else renderSources();if(hash)history.replaceState(null,'','#'+view+(view==='labs'?'/'+activeLab:''));window.scrollTo({top:0,behavior:'instant'})}
+function renderLabs(){labCleanup?.();labCleanup=null;main.innerHTML=`<section class="page-wrap"><div class="page-heading"><span class="eyebrow">Learn by changing the numbers</span><h1>把一个数改掉，看看会发生什么。</h1><p>这些微型实验使用明确给出的教学参数。每一步都可重算，不需要下载模型或 GPU。</p></div><div class="lab-nav">${Object.entries(labNames).map(([id,title],i)=>`<button data-select-lab="${id}" class="${id===activeLab?'active':''}"><span>0${i+1}</span>${title}</button>`).join('')}</div><div id="lab-root" class="lab-container"></div></section>`;labCleanup=renderLab(activeLab,$('#lab-root'));document.querySelectorAll('[data-select-lab]').forEach(b=>b.onclick=()=>{activeLab=b.dataset.selectLab;renderLabs();history.replaceState(null,'','#labs/'+activeLab)})}
+function renderGlossary(q){const list=GLOSSARY.filter(x=>(x.term+x.english+x.meaning).toLowerCase().includes(q.toLowerCase()));$('#glossary').innerHTML=list.map(x=>`<details><summary>${esc(x.term)} <span>${esc(x.english)}</span></summary><p>${esc(x.meaning)}</p><em>${esc(x.example)}</em></details>`).join('')||'<p class="empty">没有找到这个词。试试“向量”或“动作”。</p>'}
+function renderSources(){main.innerHTML=`<section class="page-wrap"><div class="page-heading"><span class="eyebrow">Trace every idea back to its source</span><h1>讲清楚，也标清楚。</h1><p>模型事实、实现选择和教学简化，在这里各有出处。</p></div><div class="scope-note"><b>本站的范围</b><br>默认计算地图采用 openpi 的 π0.5 连续动作路径与默认配置；不在浏览器中运行 π0.5 权重。小矩阵、注意力数值、场景和轨迹是可复算的教学示例，不是对真实模型内部激活的测量。</div><div class="source-grid">${READING.map(r=>`<article class="source-card"><a href="${esc(r.url)}" target="_blank" rel="noopener">${esc(r.title)} ↗</a><p>${esc(r.why)}</p></article>`).join('')}</div><h2 class="section-title">阅读时值得保留的几个区别</h2><div class="readable"><p><b>论文系统与公开接口：</b>论文描述高层子任务与低层动作的分层系统；openpi 的 sample_actions() 是连续动作采样接口，不能把高层规划当成它自动完成的步骤。</p><p><b>配置尺寸与机器人尺寸：</b>50 是默认动作块长度，32 是模型动作通道容量（含填充），200 是默认文本槽位数。它们不等于机器人自由度、固定控制频率或每次有效 token 数。</p><p><b>时间约定：</b>本站统一采用 openpi 代码的 t=1 噪声 → t=0 动作。论文可使用相反端点约定，公式要连同约定阅读。</p><p><b>泛化与可靠性：</b>在新环境中表现好，是经验性能力。碰撞约束、执行器限幅和形式化安全保证需要额外系统设计；本站不会把安全滤波器画成 π0.5 原生模块。</p></div><h2 class="section-title">视觉与交互致谢</h2><p class="readable">参考 <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">Polo Club 的 Transformer Explainer</a>：浅色计算画布、按语义着色的张量，以及在总览与具体运算之间自由往返。本站独立实现，使用中文内容和 π0.5 专属数据流。</p><p class="mini-note">资料核对日期：2026-10-23。链接指向上游源码；上游默认配置可能继续更新。</p></section>`}
+function openModule(id){if(!MODULES[id])return;pause();activeModule=id;drawerTab='intuition';returnFocus=document.activeElement;currentStep=order.indexOf(id);updateStep();renderDrawer();$('#scrim').hidden=false;$('#detail').hidden=false;document.body.classList.add('modal-open');$('#detail-close').focus();history.replaceState(null,'','#module/'+id)}
+function renderDrawer(){const m=MODULES[activeModule];let body='';if(drawerTab==='intuition'){body=`<p class="detail-summary">${esc(m.summary)}</p><div class="tensor-io"><div><label>输入 INPUT</label><code>${esc(m.input)}</code></div><span>→</span><div><label>输出 OUTPUT</label><code>${esc(m.output)}</code></div></div><ol class="detail-steps">${m.steps.map(s=>`<li><b>${esc(s.title)}</b><p>${esc(s.body)}</p></li>`).join('')}</ol><div class="pitfall"><b>容易混淆的地方</b><br>${esc(m.pitfall)}</div>`}else if(drawerTab==='math'){body=`<p class="detail-summary">把文字解释落到数字上。以下示例用于理解运算；真实模型的学习参数并不等于这些小数字。</p><h3>计算关系</h3><pre class="formula">${esc(m.formula)}</pre><h3>跟着算一个例子</h3><div class="detail-example">${esc(m.example)}</div><div class="tensor-io"><div><label>完整输入形状</label><code>${esc(m.input)}</code></div><span>→</span><div><label>完整输出形状</label><code>${esc(m.output)}</code></div></div><div class="pitfall">${esc(m.pitfall)}</div>`}else{body=`<p class="detail-summary">下面是帮助理解数据流的简化伪代码。查看底部链接，可以对照官方实现中的具体类和函数。</p><pre class="formula">${esc(m.code)}</pre><h3>对照源码阅读</h3><p class="readable">先确认输入张量的形状，再沿每一个变换查看输出。省略的批量维 B、掩码和机器人适配器，在实际部署时都需要保留。</p>`}
+$('#detail').className=m.color;$('#detail').innerHTML=`<div class="detail-top"><span class="detail-kicker">${String(order.indexOf(activeModule)+1).padStart(2,'0')} / 14 · ${esc(m.kicker.replace(/^\d+ · /,''))}</span><button id="detail-close" class="detail-close" aria-label="关闭模块详情">×</button><h2 id="detail-title">${esc(m.title)}</h2><div class="detail-tabs" role="tablist"><button data-detail-tab="intuition" role="tab" aria-selected="${drawerTab==='intuition'}" class="${drawerTab==='intuition'?'active':''}">先看懂</button><button data-detail-tab="math" role="tab" aria-selected="${drawerTab==='math'}" class="${drawerTab==='math'?'active':''}">张量与计算</button><button data-detail-tab="code" role="tab" aria-selected="${drawerTab==='code'}" class="${drawerTab==='code'?'active':''}">对应实现</button></div></div><div class="detail-body">${body}${m.lab?`<button class="detail-lab" id="open-module-lab">亲手改数字 · ${labNames[m.lab]} ↗</button>`:''}<h3>来源与进一步阅读</h3><div class="detail-sources">${m.sources.map(s=>`<a target="_blank" rel="noopener" href="${esc(s.url)}">${esc(s.title)} ↗</a>`).join('')}</div><div class="detail-nav"><button id="prev-module" ${currentStep===0?'disabled':''}>← 上一个模块</button><button id="next-module" ${currentStep===order.length-1?'disabled':''}>下一个模块 →</button></div></div>`;
+$('#detail-close').onclick=()=>closeDrawer(true);document.querySelectorAll('[data-detail-tab]').forEach(b=>b.onclick=()=>{drawerTab=b.dataset.detailTab;renderDrawer()});$('#open-module-lab')?.addEventListener('click',()=>{activeLab=m.lab;closeDrawer();navigate('labs')});$('#prev-module').onclick=()=>openModule(order[currentStep-1]);$('#next-module').onclick=()=>openModule(order[currentStep+1]);$('#detail').scrollTop=0;
+}
+function closeDrawer(updateHash=false){$('#detail').hidden=true;$('#scrim').hidden=true;document.body.classList.remove('modal-open');if(updateHash){history.replaceState(null,'','#'+activeView);returnFocus?.focus()}activeModule=null}
+$('#scrim').onclick=()=>closeDrawer(true);
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('#detail').hidden)closeDrawer(true);if(e.key==='Tab'&&!$('#detail').hidden){const items=[...$('#detail').querySelectorAll('button:not(:disabled),a[href]')];const first=items[0],last=items.at(-1);if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus()}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus()}}});
+document.querySelectorAll('.topbar [data-view]').forEach(b=>b.onclick=()=>navigate(b.dataset.view));
+function route(){const [a,b]=location.hash.slice(1).split('/');if(a==='module'&&MODULES[b]){navigate('map',false);openModule(b)}else if(a==='labs'){if(labNames[b])activeLab=b;navigate('labs',false)}else navigate(['map','lessons','beginner','sources'].includes(a)?a:'map',false)}
+window.addEventListener('hashchange',route);route();
+
+})();</script>
+</body></html>
